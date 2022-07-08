@@ -53,7 +53,7 @@ export default withTRPC<AppRouter>({
           }
         return {}
       },
-      url,
+      links,
       transformer: superjson,
     }
   },
