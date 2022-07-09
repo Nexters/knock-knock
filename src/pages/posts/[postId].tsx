@@ -19,8 +19,8 @@ function SinglePostPage() {
 
   return (
     <div>
-      <h1>{data?.title}</h1>
-      <p>{data?.body}</p>
+      <h1>제목: {data?.title}</h1>
+      <p>본문: {data?.body}</p>
     </div>
   )
 }

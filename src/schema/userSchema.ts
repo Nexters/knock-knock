@@ -3,6 +3,7 @@ import z from 'zod'
 export const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
+  phone: z.string().optional(),
 })
 
 export const createUserOutputSchema = z.object({

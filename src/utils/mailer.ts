@@ -1,14 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export async function sendLoginEmail({
-  email,
-  url,
-  token,
-}: {
-  email: string
-  url: string
-  token: string
-}) {
+export async function sendLoginEmail({ email, url, token }: { email: string; url: string; token: string }) {
   const testAccount = await nodemailer.createTestAccount()
 
   const transporter = nodemailer.createTransport({
@@ -22,10 +14,10 @@ export async function sendLoginEmail({
   })
 
   const info = await transporter.sendMail({
-    from: '"Jane Doe" <j.doe@example.com>',
+    from: '"woo10000see" <woo10000see@example.com>',
     to: email,
     subject: 'Login to your account',
-    html: `Login by clicking <a href="${url}/login#token=${token}">HERE</a>`,
+    html: `클릭해서 로그인하세요! <a href="${url}/login#token=${token}">클릭</a>`,
   })
 
   console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`)
