@@ -18,9 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <UserContextProvider value={data}>
-      <main>
-        <Component {...pageProps} />
-      </main>
+      <div className="w-full h-screen bg-slate-100">
+        <main className="w-full max-w-lg h-screen mx-auto bg-white">
+          <Component {...pageProps} />
+        </main>
+      </div>
     </UserContextProvider>
   )
 }

@@ -3,6 +3,9 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { CreateUserInput } from '../schema/userSchema'
 import { trpc } from '../utils/trpc'
+import CenteringLayout from '../components/pageLayouts/CenteringLayout'
+import Input from '../components/formElements/Input'
+import Button from '../components/formElements/Button'
 
 function RegisterPage() {
   const { handleSubmit, register } = useForm<CreateUserInput>()
@@ -19,19 +22,37 @@ function RegisterPage() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {error && error.message}
-        <h1>Register</h1>
+    <CenteringLayout seoTitle="회원가입">
+      <div className="w-full px-5">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {error && error.message}
+          <h1>Register</h1>
 
-        <input type="email" placeholder="jane.doe@example.com" {...register('email')} />
-        <br />
-        <input type="text" placeholder="Tom" {...register('name')} />
-        <button type="submit">Register</button>
-      </form>
-
-      <Link href="/login">Login</Link>
-    </>
+          <Input
+            name="email"
+            classNames="text-left"
+            label="이메일"
+            type="email"
+            placeholder="jane.doe@example.com"
+            register={register('email', {
+              required: true,
+            })}
+          />
+          <br />
+          <Input
+            label="닉네임"
+            classNames="text-left"
+            type="text"
+            placeholder="Tom"
+            register={register('name', {
+              required: true,
+            })}
+          />
+          <Button type="submit">Register</Button>
+        </form>
+        <Button onClick={() => router.push('/login')}>로그인</Button>
+      </div>
+    </CenteringLayout>
   )
 }
 
