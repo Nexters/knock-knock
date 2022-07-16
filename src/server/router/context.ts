@@ -37,5 +37,5 @@ export function createContext({ req, res }: { req: NextApiRequest; res: NextApiR
 type Context = trpc.inferAsyncReturnType<typeof createContext>
 
 export function createRouter() {
-  return trpc.router<Context>().transformer(superjson)
+  return trpc.router<Context>()
 }

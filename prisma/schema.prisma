@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id    String @unique @default(uuid())
+  id    String @unique @default(cuid())
   email String @unique
   name  String
 
@@ -24,7 +24,7 @@ model User {
 }
 
 model LoginToken {
-  id        String   @unique @default(uuid())
+  id        String   @unique @default(cuid())
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
@@ -32,7 +32,7 @@ model LoginToken {
 }
 
 model Post {
-  id    String @unique @default(uuid())
+  id    String @unique @default(cuid())
   title String
   body  String
 
