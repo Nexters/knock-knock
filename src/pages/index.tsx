@@ -1,25 +1,10 @@
-import type { NextPage } from 'next'
-import Link from 'next/link'
-import LoginForm from '../components/LoginForm'
-import CenteringLayout from '../components/pageLayouts/CenteringLayout'
-import { useUserContext } from '../context/UserContext'
-
-const Home: NextPage = () => {
-  const user = useUserContext()
-
-  if (!user) {
-    return (
-      <CenteringLayout seoTitle="우만시 HOME">
-        <LoginForm />
-      </CenteringLayout>
-    )
-  }
-
+export default function Home() {
   return (
-    <CenteringLayout seoTitle="우만시 HOME">
-      <Link href="/posts/new">Create post</Link>
-    </CenteringLayout>
+    <div className="flex-col p-8 pt-10">
+      <div className="flex justify-between">
+        <div>노크노크</div>
+        <span>돋보기아이콘</span>
+      </div>
+    </div>
   )
 }
-
-export default Home
