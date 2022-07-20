@@ -191,7 +191,7 @@ export default function Home() {
         </div>
       </div>
 
-      <button className="btn btn-circle absolute bottom-10 right-5 bg-primary">
+      <button className="btn btn-circle fixed bottom-10 right-5 bg-primary">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
