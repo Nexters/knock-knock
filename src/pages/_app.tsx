@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <div className="w-full h-screen bg-slate-100">
-        <main className="w-full max-w-[360px] h-screen mx-auto bg-white text-black">
+        <main className="w-full max-w-[360px] h-screen mx-auto bg-white text-black overflow-hidden">
           <Component {...pageProps} />
         </main>
       </div>
