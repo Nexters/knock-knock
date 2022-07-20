@@ -1,5 +1,4 @@
 import { signIn, signOut, useSession } from 'next-auth/react'
-import dynamic from 'next/dynamic'
 
 // const LoginForm = dynamic(() => import('../components/LoginForm'), {
 //   ssr: false,
@@ -23,11 +22,6 @@ function LoginPage() {
       </div>
     )
   }
-  return (
-    <div>
-      <LoginForm />
-    </div>
-  )
 }
 
 export default LoginPage

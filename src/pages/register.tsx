@@ -40,6 +40,7 @@ function RegisterPage() {
           />
           <br />
           <Input
+            name="nickname"
             label="닉네임"
             classNames="text-left"
             type="text"
