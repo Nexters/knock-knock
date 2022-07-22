@@ -139,7 +139,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   return (
-    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto">
+    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto" style={{ touchAction: 'manipulation' }}>
       <div
         onPointerDown={handleDragStartForScroll}
         onPointerMove={handleDragForScroll}
@@ -168,8 +168,12 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
               onPointerCancel={handleDragEndForScroll}
               onPointerUp={handleDragEndForScroll}
             >
-              <div className="flex-shrink-0 flex-grow-0 h-6 border-t border-r"></div>
-              <div className="flex-shrink-0 flex-grow-0 h-6 border-b border-r"></div>
+              <div className="flex-shrink-0 flex-grow-0 h-6 border-t border-r text-center select-none font-bold">
+                {`${3 + coloumnNumber}`.padStart(2, '0')}
+              </div>
+              <div className="flex-shrink-0 flex-grow-0 h-6 border-b border-r text-center select-none text-sm">
+                {'월화수목금토일'.split('')[coloumnNumber % 7]}
+              </div>
             </div>
 
             <div
@@ -185,7 +189,6 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
                   data-row={rowNumber}
                   className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid"
                   style={{
-                    touchAction: 'none',
                     borderRight: '1px solid black',
                     backgroundColor: selectedIds.has(`${coloumnNumber}-${rowNumber}`) ? 'green' : 'white',
                   }}
