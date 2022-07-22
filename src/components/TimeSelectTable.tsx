@@ -19,7 +19,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   const selectStartCoors = useRef<{ row: number; col: number; isDelete: boolean }>()
   const prevCellRef = useRef<string>()
 
-  function handleDragStartForScroll(e) {
+  function handleDragStartForScroll(e: any) {
     const target = wrapperRef.current
     if (!target) return
     isDraggingRef.current = true
@@ -36,7 +36,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   // TODO: RAF 사용
-  function handleDragForScroll(e, isVerticalScroll = true) {
+  function handleDragForScroll(e: any, isVerticalScroll = true) {
     if (!isDraggingRef.current) return
     const target = wrapperRef.current
     if (!target) return
@@ -56,11 +56,11 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
     target.scrollLeft = scrollPositionRef.current.left - dx
   }
 
-  function handleDragEndForScroll(e) {
+  function handleDragEndForScroll() {
     isDraggingRef.current = false
   }
 
-  function handleSelectStart(e) {
+  function handleSelectStart(e: any) {
     if (isSelectingRef.current) return
     const { col, row } = e.target.dataset
     if (!col || !row) return
@@ -73,7 +73,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   // TODO: RAF
-  function handleWhileSelect(e) {
+  function handleWhileSelect(e: any) {
     if (!isSelectingRef.current) return
     const { col, row } = e.target.dataset
     if (!col || !row) return
@@ -98,11 +98,11 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   // TODO: RAF
-  function handleWhileSelectTouch(e) {
+  function handleWhileSelectTouch(e: any) {
     if (!isSelectingRef.current) return
     const documentTouchMoveX = e.changedTouches[e.changedTouches.length - 1].clientX
     const documentTouchMoveY = e.changedTouches[e.changedTouches.length - 1].clientY
-    const targetCell = document.elementFromPoint(documentTouchMoveX, documentTouchMoveY)
+    const targetCell = document.elementFromPoint(documentTouchMoveX, documentTouchMoveY) as HTMLDivElement
     const dataset = targetCell?.dataset
     if (!dataset) return
     const { col, row } = dataset
@@ -111,10 +111,10 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
     if (prevCellRef.current === cellId) return
     prevCellRef.current = cellId
 
-    const smallerCol = Math.min(col, selectStartCoors.current?.col ?? col)
-    const biggerCol = Math.max(col, selectStartCoors.current?.col ?? col)
-    const smallerRow = Math.min(row, selectStartCoors.current?.row ?? row)
-    const biggerRow = Math.max(row, selectStartCoors.current?.row ?? row)
+    const smallerCol = Math.min(Number(col), selectStartCoors.current?.col ?? Number(col))
+    const biggerCol = Math.max(Number(col), selectStartCoors.current?.col ?? Number(col))
+    const smallerRow = Math.min(Number(row), selectStartCoors.current?.row ?? Number(row))
+    const biggerRow = Math.max(Number(row), selectStartCoors.current?.row ?? Number(row))
 
     const cellIds = []
 
@@ -127,12 +127,12 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
     onSelect(cellIds, selectStartCoors.current?.isDelete ?? false)
   }
 
-  function handleSelectEnd(e) {
+  function handleSelectEnd() {
     isSelectingRef.current = false
   }
 
   // 왜 별다른 Pointer Capturing 없이 이렇게 release 만 해도 잘 되는지 모르겠지만 일단 되니까 사용
-  function handleSelectPointerLeave(e) {
+  function handleSelectPointerLeave(e: any) {
     if (!isSelectingRef.current) return
     cellsWrapperRef.current?.releasePointerCapture(e.pointerId)
     isSelectingRef.current = false
