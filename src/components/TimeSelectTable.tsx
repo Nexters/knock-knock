@@ -146,7 +146,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
         onPointerLeave={handleDragEndForScroll}
         onPointerCancel={handleDragEndForScroll}
         onPointerUp={handleDragEndForScroll}
-        className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 bg-white"
+        className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 bg-white z-10"
       >
         <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
         <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
