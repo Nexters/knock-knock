@@ -2,7 +2,7 @@ import TimeSelectTable from '../../components/TimeSelectTable'
 
 export default function Event() {
   return (
-    <div className="flex flex-col pt-9 pb-36 relative h-screen relative">
+    <div className="flex flex-col pt-9 h-screen relative">
       <div className="flex justify-between px-5">
         <div className="text-sm">날짜 선택</div>
         <span>

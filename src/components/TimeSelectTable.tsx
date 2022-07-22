@@ -1,77 +1,31 @@
-import { useRef } from 'react'
-import styles from '../styles/TimeSelectTable.module.css'
-
 export default function TimeSelectTable() {
-  // const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // const horizontalScrollbarHeight = wrapperRef.current
-  //   ? wrapperRef.current.offsetHeight - wrapperRef.current.clientHeight
-  //   : 0
-
   return (
-    <div className="flex w-full mb-5">
-      <div className="w-14 flex-shrink-0 flex-grow-0 border-r border-t border-b">
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
-        <div className="h-6"></div>
+    <div className="flex w-full h-3/4 overflow-auto">
+      <div className="w-16 flex-shrink-0 flex-grow-0">
+        <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
+        <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
+
+        {[...Array(48)].map((_e, i2) => (
+          <div key={i2} className="h-7 flex-shrink-0 border-r first:border-t last:border-b"></div>
+        ))}
       </div>
 
-      <div className="flex-grow flex overflow-x-auto">
-        <div className="flex flex-col flex-shrink-0 w-1/4 border-r">
-          <div className="h-6 border-t"></div>
-          <div className="h-6 border-b"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-        </div>
-        <div className="flex flex-col flex-shrink-0 w-1/4 border-r">
-          <div className="h-6 border-t"></div>
-          <div className="h-6 border-b"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-        </div>
-        <div className="flex flex-col flex-shrink-0 w-1/4 border-r">
-          <div className="h-6 border-t"></div>
-          <div className="h-6 border-b"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-        </div>
-        <div className="flex flex-col flex-shrink-0 w-1/4 border-r">
-          <div className="h-6 border-t"></div>
-          <div className="h-6 border-b"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-        </div>
-        <div className="flex flex-col flex-shrink-0 w-1/4 border-r">
-          <div className="h-6 border-t"></div>
-          <div className="h-6 border-b"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-          <div className="h-6 border-b odd:border-dashed"></div>
-        </div>
+      <div className="flex-grow flex">
+        {[...Array(5)].map((_e, i) => (
+          <div key={i} className="flex flex-col flex-shrink-0 w-1/4">
+            <div className="bg-blue-300">
+              <div className="h-6 border-t border-r"></div>
+              <div className="h-6 border-b border-r"></div>
+            </div>
+
+            {[...Array(48)].map((_e, i2) => (
+              <div
+                key={i2}
+                className="flex-shrink-0 h-7 border-b border-r even:border-dashed last-of-type:border-solid"
+                style={{ borderRight: '1px solid' }}></div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   )
