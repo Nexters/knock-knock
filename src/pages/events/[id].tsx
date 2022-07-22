@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import TimeSelectTable from '../../components/TimeSelectTable'
 
 export default function Event() {
-  const [isDragging, setIsDragging] = useState(false)
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
-
-  // console.log(selectedCells)
 
   function addCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev, cellId]))
@@ -16,35 +13,9 @@ export default function Event() {
   }
 
   function addOrRemoveCell(cellId: string) {
-    console.log(selectedCells)
-    console.log(selectedCells.has(cellId), cellId, 'check')
     if (selectedCells.has(cellId)) removeCell(cellId)
     else addCell(cellId)
   }
-
-  useEffect(() => {
-    const handlePointerOver = e => {
-      console.log(e.target.dataset?.['id'])
-      addOrRemoveCell(e.target.dataset?.['id'])
-    }
-    const handlePointerCancel = () => console.log('canceled')
-    const handlePointerDown = e => {
-      addOrRemoveCell(e.target.dataset?.['id'])
-      document.addEventListener('pointerover', handlePointerOver)
-    }
-    const handlePointerUp = () => document.removeEventListener('pointerover', handlePointerOver)
-
-    document.addEventListener('pointerdown', handlePointerDown)
-    document.addEventListener('pointerup', handlePointerUp)
-    document.addEventListener('pointercancel', handlePointerCancel)
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown)
-      document.removeEventListener('pointerup', handlePointerUp)
-      document.removeEventListener('pointerover', handlePointerOver)
-      document.removeEventListener('pointercancel', handlePointerCancel)
-    }
-  }, [])
 
   return (
     <div className="flex flex-col pt-9 h-screen relative">
@@ -64,7 +35,7 @@ export default function Event() {
       </div>
 
       <div className="mt-7 h-full">
-        <TimeSelectTable isDragging={isDragging} selectedIds={selectedCells} onPointerOver={addOrRemoveCell} />
+        <TimeSelectTable selectedIds={selectedCells} />
       </div>
 
       <div className="absolute bottom-0 w-full flex justify-center mb-9">
