@@ -4,22 +4,31 @@ import TimeSelectTable from '../../components/TimeSelectTable'
 export default function Event() {
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
 
-  function addCell(cellId: string) {
+  function addOneCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev, cellId]))
   }
 
-  function removeCell(cellId: string) {
+  function removeOneCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev].filter(x => x !== cellId)))
   }
 
-  function addOrRemoveCell(cellId: string) {
-    if (!cellId) return
-    if (selectedCells.has(cellId)) removeCell(cellId)
-    else addCell(cellId)
+  function addOrRemoveOneCell(cellId: string) {
+    if (selectedCells.has(cellId)) removeOneCell(cellId)
+    else addOneCell(cellId)
   }
 
-  function handleCellSelect(cellIds: string[]) {
-    cellIds.forEach(id => addOrRemoveCell(id))
+  function handleCellSelect(cellIds: string[], isDelete?: boolean) {
+    if (cellIds.length === 1) {
+      if (cellIds?.[0]) addOrRemoveOneCell(cellIds[0])
+      return
+    }
+    if (isDelete) {
+      cellIds.forEach(id => {
+        if (selectedCells.has(id)) removeOneCell(id)
+      })
+      return
+    }
+    setSelectedCells(prev => new Set([...prev, ...cellIds]))
   }
 
   return (
@@ -33,13 +42,14 @@ export default function Event() {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            strokeWidth={2}>
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </span>
       </div>
 
-      <div className="mt-7 h-full">
+      <div className="mt-7 h-3/4">
         <TimeSelectTable selectedIds={selectedCells} onSelect={handleCellSelect} />
       </div>
 
