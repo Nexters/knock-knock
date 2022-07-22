@@ -139,7 +139,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   return (
-    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto" style={{ touchAction: 'manipulation' }}>
+    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
       <div
         onPointerDown={handleDragStartForScroll}
         onPointerMove={handleDragForScroll}
