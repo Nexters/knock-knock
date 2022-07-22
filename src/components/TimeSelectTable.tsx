@@ -139,14 +139,14 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   return (
-    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
+    <div ref={wrapperRef} className="flex w-full h-96 max-h-full overflow-auto" style={{ touchAction: 'none' }}>
       <div
         onPointerDown={handleDragStartForScroll}
         onPointerMove={handleDragForScroll}
         onPointerLeave={handleDragEndForScroll}
         onPointerCancel={handleDragEndForScroll}
         onPointerUp={handleDragEndForScroll}
-        className="w-16 flex-shrink-0 flex-grow-0"
+        className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 bg-white"
       >
         <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
         <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
@@ -167,6 +167,7 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
               onPointerLeave={handleDragEndForScroll}
               onPointerCancel={handleDragEndForScroll}
               onPointerUp={handleDragEndForScroll}
+              className="bg-white sticky top-0"
             >
               <div className="flex-shrink-0 flex-grow-0 h-6 border-t border-r text-center select-none font-bold">
                 {`${3 + coloumnNumber}`.padStart(2, '0')}
