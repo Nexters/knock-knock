@@ -13,8 +13,13 @@ export default function Event() {
   }
 
   function addOrRemoveCell(cellId: string) {
+    if (!cellId) return
     if (selectedCells.has(cellId)) removeCell(cellId)
     else addCell(cellId)
+  }
+
+  function handleCellSelect(cellIds: string[]) {
+    cellIds.forEach(id => addOrRemoveCell(id))
   }
 
   return (
@@ -35,7 +40,7 @@ export default function Event() {
       </div>
 
       <div className="mt-7 h-full">
-        <TimeSelectTable selectedIds={selectedCells} />
+        <TimeSelectTable selectedIds={selectedCells} onSelect={handleCellSelect} />
       </div>
 
       <div className="absolute bottom-0 w-full flex justify-center mb-9">
