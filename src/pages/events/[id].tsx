@@ -53,8 +53,10 @@ export default function Event() {
         <TimeSelectTable selectedIds={selectedCells} onSelect={handleCellSelect} />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 w-full flex justify-center mb-14">
-        <button className="btn w-24">초기화</button>
+      <div className="fixed bottom-0 left-0 right-0 w-full flex justify-center mb-8">
+        <button onClick={() => setSelectedCells(new Set<string>([]))} className="btn w-24">
+          초기화
+        </button>
         <button className="btn w-48 ml-3">결과 보기</button>
       </div>
     </div>
