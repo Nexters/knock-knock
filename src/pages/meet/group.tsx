@@ -74,7 +74,7 @@ function Group() {
         </label>
       </div>
 
-      <button className="btn btn-wide w-full max-w-xs bg-emerald-800">Wide</button>
+      <button className="btn btn-wide w-full max-w-xs bg-emerald-400">완료</button>
     </section>
   )
 }
