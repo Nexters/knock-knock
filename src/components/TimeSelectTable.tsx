@@ -3,9 +3,10 @@ import { useRef } from 'react'
 interface Props {
   selectedIds: Set<string>
   onSelect: (ids: string[], isDelete?: boolean) => void
+  isResultView: boolean
 }
 
-export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
+export default function TimeSelectTable({ selectedIds, onSelect, isResultView }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
@@ -139,23 +140,27 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
   }
 
   return (
-    <div ref={wrapperRef} className="flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
-      <div
-        onPointerDown={handleDragStartForScroll}
-        onPointerMove={handleDragForScroll}
-        onPointerLeave={handleDragEndForScroll}
-        onPointerCancel={handleDragEndForScroll}
-        onPointerUp={handleDragEndForScroll}
-        className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 bg-white z-10"
-      >
-        <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
-        <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
+    <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
+      <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
+        <div
+          onPointerDown={handleDragStartForScroll}
+          onPointerMove={handleDragForScroll}
+          onPointerLeave={handleDragEndForScroll}
+          onPointerCancel={handleDragEndForScroll}
+          onPointerUp={handleDragEndForScroll}
+          className=" bg-white "
+        >
+          <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
+          <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
 
-        {[...Array(22)].map((_e, i2) => (
-          <div key={i2} className="h-7 flex-shrink-0 border-r first:border-t last:border-b relative select-none">
-            {i2 % 2 === 0 ? <span className="absolute left-5 -top-3">{`${9 + i2 / 2}`.padStart(2, '0')}시</span> : null}
-          </div>
-        ))}
+          {[...Array(22)].map((_e, i2) => (
+            <div key={i2} className="h-7 flex-shrink-0 border-r first:border-t last:border-b relative select-none">
+              {i2 % 2 === 0 ? (
+                <span className="absolute left-5 -top-3">{`${9 + i2 / 2}`.padStart(2, '0')}시</span>
+              ) : null}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div ref={cellsWrapperRef} onPointerLeave={handleSelectPointerLeave} className="flex-grow flex">
@@ -178,10 +183,10 @@ export default function TimeSelectTable({ selectedIds, onSelect }: Props) {
             </div>
 
             <div
-              onPointerDown={handleSelectStart}
-              onMouseMove={handleWhileSelect}
-              onTouchMove={handleWhileSelectTouch}
-              onPointerUp={handleSelectEnd}
+              onPointerDown={isResultView ? undefined : handleSelectStart}
+              onMouseMove={isResultView ? undefined : handleWhileSelect}
+              onTouchMove={isResultView ? undefined : handleWhileSelectTouch}
+              onPointerUp={isResultView ? undefined : handleSelectEnd}
             >
               {[...Array(22)].map((_e, rowNumber) => (
                 <div

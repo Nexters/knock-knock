@@ -3,6 +3,8 @@ import TimeSelectTable from '../../components/TimeSelectTable'
 
 export default function Event() {
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
+  const [isResultView, setIsResultView] = useState<boolean>(false)
+  const [resultString, setResultString] = useState<string[]>(['0000111222233330000110', '0222000'])
 
   function addOneCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev, cellId]))
@@ -50,14 +52,16 @@ export default function Event() {
       </div>
 
       <div className="mt-7 h-3/4">
-        <TimeSelectTable selectedIds={selectedCells} onSelect={handleCellSelect} />
+        <TimeSelectTable selectedIds={selectedCells} onSelect={handleCellSelect} isResultView={isResultView} />
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 w-full flex justify-center mb-8">
         <button onClick={() => setSelectedCells(new Set<string>([]))} className="btn w-24">
           초기화
         </button>
-        <button className="btn w-48 ml-3">결과 보기</button>
+        <button onClick={() => setIsResultView(!isResultView)} className="btn w-48 ml-3">
+          결과 보기
+        </button>
       </div>
     </div>
   )
