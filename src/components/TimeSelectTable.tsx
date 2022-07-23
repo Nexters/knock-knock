@@ -4,9 +4,10 @@ interface Props {
   selectedIds: Set<string>
   onSelect: (ids: string[], isDelete?: boolean) => void
   isResultView: boolean
+  resultString: string[]
 }
 
-export default function TimeSelectTable({ selectedIds, onSelect, isResultView }: Props) {
+export default function TimeSelectTable({ selectedIds, onSelect, isResultView, resultString }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
@@ -139,6 +140,13 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView }:
     isSelectingRef.current = false
   }
 
+  function renderColors(col: number, row: number): string {
+    const resultNumber = resultString?.[col]?.[row]
+    if (!resultNumber || !Number(resultNumber)) return
+    const colors = ['', '#a7f3d0', '#6ee7b7', '#059669']
+    return colors[resultNumber]
+  }
+
   return (
     <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
       <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
@@ -196,7 +204,11 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView }:
                   className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid"
                   style={{
                     borderRight: '1px solid black',
-                    backgroundColor: selectedIds.has(`${coloumnNumber}-${rowNumber}`) ? 'green' : 'white',
+                    backgroundColor: isResultView
+                      ? renderColors(coloumnNumber, rowNumber)
+                      : selectedIds.has(`${coloumnNumber}-${rowNumber}`)
+                      ? 'green'
+                      : 'white',
                   }}
                 ></div>
               ))}
