@@ -142,8 +142,10 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
 
   function renderColors(col: number, row: number): string {
     const resultNumber = resultString?.[col]?.[row]
-    if (!resultNumber || !Number(resultNumber)) return
+    if (!resultNumber || !Number(resultNumber)) return ''
     const colors = ['', '#a7f3d0', '#6ee7b7', '#059669']
+    if (typeof Number(resultNumber) !== 'number') return ''
+    //@ts-ignore
     return colors[resultNumber]
   }
 
@@ -205,7 +207,7 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
                   style={{
                     borderRight: '1px solid black',
                     backgroundColor: isResultView
-                      ? renderColors(coloumnNumber, rowNumber)
+                      ? renderColors(coloumnNumber, rowNumber) || 'white'
                       : selectedIds.has(`${coloumnNumber}-${rowNumber}`)
                       ? 'green'
                       : 'white',
