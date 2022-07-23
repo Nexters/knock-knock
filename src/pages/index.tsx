@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <div className="flex flex-col p-5 pt-9 relative h-screen">
@@ -159,24 +161,26 @@ export default function Home() {
       <div className="mt-9">
         <div className="flex itmes-center justify-between">
           <h2 className="text-lg font-bold">내 그룹</h2>
-          <div className="flex items-center">
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1}>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </span>
-            <div className="ml-1">새 그룹 만들기</div>
-          </div>
+          <Link href="/createGroup">
+            <a className="flex items-center">
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1}>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </span>
+              <div className="ml-1">새 그룹 만들기</div>
+            </a>
+          </Link>
         </div>
 
         <div className="mt-4">
