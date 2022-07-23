@@ -57,7 +57,7 @@ export default function Event() {
         </span>
       </div>
 
-      <div className="mt-7 h-3/4">
+      <div className="mt-7 h-2/3">
         <TimeSelectTable
           selectedIds={selectedCells}
           onSelect={handleCellSelect}
