@@ -14,6 +14,10 @@ module.exports = {
       from: '#16C674',
       to: '#28D899',
     },
+    screens: {
+      xs: '375px',
+      sm: '390px',
+    },
     extend: {},
   },
   daisyui: {
