@@ -24,7 +24,8 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
     }),
   ],
-  secret: process.env.JWT_SECRET,
+  // https://next-auth.js.org/configuration/options#nextauth_secret
+  // secret: process.env.JWT_SECRET,
 }
 
 export default NextAuth(authOptions)
