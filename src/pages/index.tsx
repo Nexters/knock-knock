@@ -1,7 +1,11 @@
+import { useSession } from 'next-auth/react'
 import GatheringCard from 'src/components/GatheringCard'
 import MyGroupCard from 'src/components/MyGroupCard'
 
 export default function Home() {
+  const { data, status } = useSession()
+  console.log(data, status)
+
   return (
     <div className="flex flex-col py-5 pt-9 relative h-screen bg-bgColor">
       <div className="flex justify-between items-center px-5 ">

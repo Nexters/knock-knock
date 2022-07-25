@@ -26,6 +26,12 @@ export const authOptions: NextAuthOptions = {
   ],
   // https://next-auth.js.org/configuration/options#nextauth_secret
   // secret: process.env.JWT_SECRET,
+  theme: {
+    colorScheme: 'auto', // "auto" | "dark" | "light"
+    brandColor: '#16C674', // Hex color code
+    logo: '../../../assets/svg/logo.svg', // Absolute URL to image
+    buttonText: '#ffffff', // Hex color code
+  },
 }
 
 export default NextAuth(authOptions)
