@@ -38,8 +38,8 @@ export default function Home() {
           <button className="text-sm text-textGray">더보기</button>
         </div>
         <div className="mt-2 pl-5 flex overflow-auto">
-          {gatheringCardData.map(gatheringCard => (
-            <GatheringCard data={gatheringCard} />
+          {gatheringCardData.map((gatheringCard, index) => (
+            <GatheringCard key={index} data={gatheringCard} />
           ))}
         </div>
       </div>
@@ -54,8 +54,8 @@ export default function Home() {
         </div>
 
         <div className="mt-8">
-          {mygroupData.map(mygroup => (
-            <MyGroupCard data={mygroup} />
+          {mygroupData.map((mygroup, index) => (
+            <MyGroupCard key={index} data={mygroup} />
           ))}
         </div>
       </div>
