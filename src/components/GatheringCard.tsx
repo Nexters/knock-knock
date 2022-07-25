@@ -14,13 +14,11 @@ const GatheringCard = ({ data }: GatheringCardProps) => {
       <div className="card-body bg-cardBg p-4 px-3 text-white relative">
         <div className="flex items-center justify-between">
           <div className="flex">
-            {data.categoryList.map(category => {
-              return (
-                <div key={category}>
-                  <div className="badge badge-neutral text-2xs mr-2">{category}</div>
-                </div>
-              )
-            })}
+            {data.categoryList.map(category => (
+              <div key={category} className="badge badge-neutral text-2xs mr-2">
+                {category}
+              </div>
+            ))}
           </div>
           <span>
             <img src="assets/svg/fi_more-vertical.svg" alt="date_icon" />
