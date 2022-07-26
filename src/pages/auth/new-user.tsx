@@ -1,24 +1,22 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { ICreateProfile } from 'src/schema/userSchema'
 import { trpc } from 'src/utils/trpc'
 
-type Inputs = {
-  name: string
-}
-
 export default function NewUser() {
-  const { handleSubmit, register } = useForm<Inputs>()
+  const { handleSubmit, register } = useForm<ICreateProfile>()
   const { query, basePath, pathname, push } = useRouter()
-  const addNameMutation = trpc.useMutation('users.add-name')
-  const { data: userData } = useSession()
+  const { mutate, error } = trpc.useMutation('users.create-profile')
+  const { data: session } = useSession()
 
-  const onValid: SubmitHandler<Inputs> = (data: Inputs) => {
+  const onValid: SubmitHandler<ICreateProfile> = async (formValues: ICreateProfile) => {
     if (!query.callbackUrl) return
-    console.log(addNameMutation.mutate({ name: data.name, email: userData?.user?.email }))
+    if (!session?.user) return
+    if (!formValues.name) return
+    await mutate({ ...session.user, ...formValues, oauthId: session.id as string })
+    push(query.callbackUrl as string)
   }
-  console.log(userData)
-  console.log(addNameMutation)
 
   return (
     <div className="flex flex-col py-5 pt-9 px-5 relative h-screen bg-bgColor">
@@ -33,7 +31,7 @@ export default function NewUser() {
             <span className="label-text">이름</span>
           </label>
           <input
-            {...register('name')}
+            {...register('name', { required: true })}
             type="text"
             name="name"
             placeholder="이름을 입력해주세요"

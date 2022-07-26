@@ -2,15 +2,14 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
+import { useUserContext } from 'src/context/UserContext'
 
 export default function Event() {
-  const { data, status } = useSession()
+  const { status } = useSession()
   const { push, query } = useRouter()
 
-  console.log(data)
-
-  if (!data && status === 'unauthenticated') {
-  }
+  const user = useUserContext()
+  console.log(user)
 
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
   const [isResultView, setIsResultView] = useState<boolean>(false)

@@ -65,7 +65,7 @@ model User {
   // sessions      Session[]
 }
 
-model Person {
+model Profile {
   id            String          @id @default(cuid())
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -82,8 +82,8 @@ model Participation {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
-  personId  String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId   String
 }
@@ -92,7 +92,7 @@ model Event {
   id           String          @id @default(cuid())
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
-  person       Person          @relation(fields: [personId], references: [id])
+  profile      Profile         @relation(fields: [profileId], references: [id])
   participates Participation[]
-  personId     String
+  profileId    String
 }
