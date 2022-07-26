@@ -14,8 +14,12 @@ export default function NewUser() {
     if (!query.callbackUrl) return
     if (!session?.user) return
     if (!formValues.name) return
-    await mutate({ ...session.user, ...formValues, oauthId: session.id as string })
-    push(query.callbackUrl as string)
+    try {
+      await mutate({ ...session.user, ...formValues, oauthId: session.id as string })
+      push(query.callbackUrl as string)
+    } catch (error) {
+      alert('뭔가 잘못됐어요..')
+    }
   }
 
   return (
