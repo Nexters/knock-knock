@@ -5,7 +5,9 @@ import TimeSelectTable from 'src/components/TimeSelectTable'
 
 export default function Event() {
   const { data, status } = useSession()
-  const { push } = useRouter()
+  const { push, query } = useRouter()
+
+  console.log(data)
 
   if (!data && status === 'unauthenticated') {
   }
@@ -49,18 +51,29 @@ export default function Event() {
 
   return (
     <>
-      {/* <!-- Put this part before </body> tag --> */}
       <input checked={status === 'unauthenticated'} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box sm:max-w-xs">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
-            <button onClick={() => push('/auth/create/anonymous')} className="block mx-auto btn w-full max-w-xs">
+            <button
+              onClick={() => push({ pathname: '/auth/login/anonymous', query: { redirect: query.id } })}
+              className="block mx-auto btn w-full max-w-xs bg-primary text-white"
+            >
               비회원 로그인
             </button>
-            <button className="block mx-auto btn w-full max-w-xs mt-2">SNS 계정으로 로그인</button>
-            <div></div>
-            <div></div>
+            <button
+              onClick={() => push({ pathname: '/api/auth/signin' })}
+              className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
+            >
+              SNS 계정으로 로그인
+            </button>
+            <button
+              onClick={() => push({ pathname: '/' })}
+              className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
+            >
+              홈으로 가기
+            </button>
           </div>
         </div>
       </div>

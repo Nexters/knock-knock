@@ -1,5 +1,10 @@
 import z from 'zod'
 
+export const updateUserNameSchema = z.object({
+  email: z.string().email(),
+  name: z.string(),
+})
+
 export const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
