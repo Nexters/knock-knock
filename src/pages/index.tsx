@@ -6,9 +6,9 @@ export default function Home() {
     <div className="flex flex-col py-5 pt-9 relative h-screen bg-bgColor">
       <div className="flex justify-between items-center px-5 ">
         <img src="assets/svg/logo.svg" alt="logo" />
-        <span className="mr-3">
+        {/* <span className="mr-3">
           <img src="assets/svg/search.svg" alt="logo" />
-        </span>
+        </span> */}
       </div>
 
       <div className="px-5 mt-5">
@@ -33,14 +33,14 @@ export default function Home() {
       </div>
 
       <div className="mt-8">
-        <div className="flex justify-between items-center px-5">
+        <div className="flex justify-between items-center px-5 overflow-auto">
           <h2 className="text-lg font-bold">약속 모임</h2>
           <button className="text-sm text-textGray">
             {/* <Link href="/groupList">더보기</Link> */}
             필터
           </button>
         </div>
-        <div className="mx-2 mt-2 flex flex-col overflow-auto">
+        <div className="mx-2 mt-2 pb-2 flex flex-col overflow-auto xs:max-h-[75%] sm:max-h-[100%]">
           {gatheringCardData.map(gatheringCard => (
             <GatheringCard isWideView data={gatheringCard} />
           ))}
@@ -63,7 +63,7 @@ export default function Home() {
         </div>
       </div> */}
 
-      <button className="btn btn-circle fixed bottom-10 right-5 bg-primary text-white">
+      <button className="btn btn-circle fixed bottom-10 right-5 md:right-[38%] bg-primary text-white">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"

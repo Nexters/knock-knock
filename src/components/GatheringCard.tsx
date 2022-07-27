@@ -18,7 +18,7 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
       <div
         className={`card bg-slate-400 rounded-xl min-w-[190px] min-h-[${
           isWideView ? '150px' : '185px'
-        }] inline-flex flex-shrink-0 mr-3 ${isWideView && 'mt-2 ml-3'}`}
+        }] inline-flex flex-shrink-0 mr-3 cursor-pointer ${isWideView && 'mt-2 ml-3'}`}
       >
         <div className="card-body bg-cardBg p-4 px-3 text-white relative">
           <div className="flex items-center justify-between">
