@@ -2,43 +2,97 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./db.sqlite"
-  // url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  // provider             = "sqlite"
+  // url                  = "file:./db.sqlite"
+  referentialIntegrity = "prisma"
 }
 
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// 계속 jwt session 을 쓴다면 쓸모없는 모델
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Next Auth 에서 사용하는 이 User 모델은 필요한대로 수정이 잘 안 된다... 별도의 Profile 모델을 만들어서 쓰는 게 정신건강에 좋을듯 ㅠ
 model User {
-  id    String @unique @default(cuid())
-  email String @unique
-  name  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  LoginToken LoginToken[]
-  Post       Post[]
+  id            String    @id @default(cuid())
+  // 만든날짜 넣고 싶지만 next auth 설정을 몰라서 일단 스킵. 딱히 필요없기도 하고
+  // createdAt     DateTime  @default(now())
+  // updatedAt     DateTime  @updatedAt
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  // sessions      Session[]
 }
 
-model LoginToken {
-  id        String   @unique @default(cuid())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  redirect  String   @default("/")
+model Profile {
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  oauthId       String?
+  name          String
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  events        Event[]
+  participates  Participation[]
 }
 
-model Post {
-  id    String @unique @default(cuid())
-  title String
-  body  String
-
+model Participation {
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId   String
+}
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+model Event {
+  id           String          @id @default(cuid())
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  profile      Profile         @relation(fields: [profileId], references: [id])
+  participates Participation[]
+  profileId    String
 }

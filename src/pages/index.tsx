@@ -1,8 +1,11 @@
-import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import GatheringCard from 'src/components/GatheringCard'
 // import MyGroupCard from 'src/components/MyGroupCard'
 
 export default function Home() {
+  const { data, status } = useSession()
+  console.log(data, status)
+
   return (
     <div className="flex flex-col py-5 pt-9 relative h-screen bg-bgColor">
       <div className="flex justify-between items-center px-5 ">
@@ -42,8 +45,8 @@ export default function Home() {
           </button>
         </div>
         <div className="mx-2 mt-2 pb-2 flex flex-col overflow-auto xs:max-h-[75%] sm:max-h-[100%]">
-          {gatheringCardData.map(gatheringCard => (
-            <GatheringCard isWideView data={gatheringCard} />
+          {gatheringCardData.map((gatheringCard, index) => (
+            <GatheringCard key={index} isWideView data={gatheringCard} />
           ))}
         </div>
       </div>
@@ -60,8 +63,8 @@ export default function Home() {
         </div>
 
         <div className="mt-8">
-          {mygroupData.map(mygroup => (
-            <MyGroupCard data={mygroup} />
+          {mygroupData.map((mygroup, index) => (
+            <MyGroupCard key={index} data={mygroup} />
           ))}
         </div>
       </div> */}

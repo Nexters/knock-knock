@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const SECRET = process.env.SECRET || 'changme'
+const SECRET = process.env.NEXTAUTH_SECRET || 'changme'
 
 export function signJwt(data: object) {
   return jwt.sign(data, SECRET)

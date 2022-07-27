@@ -153,6 +153,7 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
     <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
       <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
         <div
+          onDrag={() => false}
           onPointerDown={handleDragStartForScroll}
           onPointerMove={handleDragForScroll}
           onPointerLeave={handleDragEndForScroll}
