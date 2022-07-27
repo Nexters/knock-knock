@@ -54,10 +54,12 @@ export default function Home() {
       {/* <div className="mt-9 px-5">
         <div className="flex itmes-center justify-between">
           <h2 className="text-lg font-bold">내 그룹</h2>
-          <div className="flex items-center">
-            <img src="assets/svg/createGroup.svg" alt="logo" />
-            <div className="text-sm text-textGray ml-1">새 그룹 만들기</div>
-          </div>
+          <Link href="/group/create">
+            <a className="flex items-center">
+              <img src="assets/svg/createGroup.svg" alt="logo" />
+              <div className="text-sm text-textGray ml-1">새 그룹 만들기</div>
+            </a>
+          </Link>
         </div>
 
         <div className="mt-8">
