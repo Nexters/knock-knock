@@ -1,9 +1,9 @@
 import { useForm, useFieldArray } from 'react-hook-form'
-import CenteringLayout from '../components/pageLayouts/CenteringLayout'
-import Input from '../components/formElements/Input'
-import Button from '../components/formElements/Button'
-import TagInput from '../components/formElements/TagInput'
-import Checkbox from '../components/formElements/Checkbox'
+import CenteringLayout from '../../components/pageLayouts/CenteringLayout'
+import Input from '../../components/formElements/Input'
+import Button from '../../components/formElements/Button'
+import TagInput from '../../components/formElements/TagInput'
+import Checkbox from '../../components/formElements/Checkbox'
 
 interface CreateGroupInput {
   name: string
@@ -13,7 +13,7 @@ interface CreateGroupInput {
   isPublic: boolean
 }
 
-function CreateGroupPage() {
+function CreateGroup() {
   const {
     control,
     register,
@@ -91,4 +91,4 @@ function CreateGroupPage() {
   )
 }
 
-export default CreateGroupPage
+export default CreateGroup
