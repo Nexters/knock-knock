@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react'
 import GatheringCard from 'src/components/GatheringCard'
-import MyGroupCard from 'src/components/MyGroupCard'
+// import MyGroupCard from 'src/components/MyGroupCard'
 
 export default function Home() {
   const { data, status } = useSession()
@@ -10,9 +10,9 @@ export default function Home() {
     <div className="flex flex-col py-5 pt-9 relative h-screen bg-bgColor">
       <div className="flex justify-between items-center px-5 ">
         <img src="assets/svg/logo.svg" alt="logo" />
-        <span className="mr-3">
+        {/* <span className="mr-3">
           <img src="assets/svg/search.svg" alt="logo" />
-        </span>
+        </span> */}
       </div>
 
       <div className="px-5 mt-5">
@@ -37,18 +37,21 @@ export default function Home() {
       </div>
 
       <div className="mt-8">
-        <div className="flex justify-between items-center px-5">
+        <div className="flex justify-between items-center px-5 overflow-auto">
           <h2 className="text-lg font-bold">약속 모임</h2>
-          <button className="text-sm text-textGray">더보기</button>
+          <button className="text-sm text-textGray">
+            {/* <Link href="/groupList">더보기</Link> */}
+            필터
+          </button>
         </div>
-        <div className="mt-2 pl-5 flex overflow-auto">
+        <div className="mx-2 mt-2 pb-2 flex flex-col overflow-auto xs:max-h-[75%] sm:max-h-[100%]">
           {gatheringCardData.map((gatheringCard, index) => (
-            <GatheringCard key={index} data={gatheringCard} />
+            <GatheringCard key={index} isWideView data={gatheringCard} />
           ))}
         </div>
       </div>
 
-      <div className="mt-9 px-5">
+      {/* <div className="mt-9 px-5">
         <div className="flex itmes-center justify-between">
           <h2 className="text-lg font-bold">내 그룹</h2>
           <div className="flex items-center">
@@ -62,9 +65,9 @@ export default function Home() {
             <MyGroupCard key={index} data={mygroup} />
           ))}
         </div>
-      </div>
+      </div> */}
 
-      <button className="btn btn-circle fixed bottom-10 right-5 bg-primary text-white">
+      <button className="btn btn-circle fixed bottom-10 right-5 md:right-[38%] bg-primary text-white">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
@@ -80,18 +83,21 @@ export default function Home() {
   )
 }
 
-const gatheringCardData = [
+export const gatheringCardData = [
   {
+    id: 1,
     categoryList: ['밥약', '넥스터즈'],
     title: '뼈찜모임 모여라',
     date: '2020-07-24',
   },
   {
+    id: 2,
     categoryList: ['술약', '넥스터즈'],
     title: '수제맥주 뿌실분',
     date: '2020-07-24',
   },
   {
+    id: 3,
     categoryList: ['커피챗', '넥스터즈'],
     title: '면접 꿀팁 알려주세요',
     date: '2020-07-24',
