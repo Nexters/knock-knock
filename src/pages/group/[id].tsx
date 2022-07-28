@@ -68,7 +68,7 @@ export default function GroupDetail() {
               <div className="flex items-center justify-between bg-cardBg p-3 rounded-lg mt-2">
                 <div className="avatar flex items-center">
                   <div className="w-10 rounded-full">
-                    <img src="https://placeimg.com/192/192/people" />
+                    <img src="https://placeimg.com/50/50/people" />
                   </div>
 
                   <div className="ml-3 font-bold">{person}</div>

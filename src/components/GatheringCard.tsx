@@ -46,13 +46,13 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
 
           <div className="avatar items-center mt-5">
             <div className="w-7 rounded-full mr-2">
-              <img src="https://placeimg.com/192/192/people" />
+              <img src="https://placeimg.com/50/50/people" />
             </div>
             <div className="w-7 rounded-full mr-2">
-              <img src="https://placeimg.com/192/192/people" />
+              <img src="https://placeimg.com/50/50/people" />
             </div>
             <div className="w-7 rounded-full">
-              <img src="https://placeimg.com/192/192/people" />
+              <img src="https://placeimg.com/50/50/people" />
             </div>
           </div>
         </div>

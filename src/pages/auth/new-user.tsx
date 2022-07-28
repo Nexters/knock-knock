@@ -14,6 +14,7 @@ export default function NewUser() {
     if (!query.callbackUrl) return
     if (!session?.user) return
     if (!formValues.name) return
+    if (!formValues.tags) return
     try {
       await mutate({ ...session.user, ...formValues, oauthId: session.id as string })
       push(query.callbackUrl as string)
@@ -25,21 +26,41 @@ export default function NewUser() {
   return (
     <div className="flex flex-col py-5 pt-9 px-5 relative h-screen bg-bgColor">
       <div>
-        <h1 className="font-bold">이름을 입력해주세요</h1>
-        <p className="text-sm">다른 이용자들이 보게될 이름입니다.</p>
+        <h1 className="font-bold text-lg">이름 및 본인 소개를 입력해주세요</h1>
+        <p className="text-sm text-textGray mt-3">다른 이용자들에게 보여집니다.</p>
       </div>
 
       <form onSubmit={handleSubmit(onValid)}>
         <div className="form-control w-full mt-5">
           <label htmlFor="name" className="label pb-1 pl-0">
-            <span className="label-text">이름</span>
+            <span className="label-text text-textGray">이름</span>
           </label>
           <input
             {...register('name', { required: true })}
             type="text"
             name="name"
-            placeholder="이름을 입력해주세요"
+            placeholder="ex) 김노크"
             className="input input-bordered w-full"
+          />
+          <label htmlFor="tag" className="label pb-1 pl-0 mt-4">
+            <span className="label-text text-textGray">태그</span>
+          </label>
+          <input
+            {...register('tags', { required: true })}
+            type="text"
+            name="tags"
+            placeholder="ex) 개발자, ENFJ, 냥집사"
+            className="input input-bordered w-full"
+          />
+
+          <label htmlFor="introduction" className="label pb-1 pl-0 mt-4">
+            <span className="label-text text-textGray">소개 (선택)</span>
+          </label>
+          <textarea
+            {...register('introduction', { required: false })}
+            name="introduction"
+            placeholder="ex) 안녕하세요! 노크노크의 부릉부릉입니다 :)"
+            className="textarea textarea-bordered w-full"
           />
         </div>
 
