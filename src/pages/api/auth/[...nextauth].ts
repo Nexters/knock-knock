@@ -32,12 +32,10 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) token.id = user.id
-      console.log(token, user, '@@')
       return token
     },
     session: async ({ session, token }) => {
       if (token) session.id = token.id
-      console.log(token, session, '##')
       return session
     },
   },

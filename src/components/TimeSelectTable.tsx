@@ -5,9 +5,20 @@ interface Props {
   onSelect: (ids: string[], isDelete?: boolean) => void
   isResultView: boolean
   resultString: string[]
+  timeStarts: number[]
+  timeInterval: number
+  timeSize: number
 }
 
-export default function TimeSelectTable({ selectedIds, onSelect, isResultView, resultString }: Props) {
+export default function TimeSelectTable({
+  selectedIds,
+  onSelect,
+  isResultView,
+  resultString,
+  timeInterval,
+  timeSize,
+  timeStarts,
+}: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
@@ -149,6 +160,9 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
     return colors[resultNumber]
   }
 
+  const rowsCount = timeSize / timeInterval
+  console.log(rowsCount)
+
   return (
     <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
       <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
@@ -204,6 +218,7 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
                   key={`${coloumnNumber}-${rowNumber}`}
                   data-col={coloumnNumber}
                   data-row={rowNumber}
+                  data-time={}
                   className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid"
                   style={{
                     borderRight: '1px solid black',
