@@ -8,17 +8,21 @@ function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSi
       <img src="assets/svg/logo.svg" alt="logo" className="mb-10 w-[220px]" />
       {providers &&
         Object.values(providers)?.map((provider: any) => (
-          <div key={provider.name} className="mt-2">
-            <button
-              className={`btn w-[250px] text-bgColor hover:text-white ${
-                provider.id === 'kakao' ? 'bg-kakao' : 'bg-white'
-              }`}
-              onClick={() => signIn(provider.id)}
-            >
-              {provider.id !== 'email' && <img src={`assets/svg/${provider.id}.svg`} alt="logo" className="ml-3" />}
-              {provider.name}로 로그인
-            </button>
-          </div>
+          <>
+            {provider.id !== 'email' && (
+              <div key={provider.name} className="mt-2">
+                <button
+                  className={`btn w-[250px] text-bgColor hover:text-white ${
+                    provider.id === 'kakao' ? 'bg-kakao' : 'bg-white'
+                  }`}
+                  onClick={() => signIn(provider.id)}
+                >
+                  {provider.id !== 'email' && <img src={`assets/svg/${provider.id}.svg`} alt="logo" className="ml-3" />}
+                  {provider.name}로 로그인
+                </button>
+              </div>
+            )}
+          </>
         ))}
     </div>
   )
