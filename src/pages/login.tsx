@@ -1,27 +1,27 @@
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { getProviders, signIn } from 'next-auth/react'
 
-// const LoginForm = dynamic(() => import('../components/LoginForm'), {
-//   ssr: false,
-// })
+function LoginPage({ providers }: any) {
+  console.log(providers)
 
-function LoginPage() {
-  const { data: session, status } = useSession()
-  if (status === 'authenticated') {
-    return (
-      <>
-        <div>로그인됨!!</div>
-        <p>Welcome {session.user?.name}</p>
-        <button onClick={() => signOut()}>로그아웃</button>
-      </>
-    )
-  } else {
-    return (
-      <div>
-        You need to login
-        <button onClick={() => signIn()}>login</button>
-      </div>
-    )
-  }
+  return (
+    <>
+      {providers &&
+        Object.values(providers)?.map((provider: any) => (
+          <div key={provider.name}>
+            <button onClick={() => signIn(provider.id)}>Sign in with {provider.name}</button>
+          </div>
+        ))}
+    </>
+  )
 }
 
 export default LoginPage
+
+export async function getServerSideProps(context: any) {
+  const providers = await getProviders()
+  return {
+    props: {
+      providers,
+    },
+  }
+}
