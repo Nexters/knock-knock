@@ -34,6 +34,7 @@ export default function Event() {
   }
 
   function handleCellSelect(cellIds: string[], isDelete?: boolean) {
+    console.log(cellIds)
     if (cellIds.length === 1) {
       if (cellIds?.[0]) addOrRemoveOneCell(cellIds[0])
       return
@@ -95,14 +96,15 @@ export default function Event() {
 
         <div className="mt-7 h-2/3">
           <TimeSelectTable
-            timeStarts={[
-              Math.floor(new Date(2022, 6, 29, 9, 0).getTime() / 1000),
-              Math.floor(new Date(2022, 6, 30, 9, 0).getTime() / 1000),
-              Math.floor(new Date(2022, 7, 3, 9, 0).getTime() / 1000),
-              Math.floor(new Date(2022, 7, 7, 9, 0).getTime() / 1000),
+            startingTimes={[
+              Math.floor(new Date(2022, 6, 29, 9, 0).getTime()),
+              Math.floor(new Date(2022, 6, 30, 9, 0).getTime()),
+              Math.floor(new Date(2022, 7, 3, 9, 0).getTime()),
+              Math.floor(new Date(2022, 7, 7, 9, 0).getTime()),
+              Math.floor(new Date(2022, 7, 8, 9, 0).getTime()),
             ]}
-            timeInterval={30 * 60}
-            timeSize={60 * 60 * 6}
+            timeInterval={30 * 60 * 1000}
+            timeSize={60 * 60 * 6 * 1000}
             selectedIds={selectedCells}
             onSelect={handleCellSelect}
             isResultView={isResultView}
