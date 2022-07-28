@@ -40,6 +40,9 @@ export const authOptions: NextAuthOptions = {
       console.log(token, session, '##')
       return session
     },
+    async redirect() {
+      return '/'
+    },
   },
   // https://next-auth.js.org/configuration/options#nextauth_secret
   // secret: process.env.JWT_SECRET,
@@ -48,6 +51,7 @@ export const authOptions: NextAuthOptions = {
     // signOut: '/auth/signout',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
+    signIn: '/login',
     newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   theme: {
