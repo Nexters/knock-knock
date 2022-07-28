@@ -164,7 +164,7 @@ export default function TimeSelectTable({
   console.log(rowsCount)
 
   return (
-    <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
+    <div ref={wrapperRef} className="relative flex w-full max-h-full" style={{ touchAction: 'none' }}>
       <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
         <div
           onDrag={() => false}

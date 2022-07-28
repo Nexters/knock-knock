@@ -9,7 +9,6 @@ export default function Event() {
   const { push, query } = useRouter()
 
   const user = useUserContext()
-  console.log(user)
 
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
   const [isResultView, setIsResultView] = useState<boolean>(false)
@@ -96,6 +95,14 @@ export default function Event() {
 
         <div className="mt-7 h-2/3">
           <TimeSelectTable
+            timeStarts={[
+              Math.floor(new Date(2022, 6, 29, 9, 0).getTime() / 1000),
+              Math.floor(new Date(2022, 6, 30, 9, 0).getTime() / 1000),
+              Math.floor(new Date(2022, 7, 3, 9, 0).getTime() / 1000),
+              Math.floor(new Date(2022, 7, 7, 9, 0).getTime() / 1000),
+            ]}
+            timeInterval={30 * 60}
+            timeSize={60 * 60 * 6}
             selectedIds={selectedCells}
             onSelect={handleCellSelect}
             isResultView={isResultView}
