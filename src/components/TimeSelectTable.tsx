@@ -159,7 +159,7 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
           onPointerLeave={handleDragEndForScroll}
           onPointerCancel={handleDragEndForScroll}
           onPointerUp={handleDragEndForScroll}
-          className=" bg-white "
+          className="bg-bgColor"
         >
           <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
           <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
@@ -167,7 +167,7 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
           {[...Array(22)].map((_e, i2) => (
             <div key={i2} className="h-7 flex-shrink-0 border-r first:border-t last:border-b relative select-none">
               {i2 % 2 === 0 ? (
-                <span className="absolute left-5 -top-3">{`${9 + i2 / 2}`.padStart(2, '0')}시</span>
+                <span className="absolute left-5 -top-2 text-xs">{`${9 + i2 / 2}`.padStart(2, '0')}시</span>
               ) : null}
             </div>
           ))}
@@ -176,19 +176,19 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
 
       <div ref={cellsWrapperRef} onPointerLeave={handleSelectPointerLeave} className="flex-grow flex">
         {[...Array(5)].map((_e, coloumnNumber) => (
-          <div key={coloumnNumber} className="flex flex-col flex-shrink-0 flex-grow-0 w-1/4">
+          <div key={coloumnNumber} className="flex flex-col flex-shrink-0 flex-grow-0 w-[23%]">
             <div
               onPointerDown={handleDragStartForScroll}
               onPointerMove={e => handleDragForScroll(e, false)}
               onPointerLeave={handleDragEndForScroll}
               onPointerCancel={handleDragEndForScroll}
               onPointerUp={handleDragEndForScroll}
-              className="bg-white sticky top-0"
+              className="bg-bgColor sticky top-0"
             >
-              <div className="flex-shrink-0 flex-grow-0 h-6 border-t border-r text-center select-none font-bold">
+              <div className="flex-shrink-0 flex-grow-0 border-t border-r text-center select-none text-sm font-bold pt-1">
                 {`${3 + coloumnNumber}`.padStart(2, '0')}
               </div>
-              <div className="flex-shrink-0 flex-grow-0 h-6 border-b border-r text-center select-none text-sm">
+              <div className="flex-shrink-0 flex-grow-0 border-b border-r text-center select-none text-xs pb-1">
                 {'월화수목금토일'.split('')[coloumnNumber % 7]}
               </div>
             </div>
@@ -206,12 +206,13 @@ export default function TimeSelectTable({ selectedIds, onSelect, isResultView, r
                   data-row={rowNumber}
                   className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid"
                   style={{
-                    borderRight: '1px solid black',
+                    borderRight: '1px solid gray',
+                    borderColor: 'gray',
                     backgroundColor: isResultView
-                      ? renderColors(coloumnNumber, rowNumber) || 'white'
+                      ? renderColors(coloumnNumber, rowNumber) || 'black'
                       : selectedIds.has(`${coloumnNumber}-${rowNumber}`)
                       ? 'green'
-                      : 'white',
+                      : 'black',
                   }}
                 ></div>
               ))}
