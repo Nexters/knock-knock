@@ -1,10 +1,13 @@
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import GatheringCard from 'src/components/GatheringCard'
+import { useUserContext } from 'src/context/UserContext'
 // import MyGroupCard from 'src/components/MyGroupCard'
 
 export default function Home() {
   const { data, status } = useSession()
-  console.log(data, status)
+
+  const user = useUserContext()
 
   return (
     <div className="flex flex-col py-5 pt-9 relative h-screen bg-bgColor">
@@ -17,22 +20,39 @@ export default function Home() {
 
       <div className="px-5 mt-5">
         <div className="card bg-gradient-to-r from-from to-to rounded-xl">
-          <div className="card-body p-4 relative">
-            <div>
-              <div className="avatar items-center">
-                <div className="w-10 rounded-full">
-                  <img src="https://placeimg.com/192/192/people" />
+          {status === 'authenticated' ? (
+            <div className="card-body p-4 relative">
+              <div>
+                <div className="avatar items-center">
+                  <div className="w-10 rounded-full">
+                    <img src="https://placeimg.com/50/50/people" />
+                  </div>
+                  <div className="ml-3 font-bold">{user?.name}</div>
                 </div>
-                <div className="ml-3 font-bold">김태우</div>
+              </div>
+              <div className="mt-3">
+                {user?.tags?.split(',').map(tag => {
+                  return <div className="badge badge-secondary mr-2">{tag.trim()}</div>
+                })}
               </div>
             </div>
-            <div className="mt-3">
-              <div className="badge badge-md badge-secondary p-2 text-sm">태그를 등록해주세요</div>
+          ) : (
+            <div className="card-body p-4">
+              <div className="ml-3 font-bold">
+                <Link href="/api/auth/signin">
+                  <span className="underline underline-offset-1 cursor-pointer">로그인</span>
+                </Link>{' '}
+                후 이용하시겠습니까?
+              </div>
             </div>
-          </div>
-          <span className="absolute right-3 top-3 text-white p-2">
-            <img src="assets/svg/Edit_outlined.svg" alt="logo" />
-          </span>
+          )}
+          {status === 'authenticated' && (
+            <Link href="/profile">
+              <span className="absolute right-3 top-3 text-white p-2 cursor-pointer">
+                <img src="assets/svg/Edit_outlined.svg" alt="logo" />
+              </span>
+            </Link>
+          )}
         </div>
       </div>
 

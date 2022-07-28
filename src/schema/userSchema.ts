@@ -6,6 +6,8 @@ export const createProfileSchema = z.object({
   oauthId: z.string().optional(),
   image: z.string().optional().nullable(),
   emailVerified: z.date().optional(),
+  tags: z.string(),
+  introduction: z.string().optional(),
 })
 
 export type ICreateProfile = z.TypeOf<typeof createProfileSchema>

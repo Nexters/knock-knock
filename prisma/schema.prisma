@@ -74,6 +74,8 @@ model Profile {
   email         String?         @unique
   emailVerified DateTime?
   image         String?
+  tags          String?
+  introduction  String?
   events        Event[]
   participates  Participation[]
 }
