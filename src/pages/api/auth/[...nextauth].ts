@@ -40,6 +40,9 @@ export const authOptions: NextAuthOptions = {
       console.log(token, session, '##')
       return session
     },
+    async redirect() {
+      return '/'
+    },
   },
   // https://next-auth.js.org/configuration/options#nextauth_secret
   // secret: process.env.JWT_SECRET,

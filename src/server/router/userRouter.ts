@@ -1,18 +1,14 @@
 import * as trpc from '@trpc/server'
 import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
-import { useRouter } from 'next/router'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 
-const router = useRouter()
-console.log(router)
 export const userRouter = createRouter()
   .query('getSession', {
     resolve({ ctx }) {
       return ctx.session
     },
   })
-
   .query('me', {
     resolve({ ctx }) {
       const session = ctx.session
