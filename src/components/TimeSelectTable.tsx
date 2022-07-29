@@ -43,7 +43,7 @@ export default function TimeSelectTable({
   const cellIds = new Array(rowsCount).fill(0).map(() => new Array(columnsCount))
   for (let col = 0; col < columnsCount; col++) {
     for (let row = 0; row < rowsCount; row++) {
-      cellIds[row][col] = String((startingTimes[col]! + timeInterval * row) / 1000)
+      cellIds[row]![col] = String((startingTimes[col]! + timeInterval * row) / 1000)
     }
   }
 
@@ -93,11 +93,11 @@ export default function TimeSelectTable({
     const { col, row } = e.target.dataset
     if (!col || !row) return
     isSelectingRef.current = true
-    const cellId = cellIds[row][col]
+    const cellId = cellIds[row]![col]
     const isDelete = selectedIds.has(cellId)
     selectStartCoors.current = { col, row, isDelete }
     prevCellRef.current = cellId
-    onSelect([cellIds[row][col]])
+    onSelect([cellIds[row]![col]])
   }
 
   // TODO: RAF
@@ -105,7 +105,7 @@ export default function TimeSelectTable({
     if (!isSelectingRef.current) return
     const { col, row } = e.target.dataset
     if (!col || !row) return
-    const cellId = cellIds[row][col]
+    const cellId = cellIds[row]![col]
     if (prevCellRef.current === cellId) return
     prevCellRef.current = cellId
 
@@ -118,7 +118,7 @@ export default function TimeSelectTable({
 
     for (let col = smallerCol; col <= biggerCol; col++) {
       for (let row = smallerRow; row <= biggerRow; row++) {
-        selectedCellIds.push(cellIds[row][col])
+        selectedCellIds.push(cellIds[row]![col])
       }
     }
 
@@ -148,7 +148,7 @@ export default function TimeSelectTable({
 
     for (let col = smallerCol; col <= biggerCol; col++) {
       for (let row = smallerRow; row <= biggerRow; row++) {
-        selectedCellIds.push(cellIds[row][col])
+        selectedCellIds.push(cellIds[row]![col])
       }
     }
 
