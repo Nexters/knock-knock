@@ -177,7 +177,11 @@ export default function TimeSelectTable({
   }
 
   return (
-    <div ref={wrapperRef} className="relative flex w-full max-h-full overflow-auto" style={{ touchAction: 'none' }}>
+    <div
+      ref={wrapperRef}
+      className="relative flex w-full max-h-full overflow-auto text-textGray2"
+      style={{ touchAction: 'none' }}
+    >
       <div className="w-16 flex-shrink-0 flex-grow-0 sticky left-0 z-10">
         <div
           onDrag={() => false}
@@ -188,11 +192,14 @@ export default function TimeSelectTable({
           onPointerUp={handleDragEndForScroll}
           className="bg-bgColor"
         >
-          <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
-          <div className="h-6 flex-shrink-0 border-r first:border-t"></div>
+          <div className="h-6 flex-shrink-0 border-r first:border-t border-[#474747]"></div>
+          <div className="h-6 flex-shrink-0 border-r first:border-t border-[#474747]"></div>
 
           {[...Array(rowsCount)].map((_e, i2) => (
-            <div key={i2} className="h-7 flex-shrink-0 border-r first:border-t last:border-b relative select-none">
+            <div
+              key={i2}
+              className="h-7 flex-shrink-0 border-r first:border-t last:border-b border-[#474747] relative select-none"
+            >
               {i2 % 2 === isOddLabelStart ? (
                 <span className="absolute left-5 -top-2 text-xs">
                   {`${startingHours + Math.ceil(i2 / 2)}`.padStart(2, '0')}시
@@ -218,12 +225,12 @@ export default function TimeSelectTable({
               onPointerUp={handleDragEndForScroll}
               className="bg-bgColor sticky top-0"
             >
-              <div className="flex-shrink-0 flex-grow-0 border-t border-r text-center select-none text-sm font-bold pt-1">
+              <div className="flex-shrink-0 flex-grow-0 border-t border-r text-center select-none text-sm font-bold pt-1 border-[#474747]">
                 {`${`${new Date(startingTime).getMonth() + 1}`.padStart(2, '0')}.${`${new Date(
                   startingTime,
                 ).getDate()}`.padStart(2, '0')}`}
               </div>
-              <div className="flex-shrink-0 flex-grow-0 border-b border-r text-center select-none text-xs pb-1">
+              <div className="flex-shrink-0 flex-grow-0 border-b border-r text-center select-none text-xs pb-1 border-[#474747]">
                 {'일월화수목금토'[new Date(startingTime).getDay()]}
               </div>
             </div>
@@ -240,15 +247,15 @@ export default function TimeSelectTable({
                   data-col={coloumnNumber}
                   data-row={rowNumber}
                   data-time={(startingTime + rowNumber * timeInterval) / 1000}
-                  className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid"
+                  className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid border-[#474747]"
                   style={{
-                    borderRight: '1px solid gray',
-                    borderColor: 'gray',
+                    borderRight: '1px solid #474747',
+                    borderColor: '#474747',
                     backgroundColor: isResultView
                       ? renderColors(String((startingTime + rowNumber * timeInterval) / 1000)) || 'black'
                       : selectedIds.has(String((startingTime + rowNumber * timeInterval) / 1000))
-                      ? 'green'
-                      : 'black',
+                      ? '#16C674'
+                      : '#18191F',
                   }}
                 ></div>
               ))}

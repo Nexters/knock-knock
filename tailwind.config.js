@@ -3,13 +3,12 @@
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    borderColor: {
-      DEFAULT: 'black',
-    },
     colors: {
       bgColor: '#18191F',
       cardBg: '#2B2F37',
+      textLightGray: '#E8E8E9',
       textGray: '#BABABC',
+      textGray2: '#B8B7BC',
       white: '#FFF',
       from: '#16C674',
       to: '#28D899',

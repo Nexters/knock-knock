@@ -38,8 +38,14 @@ export const authOptions: NextAuthOptions = {
       if (token) session.id = token.id
       return session
     },
-    async redirect() {
-      return '/'
+    async redirect(context) {
+      console.log(context, '@@')
+      const { url, baseUrl } = context
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
   },
   // https://next-auth.js.org/configuration/options#nextauth_secret
@@ -49,7 +55,7 @@ export const authOptions: NextAuthOptions = {
     // signOut: '/auth/signout',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
-    signIn: '/login',
+    signIn: '/auth/login',
     newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   theme: {

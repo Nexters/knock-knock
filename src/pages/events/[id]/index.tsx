@@ -22,6 +22,7 @@ export default function Event() {
     },
   })
   const user = useUserContext()
+  console.log(status, user)
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(
@@ -59,6 +60,7 @@ export default function Event() {
   }, [isResultView])
 
   function updateSelectedCells() {
+    console.log(query.id, user.id)
     if (!query.id || !user?.id) return
     mutate({ eventId: query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
   }
@@ -110,13 +112,13 @@ export default function Event() {
               비회원 로그인
             </button>
             <button
-              onClick={() => push({ pathname: '/api/auth/signin' })}
+              onClick={() => push({ pathname: '/api/auth/signin', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               SNS 계정으로 로그인
             </button>
             <button
-              onClick={() => push({ pathname: '/' })}
+              onClick={() => push({ pathname: '/', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               홈으로 가기
@@ -125,7 +127,7 @@ export default function Event() {
         </div>
       </div>
 
-      <div className="flex flex-col pt-9 h-screen relative  bg-bgColor">
+      <div className="flex flex-col pt-9 h-screen relative bg-bgColor">
         <div className="flex justify-between items-center ml-5">
           <Link href="/">
             <img src="/assets/svg/logo.svg" alt="logo" />
