@@ -2,13 +2,17 @@
 import * as trpc from '@trpc/server'
 import { prisma } from '../db/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { Session, unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'src/pages/api/auth/[...nextauth]'
+
+async function getUser(session: Session | null) {
+  if (!prisma || !session?.user?.email) return null
+  return prisma.profile.findFirst({ where: { email: session.user.email } })
+}
 
 export async function createContext({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
   const session = await unstable_getServerSession(req, res, authOptions)
-  const user =
-    prisma && session?.user?.email ? await prisma.profile.findFirst({ where: { email: session.user.email } }) : null
+  const user = await getUser(session)
   return { req, res, prisma, session, user }
 }
 
