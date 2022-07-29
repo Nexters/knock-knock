@@ -10,6 +10,8 @@ import { getBaseUrl } from '../utils/url'
 import { SessionProvider } from 'next-auth/react'
 import { UserContextProvider } from 'src/context/UserContext'
 import { trpc } from 'src/utils/trpc'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const { data } = trpc.useQuery(['users.me'])
@@ -22,6 +24,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <Component {...pageProps} />
           </main>
         </div>
+        <ToastContainer />
       </UserContextProvider>
     </SessionProvider>
   )

@@ -5,7 +5,7 @@ interface Props {
   onSelect: (ids: string[], isDelete?: boolean) => void
   onSelectEnd: () => void
   isResultView: boolean
-  resultString: string[]
+  resultCellCount: { [key: string]: number }
   startingTimes: number[]
   timeInterval?: number
   timeSize: number
@@ -16,7 +16,7 @@ export default function TimeSelectTable({
   onSelect,
   onSelectEnd,
   isResultView,
-  resultString,
+  resultCellCount,
   timeSize,
   timeInterval = 30 * 60 * 1000,
   startingTimes = [],
@@ -167,8 +167,8 @@ export default function TimeSelectTable({
     isSelectingRef.current = false
   }
 
-  function renderColors(col: number, row: number): string {
-    const resultNumber = resultString?.[col]?.[row]
+  function renderColors(cellId: string): string {
+    const resultNumber = resultCellCount[cellId]
     if (!resultNumber || !Number(resultNumber)) return ''
     const colors = ['', '#a7f3d0', '#6ee7b7', '#059669']
     if (typeof Number(resultNumber) !== 'number') return ''
@@ -244,7 +244,7 @@ export default function TimeSelectTable({
                   style={{
                     borderRight: '1px solid black',
                     backgroundColor: isResultView
-                      ? renderColors(coloumnNumber, rowNumber) || 'white'
+                      ? renderColors((startingTime + rowNumber * timeInterval) / 1000) || 'white'
                       : selectedIds.has(String((startingTime + rowNumber * timeInterval) / 1000))
                       ? 'green'
                       : 'white',

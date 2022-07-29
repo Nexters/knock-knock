@@ -37,6 +37,51 @@ export const eventRouter = createRouter()
       }
     },
   })
+  .mutation('my-cells', {
+    input: z.object({ eventId: z.string(), profileId: z.string(), cells: z.string() }),
+    async resolve({ ctx, input }) {
+      const alreadyExists = await ctx.prisma.participation.findFirst({
+        where: {
+          eventId: input.eventId,
+          profileId: input.profileId,
+        },
+      })
+      if (alreadyExists) {
+        if (input.cells.length === 0) {
+          await ctx.prisma.participation.delete({
+            where: {
+              id: alreadyExists.id,
+            },
+          })
+        } else {
+          await ctx.prisma.participation.update({
+            where: {
+              id: alreadyExists.id,
+            },
+            data: {
+              selectedCells: input.cells,
+            },
+          })
+        }
+      } else {
+        await ctx.prisma.participation.create({
+          data: {
+            profile: {
+              connect: {
+                id: input.profileId,
+              },
+            },
+            event: {
+              connect: {
+                id: input.eventId,
+              },
+            },
+            selectedCells: input.cells,
+          },
+        })
+      }
+    },
+  })
   .mutation('create-event', {
     input: createProfileSchema,
     async resolve({ ctx, input }) {
