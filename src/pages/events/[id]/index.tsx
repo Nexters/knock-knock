@@ -35,21 +35,28 @@ export default function Event() {
   useEffect(() => {
     const myCells = (myParticipation?.selectedCells ?? '').split(',')
     setSelectedCells(new Set(myCells))
+  }, [myParticipation])
 
+  useEffect(() => {
     const counts = participates.reduce<{ [key: string]: number }>((accu, curr) => {
+      if (curr.profileId === user?.id) return accu
       const selectedCells = (curr?.selectedCells ?? '').split(',')
       selectedCells.forEach(cellId => {
         if (accu[cellId]) {
-          accu[cellId] = accu[cellId]! + 1
+          accu[cellId] += 1
         } else {
           accu[cellId] = 1
         }
       })
       return accu
     }, {})
-
+    const myCells = [...selectedCells]
+    myCells.forEach(cellId => {
+      if (counts[cellId]) counts[cellId] += 1
+      else counts[cellId] = 1
+    })
     setResultCellCount(counts)
-  }, [myParticipation])
+  }, [isResultView])
 
   function updateSelectedCells() {
     if (!query.id || !user?.id) return
