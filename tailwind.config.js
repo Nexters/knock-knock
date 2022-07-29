@@ -13,6 +13,7 @@ module.exports = {
       white: '#FFF',
       from: '#16C674',
       to: '#28D899',
+      kakao: '#FEE500',
     },
     screens: {
       xs: '375px',
