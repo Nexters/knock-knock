@@ -3,20 +3,22 @@ import { useRef } from 'react'
 interface Props {
   selectedIds: Set<string>
   onSelect: (ids: string[], isDelete?: boolean) => void
+  onSelectEnd: () => void
   isResultView: boolean
   resultString: string[]
   startingTimes: number[]
-  timeInterval: number
+  timeInterval?: number
   timeSize: number
 }
 
 export default function TimeSelectTable({
   selectedIds,
   onSelect,
+  onSelectEnd,
   isResultView,
   resultString,
-  timeInterval,
   timeSize,
+  timeInterval = 30 * 60 * 1000,
   startingTimes = [],
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -155,6 +157,7 @@ export default function TimeSelectTable({
 
   function handleSelectEnd() {
     isSelectingRef.current = false
+    onSelectEnd()
   }
 
   // 왜 별다른 Pointer Capturing 없이 이렇게 release 만 해도 잘 되는지 모르겠지만 일단 되니까 사용
@@ -205,7 +208,7 @@ export default function TimeSelectTable({
           <div
             key={coloumnNumber}
             className="flex flex-col flex-shrink-0 flex-grow-0 w-1/4"
-            style={{ width: columnsCount > 4 ? '24%' : '25%' }}
+            style={{ width: columnsCount > 4 ? '24%' : `${100 / columnsCount}%` }}
           >
             <div
               onPointerDown={handleDragStartForScroll}

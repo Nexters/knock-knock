@@ -1,12 +1,14 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
 import { useUserContext } from 'src/context/UserContext'
+import { trpc } from 'src/utils/trpc'
 
 export default function Event() {
   const { status } = useSession()
   const { push, query } = useRouter()
+  const { data: eventData } = trpc.useQuery(['events.single-event', { eventId: query.id as string }])
 
   const user = useUserContext()
 
@@ -19,6 +21,8 @@ export default function Event() {
     '0000111222200030000110',
     '0000111222233330000110',
   ])
+
+  async function updateSelectedCells() {}
 
   function addOneCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev, cellId]))
@@ -34,7 +38,6 @@ export default function Event() {
   }
 
   function handleCellSelect(cellIds: string[], isDelete?: boolean) {
-    console.log(cellIds)
     if (cellIds.length === 1) {
       if (cellIds?.[0]) addOrRemoveOneCell(cellIds[0])
       return
@@ -96,17 +99,12 @@ export default function Event() {
 
         <div className="mt-7 h-2/3">
           <TimeSelectTable
-            startingTimes={[
-              Math.floor(new Date(2022, 6, 29, 9, 0).getTime()),
-              Math.floor(new Date(2022, 6, 30, 9, 0).getTime()),
-              Math.floor(new Date(2022, 7, 3, 9, 0).getTime()),
-              Math.floor(new Date(2022, 7, 7, 9, 0).getTime()),
-              Math.floor(new Date(2022, 7, 8, 9, 0).getTime()),
-            ]}
-            timeInterval={30 * 60 * 1000}
-            timeSize={60 * 60 * 6 * 1000}
+            startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
+            timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
+            timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
             selectedIds={selectedCells}
             onSelect={handleCellSelect}
+            onSelectEnd={updateSelectedCells}
             isResultView={isResultView}
             resultString={resultString}
           />
