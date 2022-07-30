@@ -26,7 +26,7 @@ export default function Profile() {
 
       <div className="flex flex-col items-center justify-center mt-7">
         <div className="w-[20%]">
-          <img className="rounded-[20px]" src="https://placeimg.com/50/50/people" />
+          <img className="rounded-[20px]" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
         </div>
         <div className="flex mt-5">
           {user?.tags?.split(',').map(tag => {

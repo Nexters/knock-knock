@@ -198,7 +198,7 @@ export default function TimeSelectTable({
           {[...Array(rowsCount)].map((_e, i2) => (
             <div
               key={i2}
-              className="h-7 flex-shrink-0 border-r first:border-t last:border-b border-[#474747] relative select-none"
+              className="h-8 flex-shrink-0 border-r first:border-t last:border-b border-[#474747] relative select-none"
             >
               {i2 % 2 === isOddLabelStart ? (
                 <span className="absolute left-5 -top-2 text-xs">
