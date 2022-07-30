@@ -103,7 +103,7 @@ model Event {
   startingTimes String          @db.Text
   timeSize      Int
   timeInterval  Int?
-  isPublicMeet  Boolean
-  headCounts    Int
-  tags          String
+  isPublicMeet  Boolean?
+  headCounts    Int?
+  tags          String?
 }

@@ -4,12 +4,21 @@ import { createRouter } from './context'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { defaultError } from '../shared/errors'
 import z from 'zod'
+import { createEventSchema } from 'src/schema/eventSchema'
 
 export const eventRouter = createRouter()
   .query('events', {
     async resolve({ ctx }) {
       try {
-        const events = await ctx.prisma.event.findMany({})
+        const events = await ctx.prisma.event.findMany({
+          include: {
+            participates: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        })
         return events
       } catch (error) {
         console.error(error)
@@ -26,7 +35,11 @@ export const eventRouter = createRouter()
             id: input.eventId,
           },
           include: {
-            participates: true,
+            participates: {
+              include: {
+                profile: true,
+              },
+            },
             profile: true,
           },
         })
@@ -83,13 +96,20 @@ export const eventRouter = createRouter()
     },
   })
   .mutation('create-event', {
-    input: createProfileSchema,
+    input: createEventSchema,
     async resolve({ ctx, input }) {
       try {
-        const profile = await ctx.prisma.profile.create({
-          data: input,
+        const event = await ctx.prisma.event.create({
+          data: {
+            profile: {
+              connect: {
+                id: ctx.user?.id,
+              },
+            },
+            ...input,
+          },
         })
-        return profile
+        return event
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === 'P2002') {

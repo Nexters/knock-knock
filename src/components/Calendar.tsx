@@ -22,10 +22,11 @@ export default function Calendar({ dates, onDatesUpdate }: Props) {
     return classNames
   }
 
-  const tileDisabled = ({ date, view }) => {
+  const tileDisabled = ({ date, view }: { date: Date; view: any }) => {
     if (view === 'month') {
       if (date.getTime() < Date.now()) return true
     }
+    return false
   }
 
   return (

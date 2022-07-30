@@ -17,7 +17,7 @@ function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSi
                   className={`btn w-[250px] text-bgColor hover:text-white ${
                     provider.id === 'kakao' ? 'bg-kakao' : 'bg-white'
                   }`}
-                  onClick={() => signIn(provider.id)}
+                  onClick={() => signIn(provider.id, { callbackUrl: (router.query.redirect as string) ?? '/' })}
                 >
                   {provider.id !== 'email' && (
                     <img src={`/assets/svg/${provider.id}.svg`} alt="logo" className="ml-3 mr-1" />
@@ -36,14 +36,6 @@ export default LoginPage
 
 export async function getServerSideProps(context: NextPageContext) {
   const { req, res } = context
-  const session = await getSession({ req })
-  if (session && res && session?.user?.email) {
-    res.writeHead(302, {
-      Location: '/',
-    })
-    res.end()
-    return { props: {} }
-  }
   const providers = await getProviders()
   return {
     props: {

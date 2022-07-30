@@ -39,7 +39,6 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async redirect(context) {
-      console.log(context, '@@')
       const { url, baseUrl } = context
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`

@@ -22,7 +22,6 @@ export default function Event() {
     },
   })
   const user = useUserContext()
-  console.log(status, user)
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(
@@ -60,7 +59,6 @@ export default function Event() {
   }, [isResultView])
 
   function updateSelectedCells() {
-    console.log(query.id, user.id)
     if (!query.id || !user?.id) return
     mutate({ eventId: query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
   }
@@ -105,12 +103,6 @@ export default function Event() {
         <div className="modal-box sm:max-w-xs">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
-            <button
-              onClick={() => push({ pathname: '/auth/login/anonymous', query: { redirect: query.id } })}
-              className="block mx-auto btn w-full max-w-xs bg-primary text-white"
-            >
-              비회원 로그인
-            </button>
             <button
               onClick={() => push({ pathname: '/api/auth/signin', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"

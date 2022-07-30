@@ -1,13 +1,13 @@
 import z from 'zod'
 
 export const createEventSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  oauthId: z.string().optional(),
-  image: z.string().optional().nullable(),
-  emailVerified: z.date().optional(),
+  title: z.string(),
+  description: z.string(),
+  startingTimes: z.string(),
+  timeSize: z.number(),
+  isPublicMeet: z.boolean(),
+  headCounts: z.number(),
   tags: z.string(),
-  introduction: z.string().optional(),
 })
 
 export type ICreateEvent = z.TypeOf<typeof createEventSchema>
