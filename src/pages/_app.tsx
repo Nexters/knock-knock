@@ -10,6 +10,8 @@ import { getBaseUrl } from '../utils/url'
 import { SessionProvider } from 'next-auth/react'
 import { UserContextProvider } from 'src/context/UserContext'
 import { trpc } from 'src/utils/trpc'
+import { toast, ToastContainer, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const { data } = trpc.useQuery(['users.me'])
@@ -22,6 +24,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             <Component {...pageProps} />
           </main>
         </div>
+        <ToastContainer
+          position={toast.POSITION.TOP_CENTER}
+          autoClose={1000}
+          hideProgressBar={true}
+          transition={Slide}
+        />
       </UserContextProvider>
     </SessionProvider>
   )
@@ -32,7 +40,7 @@ export default withTRPC<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`
 
     const links = [
-      loggerLink(),
+      // loggerLink(),
       httpBatchLink({
         maxBatchSize: 10,
         url,

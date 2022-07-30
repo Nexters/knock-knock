@@ -81,20 +81,29 @@ model Profile {
 }
 
 model Participation {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId   String
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId     String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId       String
+  selectedCells String   @db.Text
 }
 
 model Event {
-  id           String          @id @default(cuid())
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  profile      Profile         @relation(fields: [profileId], references: [id])
-  participates Participation[]
-  profileId    String
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  profile       Profile         @relation(fields: [profileId], references: [id])
+  profileId     String
+  participates  Participation[]
+  title         String
+  description   String          @db.Text
+  startingTimes String          @db.Text
+  timeSize      Int
+  timeInterval  Int?
+  isPublicMeet  Boolean?
+  headCounts    Int?
+  tags          String?
 }

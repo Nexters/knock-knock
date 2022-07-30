@@ -1,26 +1,73 @@
+import { Participation } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
 import { useUserContext } from 'src/context/UserContext'
+import { trpc } from 'src/utils/trpc'
+import { toast } from 'react-toastify'
 
 export default function Event() {
   const { status } = useSession()
   const { push, query } = useRouter()
-
+  const { data: eventData, isLoading, error } = trpc.useQuery(['events.single-event', { eventId: query.id as string }])
+  const utils = trpc.useContext()
+  const { mutate } = trpc.useMutation('events.my-cells', {
+    onSuccess() {
+      toast('저장 완료!', { autoClose: 2000 })
+    },
+    onError() {
+      toast('저장 실패...', { autoClose: 2000 })
+    },
+  })
   const user = useUserContext()
-  console.log(user)
+
+  const participates = eventData?.participates ?? []
+  const myParticipation: Participation | undefined = participates.find(
+    participate => participate.profileId === user?.id,
+  )
 
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
   const [isResultView, setIsResultView] = useState<boolean>(false)
-  const [resultString, setResultString] = useState<string[]>([
-    '0033111222233330020110',
-    '0000111222233331100110',
-    '0111222233330000110000',
-    '0000111222200030000110',
-    '0000111222233330000110',
-  ])
+  const [resultCellCount, setResultCellCount] = useState<{ [key: string]: number }>({})
+
+  useEffect(() => {
+    const myCells = (myParticipation?.selectedCells ?? '').split(',')
+    setSelectedCells(new Set(myCells))
+  }, [myParticipation])
+
+  useEffect(() => {
+    const counts = participates.reduce<{ [key: string]: number }>((accu, curr) => {
+      if (curr.profileId === user?.id) return accu
+      const selectedCells = (curr?.selectedCells ?? '').split(',')
+      selectedCells.forEach(cellId => {
+        if (accu[cellId]) {
+          accu[cellId] += 1
+        } else {
+          accu[cellId] = 1
+        }
+      })
+      return accu
+    }, {})
+    const myCells = [...selectedCells]
+    myCells.forEach(cellId => {
+      if (counts[cellId]) counts[cellId] += 1
+      else counts[cellId] = 1
+    })
+    setResultCellCount(counts)
+  }, [isResultView])
+
+  function updateSelectedCells() {
+    if (!query.id || !user?.id) return
+    mutate({ eventId: query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
+  }
+
+  function deselectAll() {
+    setSelectedCells(new Set<string>([]))
+    if (!query.id || !user?.id) return
+    mutate({ eventId: query.id as string, profileId: user.id, cells: '' })
+  }
 
   function addOneCell(cellId: string) {
     setSelectedCells(prev => new Set([...prev, cellId]))
@@ -57,19 +104,13 @@ export default function Event() {
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
             <button
-              onClick={() => push({ pathname: '/auth/login/anonymous', query: { redirect: query.id } })}
-              className="block mx-auto btn w-full max-w-xs bg-primary text-white"
-            >
-              비회원 로그인
-            </button>
-            <button
-              onClick={() => push({ pathname: '/api/auth/signin' })}
+              onClick={() => push({ pathname: '/api/auth/signin', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               SNS 계정으로 로그인
             </button>
             <button
-              onClick={() => push({ pathname: '/' })}
+              onClick={() => push({ pathname: '/', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               홈으로 가기
@@ -78,20 +119,34 @@ export default function Event() {
         </div>
       </div>
 
-      <div className="flex flex-col pt-9 h-screen relative  bg-bgColor">
+      <div className="flex flex-col pt-9 h-screen relative bg-bgColor">
         <div className="flex justify-between items-center ml-5">
           <Link href="/">
             <img src="/assets/svg/logo.svg" alt="logo" />
           </Link>
         </div>
 
-        <div className="mt-7 h-2/3">
-          <TimeSelectTable
-            selectedIds={selectedCells}
-            onSelect={handleCellSelect}
-            isResultView={isResultView}
-            resultString={resultString}
-          />
+        <div className="mt-7 h-2/3 text-bgColor">
+          {isLoading && (
+            <div className="text-primary font-bold w-full h-full flex justify-center items-center">로딩중...</div>
+          )}
+          {error && (
+            <div className="text-primary font-bold w-full h-full flex justify-center items-center">
+              에러가 발생했습니다.
+            </div>
+          )}
+          {eventData && (
+            <TimeSelectTable
+              startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
+              timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
+              timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
+              selectedIds={selectedCells}
+              onSelect={handleCellSelect}
+              onSelectEnd={updateSelectedCells}
+              isResultView={isResultView}
+              resultCellCount={resultCellCount}
+            />
+          )}
         </div>
 
         <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
@@ -101,10 +156,7 @@ export default function Event() {
             </button>
           ) : (
             <>
-              <button
-                onClick={() => setSelectedCells(new Set<string>([]))}
-                className="btn w-[42%] bg-white text-cardBg"
-              >
+              <button onClick={deselectAll} className="btn w-[42%] bg-white text-cardBg">
                 초기화
               </button>
               <button

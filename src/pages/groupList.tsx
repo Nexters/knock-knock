@@ -11,9 +11,9 @@ export default function GroupListPage() {
         <h2 className="text-lg font-bold ml-2">약속 모임</h2>
       </div>
       <div className="mt-2 flex flex-col overflow-auto">
-        {gatheringCardData.map(gatheringCard => (
+        {/* {gatheringCardData.map(gatheringCard => (
           <GatheringCard isWideView data={gatheringCard} />
-        ))}
+        ))} */}
       </div>
     </div>
   )
