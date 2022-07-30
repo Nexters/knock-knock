@@ -99,7 +99,10 @@ function Create() {
 
   const handleSubmit = () => {
     const tags = fields.map(field => field.text)
-    const dateTimestamp = selectedDates.map(date => date.getTime() / 1000)
+    console.log(startTime)
+    const dateTimestamp = selectedDates.map(date => {
+      return (date.getTime() + Number(startTime.split(':')[0])! * 60 * 60 * 1000) / 1000
+    })
     const timeGapStamp =
       (new Date(`2022-07-30T${endTime}`).getTime() - new Date(`2022-07-30T${startTime}`).getTime()) / 1000
     if (timeGapStamp < 0) {
