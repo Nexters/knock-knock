@@ -31,6 +31,7 @@ export default function Event() {
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
   const [isResultView, setIsResultView] = useState<boolean>(false)
   const [resultCellCount, setResultCellCount] = useState<{ [key: string]: number }>({})
+  const [maximumCount, setMaximumCount] = useState(1)
 
   useEffect(() => {
     const myCells = (myParticipation?.selectedCells ?? '').split(',')
@@ -44,6 +45,9 @@ export default function Event() {
       selectedCells.forEach(cellId => {
         if (accu[cellId]) {
           accu[cellId] += 1
+          if (accu[cellId]! > maximumCount) {
+            setMaximumCount(accu[cellId] as number)
+          }
         } else {
           accu[cellId] = 1
         }
@@ -145,6 +149,7 @@ export default function Event() {
               onSelectEnd={updateSelectedCells}
               isResultView={isResultView}
               resultCellCount={resultCellCount}
+              maximumCount={maximumCount}
             />
           )}
         </div>

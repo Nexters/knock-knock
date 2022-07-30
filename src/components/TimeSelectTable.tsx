@@ -9,6 +9,7 @@ interface Props {
   startingTimes: number[]
   timeInterval?: number
   timeSize: number
+  maximumCount?: number
 }
 
 export default function TimeSelectTable({
@@ -20,6 +21,7 @@ export default function TimeSelectTable({
   timeSize,
   timeInterval = 30 * 60 * 1000,
   startingTimes = [],
+  maximumCount = 1,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
@@ -168,12 +170,13 @@ export default function TimeSelectTable({
   }
 
   function renderColors(cellId: string): string {
-    const resultNumber = resultCellCount[cellId]
-    if (!resultNumber || !Number(resultNumber)) return ''
-    const colors = ['', '#a7f3d0', '#6ee7b7', '#059669']
-    if (typeof Number(resultNumber) !== 'number') return ''
+    const resultNumber = Number(resultCellCount[cellId])
+    if (!resultNumber) return ''
+    if (typeof resultNumber !== 'number') return ''
     //@ts-ignore
-    return colors[resultNumber]
+    // return colors[resultNumber]
+    const step = Number((0.5 / maximumCount).toFixed(2))
+    return `rgba(22, 198, 116, ${0.5 + step * (resultNumber - 1)})`
   }
 
   return (
