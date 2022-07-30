@@ -228,12 +228,12 @@ export default function TimeSelectTable({
               onPointerUp={handleDragEndForScroll}
               className="bg-bgColor sticky top-0"
             >
-              <div className="flex-shrink-0 flex-grow-0 border-t border-r text-center select-none text-sm font-bold pt-1 border-[#474747]">
+              <div className="h-6 flex-shrink-0 flex-grow-0 border-t border-r text-center select-none text-sm font-bold pt-1 border-[#474747]">
                 {`${`${new Date(startingTime).getMonth() + 1}`.padStart(2, '0')}.${`${new Date(
                   startingTime,
                 ).getDate()}`.padStart(2, '0')}`}
               </div>
-              <div className="flex-shrink-0 flex-grow-0 border-b border-r text-center select-none text-xs pb-1 border-[#474747]">
+              <div className="h-6 flex-shrink-0 flex-grow-0 border-b border-r text-center select-none text-xs pb-1 border-[#474747]">
                 {'일월화수목금토'[new Date(startingTime).getDay()]}
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function TimeSelectTable({
                   data-col={coloumnNumber}
                   data-row={rowNumber}
                   data-time={(startingTime + rowNumber * timeInterval) / 1000}
-                  className="flex-shrink-0 flex-grow-0 h-7 border-b border-r odd:border-dashed last-of-type:border-solid border-[#474747]"
+                  className="flex-shrink-0 flex-grow-0 h-8 border-b border-r odd:border-dashed last-of-type:border-solid border-[#474747]"
                   style={{
                     borderRight: '1px solid #474747',
                     borderColor: '#474747',
