@@ -1,11 +1,11 @@
 import { ChangeEvent, useMemo, useState } from 'react'
-import Calendar from 'react-calendar'
 import { useRouter } from 'next/router'
 import { useFieldArray, useForm } from 'react-hook-form'
-import getUnixTime from 'date-fns/getUnixTime'
 import format from 'date-fns/format'
 
 import TagInput from '../../components/formElements/TagInput'
+import Calendar from 'src/components/Calendar'
+import { toast } from 'react-toastify'
 
 interface MeetTags {
   tags?: { id: string; text: string }[]
@@ -19,23 +19,22 @@ function Create() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [headcount, setHeadcount] = useState(0)
-  const [calendar, setCalendar] = useState<Date>(new Date())
-  const [formattedDates, setFormattedDates] = useState<string[]>([])
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [isPublicMeet, setIsPublicMeet] = useState(false)
+  const [selectedDates, setSelectedDates] = useState<Date[]>([])
 
   const calendarText = useMemo(() => {
-    if (formattedDates.length === 0) {
+    if (selectedDates.length === 0) {
       return ''
     }
-    if (formattedDates.length === 1) {
-      return formattedDates[0]
+    if (selectedDates.length === 1) {
+      return format(selectedDates[0]!, 'yyyy.MM.dd')
     }
-    if (formattedDates.length > 1) {
-      return `${formattedDates[0]} 외 ${formattedDates.length - 1}일`
+    if (selectedDates.length > 1) {
+      return `${format(selectedDates[selectedDates.length - 1]!, 'yyyy.MM.dd')} 외 ${selectedDates.length - 1}일`
     }
-  }, [formattedDates])
+  }, [selectedDates])
 
   const {
     control,
@@ -69,10 +68,8 @@ function Create() {
     setHeadcount(Number(event.target.value))
   }
 
-  const handleCalender = (value: Date, event: ChangeEvent<HTMLInputElement>) => {
-    console.log({ value })
-    setCalendar(value)
-    setFormattedDates(prev => [...prev, format(value, 'yyyy.MM.dd')])
+  const handleCalenderUpdate = (values: Date[]) => {
+    setSelectedDates(values)
   }
 
   const handleStartTime = (event: ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +77,7 @@ function Create() {
   }
 
   const handleEndTime = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value)
     setEndTime(event.target.value)
   }
 
@@ -89,16 +87,13 @@ function Create() {
 
   const handleSubmit = () => {
     const tags = fields.map(field => field.text)
-    const formattedStartTime = Number(startTime.split(':')[0])
-    const formattedEndTime = Number(endTime.split(':')[0])
-    const dateTimestamp = formattedDates.map(date => {
-      const [year, month, day] = date.split('.')
-      return getUnixTime(new Date(Number(year), Number(month), Number(day), Number(formattedStartTime)))
-    })
-    const timeGapStamp = (formattedEndTime - formattedStartTime) * 60 * 60
-
-    console.log({ tags })
-
+    const dateTimestamp = selectedDates.map(date => date.getTime() / 1000)
+    const timeGapStamp =
+      (new Date(`2022-07-30T${endTime}`).getTime() - new Date(`2022-07-30T${startTime}`).getTime()) / 1000
+    if (timeGapStamp < 0) {
+      toast('끝 시간이 시작 시간보다 빠릅니다.')
+      return
+    }
     // api params
     const params = {
       title,
@@ -110,8 +105,10 @@ function Create() {
       isPublicMeet,
     }
 
+    console.log(params)
+
     // 페이지 이동 (id 매핑 또는 하드코딩)
-    router.push('/invite/:id')
+    // router.push('/invite/:id')
   }
 
   return (
@@ -134,7 +131,7 @@ function Create() {
         />
       </div>
 
-      <div className="form-control w-full max-w-xs">
+      <div className="form-control w-full max-w-xs mt-4">
         <label className="label">
           <span className="label-text">약속 설명</span>
         </label>
@@ -186,36 +183,41 @@ function Create() {
         </select>
       </div>
 
-      <div className="form-control w-full max-w-xs">
+      <div className="form-control w-full max-w-xs mt-5">
         <label className="label">
           <span className="label-text">날짜</span>
         </label>
         <input type="text" className="select bg-[#2F3035] border-none" onClick={toggleCalendar} value={calendarText} />
       </div>
-      {showCalendar && <Calendar onChange={handleCalender} value={calendar} locale={'en'} />}
 
-      <div className="form-control w-full max-w-xs">
-        <label className="label">
-          <span className="label-text">약속 시간대 설정</span>
+      {showCalendar && (
+        <div className="w-full max-w-xs">
+          <Calendar dates={selectedDates} onDatesUpdate={handleCalenderUpdate} />
+        </div>
+      )}
+
+      <div className="form-control w-full max-w-xs mt-5">
+        <label className="label pb-0">
+          <span className="label-text font-bold">약속 시간대 설정</span>
         </label>
-        <div className="flex gap-x-2">
-          <div className="form-control">
+        <div className="flex w-full justify-between gap-x-2">
+          <div className="form-control w-1/2">
             <label className="label">
               <span className="label-text text-[0.8125rem]">시작</span>
             </label>
             <input
-              type="text"
+              type="time"
               className="w-full input bg-[#2F3035] border-none text-center"
               onChange={handleStartTime}
               value={startTime}
             />
           </div>
-          <div className="form-control">
+          <div className="form-control w-1/2">
             <label className="label">
               <span className="label-text text-[0.8125rem]">끝</span>
             </label>
             <input
-              type="text"
+              type="time"
               className="w-full input bg-[#2F3035] border-none text-center"
               onChange={handleEndTime}
               value={endTime}
@@ -231,7 +233,7 @@ function Create() {
         </label>
       </div>
 
-      <button className="btn btn-primary btn-wide w-full max-w-xs mt-[0.5rem]" onClick={handleSubmit}>
+      <button className="btn btn-primary w-full max-w-xs mt-[0.5rem]" onClick={handleSubmit}>
         완료
       </button>
     </section>

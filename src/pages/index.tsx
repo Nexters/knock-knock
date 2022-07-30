@@ -90,24 +90,25 @@ export default function Home() {
           ))}
         </div>
       </div> */}
-
-      <button
-        className="btn btn-circle fixed bottom-10 right-5 md:right-[38%] bg-primary text-white"
-        onClick={() => {
-          router.push('/meets/create')
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
+      <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+        <button
+          className="btn btn-circle bg-primary text-white mr-5"
+          onClick={() => {
+            router.push('/meets/create')
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }

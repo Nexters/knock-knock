@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
-  console.log(router)
+
   return (
     <div className="flex flex-col items-center justify-center py-5 pt-9 px-5 relative h-screen bg-bgColor">
       <img src="/assets/svg/logo.svg" alt="logo" className="mb-10 w-[220px]" />
