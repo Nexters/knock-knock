@@ -8,8 +8,9 @@ export default function Document() {
           <meta name="theme-color" content="#16C674"></meta>
         </head>
         <link rel="manifest" href="/manifest.json" />
-        <link href="/assets/icons/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
+        {/* <link href="/assets/icons/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
         <link href="/assets/icons/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
+        <link href="/assets/icons/favicon-48x48.png" rel="icon" type="image/png" sizes="48x48" /> */}
         <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png" />
         <meta name="msapplication-TileColor" content="#16C674"></meta>
         <link
