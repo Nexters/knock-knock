@@ -28,7 +28,7 @@ export default function Home() {
             <div className="card-body p-4 relative">
               <div>
                 <div className="avatar items-center">
-                  <div className="w-10 rounded-full">
+                  <div className="w-10 h-10 rounded-full">
                     <img src={user?.image ?? 'assets/images/avatar.png'} />
                   </div>
                   <div className="ml-3 font-bold">{user?.name}</div>
