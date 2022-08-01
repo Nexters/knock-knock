@@ -25,8 +25,8 @@ export default function Profile() {
       </div>
 
       <div className="flex flex-col items-center justify-center mt-7">
-        <div className="w-[20%]">
-          <img className="rounded-[20px]" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
+        <div className="w-[70px] h-[70px] rounded-[20px] overflow-hidden object-cover">
+          <img className="" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
         </div>
         <div className="flex mt-5">
           {user?.tags?.split(',').map(tag => {
@@ -37,7 +37,7 @@ export default function Profile() {
         <span className="text-center text-sm text-textGray max-w-[250px] mt-5">{user?.introduction}</span>
       </div>
 
-      <div className="flex justify-between items-center px-5 mt-10">
+      <div className="flex justify-between items-center px-5 mt-5">
         <h2 className="text-lg font-bold text-textGray">이때 가장 여유로워요!</h2>
         <button className="text-sm text-textGray">더보기</button>
       </div>

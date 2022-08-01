@@ -87,7 +87,7 @@ export default function Invite() {
             <p className="mt-2 mb-3 text-sm bg-cardBg rounded-lg p-3">{eventData?.participates.length}명</p>
             <div>
               {eventData?.participates?.map(participate => (
-                <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2">
+                <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 text-sm">
                   {participate.profile.name}
                 </div>
               ))}
