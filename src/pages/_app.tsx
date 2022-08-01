@@ -24,8 +24,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       </Head>
       <SessionProvider session={session}>
         <UserContextProvider value={data}>
-          <div className="w-full h-screen bg-slate-100">
-            <main className="w-full md:max-w-sm h-screen mx-auto bg-white text-black overflow-hidden">
+          <div className="w-full h-screen bg-slate-100 overflow-auto">
+            <main className="w-full md:max-w-sm h-screen mx-auto bg-bgColor text-white">
               <Component {...pageProps} />
             </main>
           </div>
