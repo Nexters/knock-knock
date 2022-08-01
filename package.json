@@ -23,6 +23,8 @@
     "jsonwebtoken": "^8.5.1",
     "next": "12.2.0",
     "next-auth": "^4.10.0",
+    "next-compose-plugins": "^2.2.1",
+    "next-pwa": "^5.5.5",
     "nodemailer": "^6.7.7",
     "react": "18.2.0",
     "react-calendar": "^3.7.0",
