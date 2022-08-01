@@ -67,14 +67,14 @@ function Create() {
     if (title.length >= 15) {
       return
     }
-    setTitle(event.target.value.trim())
+    setTitle(event.target.value)
   }
 
   const handleChangeDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
     if (description.length >= 95) {
       return
     }
-    setDescription(event.target.value.trim())
+    setDescription(event.target.value)
   }
 
   const handleChangeHeadcount = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -149,12 +149,13 @@ function Create() {
         </div>
       </div>
       <section className="flex flex-col items-center bg-bgColor h-screen pt-[1.625rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto">
-        <button onClick={() => router.back()} className="absolute top-9 left-5">
-          <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer" />
-        </button>
-        <h1 className="mt-12 text-xl font-bold text-white text-center">약속 만들기</h1>
-
-        <div className="form-control w-full max-w-xs mt-[3.125rem]">
+        <div className="fixed w-full bg-bgColor top-0 pb-4">
+          <button onClick={() => router.back()} className="absolute top-9 left-5 ">
+            <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
+          </button>
+          <h1 className="mt-8 text-xl font-bold text-white text-center ">약속 만들기</h1>
+        </div>
+        <div className="form-control w-full max-w-xs mt-[5.5rem]">
           <label className="label">
             <span className="label-text">약속 제목</span>
           </label>

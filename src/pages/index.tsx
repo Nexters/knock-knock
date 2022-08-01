@@ -28,7 +28,7 @@ export default function Home() {
             <div className="card-body p-4 relative">
               <div>
                 <div className="avatar items-center">
-                  <div className="w-10 rounded-full">
+                  <div className="w-10 h-10 rounded-full">
                     <img src={user?.image ?? 'assets/images/avatar.png'} />
                   </div>
                   <div className="ml-3 font-bold">{user?.name}</div>
@@ -72,7 +72,7 @@ export default function Home() {
             필터
           </button>
         </div>
-        <div className="mx-2 mt-2 pb-2 flex flex-col overflow-auto xs:max-h-[75%] sm:max-h-[100%]">
+        <div className="mx-2 mt-2 pb-2 flex flex-col overflow-auto max-h-[100%]">
           {(events ?? []).map((event, index) => (
             <GatheringCard key={index} isWideView data={event} />
           ))}
