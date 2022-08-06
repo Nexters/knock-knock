@@ -11,7 +11,7 @@ import { useUserContext } from 'src/context/UserContext'
 import { useSession } from 'next-auth/react'
 
 interface MeetTags {
-  tags?: { id: string; text: string }[]
+  tags?: { text: string }[]
 }
 
 function Create() {
