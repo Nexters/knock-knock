@@ -9,7 +9,7 @@ interface CreateGroupInput {
   name: string
   password?: number
   introduction?: string
-  tags?: { id: string; text: string }[]
+  tags?: { text: string }[]
   isPublic: boolean
 }
 
