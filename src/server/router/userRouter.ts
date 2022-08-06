@@ -1,6 +1,7 @@
 import * as trpc from '@trpc/server'
 import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
+import { defaultError } from '../shared/errors'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 
 export const userRouter = createRouter()
@@ -14,6 +15,17 @@ export const userRouter = createRouter()
       const session = ctx.session
       if (!session) throw new trpc.TRPCError({ code: 'UNAUTHORIZED', message: 'Session is null' })
       return ctx.user
+    },
+  })
+  .query('user-list', {
+    async resolve({ ctx }) {
+      try {
+        const userList = await ctx.prisma.profile.findMany()
+        return userList
+      } catch (error) {
+        console.error(error)
+        throw new trpc.TRPCError(defaultError)
+      }
     },
   })
   .mutation('create-profile', {
