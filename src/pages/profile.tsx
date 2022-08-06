@@ -16,7 +16,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <div className="flex flex-col py-5 pt-2 relative h-screen bg-bgColor overflow-auto">
+    <div className="flex flex-col py-5 pt-2 relative bg-bgColor">
       <div className="flex itmes-center justify-between mt-5 px-3">
         <Link href="/">
           <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer" />
@@ -47,7 +47,7 @@ export default function Profile() {
         <div className="badge badge-lg badge-success mr-2">수요일</div>
       </div>
 
-      <div className="flex pl-5 mt-5 overflow-auto overflow-x-scroll">
+      <div className="flex pl-5 mt-5 overflow-x-scroll">
         <div className="min-w-[160px] min-h-[130px] bg-cardBg rounded-lg flex flex-col items-center justify-center mr-3 py-3">
           <img className="w-[70px]" src="/assets/images/badge1.png" alt="badge" />
           <span className="text-sm text-textGray mt-1">[넥스터즈]</span>
@@ -65,7 +65,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <button className="btn btn-primary mx-5 mt-10">약속 요청하기</button>
+      <button className="btn btn-primary mx-5 mt-10 fixed bottom-5 ">약속 요청하기</button>
     </div>
   )
 }
