@@ -82,17 +82,33 @@ export default function Invite() {
               ))}
             </div>
           </div>
-          <div className="mt-8 px-5">
+          <div className="mt-7 px-5">
             <h2 className="text-sm font-bold">참여 인원</h2>
             <p className="mt-2 mb-3 text-sm bg-cardBg rounded-lg p-3">{eventData?.participates.length}명</p>
-            <div>
-              {eventData?.participates?.map(participate => (
-                <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 text-sm">
-                  {participate.profile.name}
-                </div>
-              ))}
+            <div className="flex items-center">
+              {eventData?.participates?.map(participate => {
+                return (
+                  <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 text-sm">
+                    <img className="w-[20px] rounded-lg mr-2" src={participate.profile.image || ''} />
+                    {participate.profile.name}
+                  </div>
+                )
+              })}
             </div>
           </div>
+
+          <div className="mt-5 flex flex-col px-5">
+            <span className="text-sm text-textGray mb-2">날짜</span>
+            <select className="select w-full max-w-s mt-3 bg-cardBg text-textGray">
+              <option disabled selected>
+                날짜 선택
+              </option>
+              {eventData?.startingTimes?.split(',').map(date => {
+                return <option>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
+              })}
+            </select>
+          </div>
+
           <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
             <button onClick={onCopyToClipboard} className="btn w-[48%] bg-white text-primary">
               링크 공유

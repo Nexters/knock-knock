@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="flex flex-col py-5 pt-9 relative bg-bgColor">
       <div className="flex justify-between items-center px-5 ">
-        <img src="assets/svg/logo.svg" alt="logo" />
+        <object data="assets/svg/logo.svg" />
         {/* <span className="mr-3">
           <img src="assets/svg/search.svg" alt="logo" />
         </span> */}
@@ -73,9 +73,9 @@ export default function Home() {
           </button>
         </div>
         <div className="mx-2 mt-2 pb-2 flex flex-col">
-          {(events ?? []).map((event, index) => (
-            <GatheringCard key={index} isWideView data={event} />
-          ))}
+          {(events ?? []).map((event, index) => {
+            return <GatheringCard key={index} isWideView data={event} />
+          })}
         </div>
       </div>
 
