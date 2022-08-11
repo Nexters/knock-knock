@@ -15,11 +15,12 @@ import { toast, ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const { data } = trpc.useQuery(['users.me'])
+  const { data } = trpc.useQuery(['users.me'], {})
 
   return (
     <>
       <Head>
+        <title>노크노크</title>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
       </Head>
       <SessionProvider session={session}>

@@ -1,16 +1,14 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useUserContext } from 'src/context/UserContext'
+import { useUser } from 'src/shared/hooks'
 
 export default function Profile() {
-  const { status } = useSession()
+  const { user, isAuthenticated, isLoadingUser } = useUser()
   const router = useRouter()
-  const user = useUserContext()
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (!isLoadingUser && !isAuthenticated) {
       router.push('/')
     }
   }, [])

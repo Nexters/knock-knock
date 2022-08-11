@@ -1,6 +1,6 @@
 import { inferProcedureOutput } from '@trpc/server'
 import React, { createContext, useContext } from 'react'
-import { AppRouter } from '../server/router'
+import type { AppRouter } from '../server/router'
 
 type TQuery = keyof AppRouter['_def']['queries']
 
