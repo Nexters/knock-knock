@@ -1,24 +1,29 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import format from 'date-fns/format'
-
-import TagInput from '../../components/formElements/TagInput'
-import Calendar from 'src/components/Calendar'
 import { toast } from 'react-toastify'
+
+import TagInput from '../../../components/formElements/TagInput'
+import Calendar from 'src/components/Calendar'
 import { trpc } from 'src/utils/trpc'
-import { useSession } from 'next-auth/react'
-import { ICreateEvent } from '../../schema/eventSchema'
+import { IEditEvent } from '../../../schema/eventSchema'
+import { useUser } from 'src/shared/hooks'
+import { IUser } from 'src/types/User'
 
 interface MeetTags {
   tags?: { text: string }[]
 }
 
-function Create() {
+// TODO: 필수, 선택에 따른 유효성 검사
+function Edit() {
   const router = useRouter()
   const { status } = useSession()
+  const { user, isAuthenticated } = useUser()
+  const { data: eventData } = trpc.useQuery(['events.single-event', { eventId: router.query.id as string }])
 
-  const [createPhase, setCreatePhase] = useState(1)
+  const [editPhase, setEditPhase] = useState(1)
 
   const [selectedGroup, setSelectedGroup] = useState('')
   const [title, setTitle] = useState('')
@@ -29,15 +34,45 @@ function Create() {
   const [endTime, setEndTime] = useState('')
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('')
-  const { mutate } = trpc.useMutation('events.create-event', {
+  const { mutate } = trpc.useMutation('events.edit-event', {
     onSuccess(data) {
-      toast('생성 완료!', { autoClose: 2000 })
+      toast('수정 완료!', { autoClose: 2000 })
       router.push(`/invite/${data.id}`)
     },
     onError() {
-      toast('생성 실패...', { autoClose: 2000 })
+      toast('수정 실패...', { autoClose: 2000 })
     },
   })
+
+  const {
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<MeetTags>()
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tags',
+  })
+
+  useEffect(() => {
+    const tags = eventData?.tags?.split(',').map(value => {
+      return { text: value }
+    })
+
+    console.log(eventData?.startingTimes)
+
+    // TODO: group, startTime, endTime, selectedTimes 초기화
+    setTitle(eventData?.title ?? '')
+    setDescription(eventData?.description ?? '')
+    setValue('tags', tags ?? undefined)
+    setSelectedDates([])
+    setHeadCounts(eventData?.headCounts ?? 0)
+    setIsUnlimitedHeadCounts(eventData?.isUnlimitedHeadCounts ?? false)
+    setStartTime('')
+    setEndTime('')
+    setSelectedTimeSlot('')
+  }, [])
 
   const calendarText = useMemo(() => {
     if (selectedDates.length === 0) {
@@ -47,19 +82,9 @@ function Create() {
       return format(selectedDates[0]!, 'yyyy.MM.dd')
     }
     if (selectedDates.length > 1) {
-      return `${format(selectedDates[selectedDates.length - 1]!, 'yyyy.MM.dd')} 외 ${selectedDates.length - 1}일`
+      return `${format(selectedDates[0]!, 'yyyy.MM.dd')} 외 ${selectedDates.length - 1}일`
     }
   }, [selectedDates])
-
-  const {
-    control,
-    formState: { errors },
-  } = useForm<MeetTags>()
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'tags',
-  })
 
   const handleChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     if (title.length >= 15) {
@@ -100,16 +125,16 @@ function Create() {
   }
 
   const handleBack = () => {
-    if (createPhase === 1) {
+    if (editPhase === 1) {
       router.back()
     }
-    if (createPhase === 2) {
-      setCreatePhase(prevState => prevState - 1)
+    if (editPhase === 2) {
+      setEditPhase(prevState => prevState - 1)
     }
   }
 
   const handleNextPhase = () => {
-    setCreatePhase(prevState => prevState + 1)
+    setEditPhase(prevState => prevState + 1)
   }
 
   const handleSubmit = () => {
@@ -118,19 +143,24 @@ function Create() {
       return (date.getTime() + Number(startTime.split(':')[0])! * 60 * 60 * 1000) / 1000
     })
     const timeGapStamp =
-      (new Date(`2022-07-30T${endTime}`).getTime() - new Date(`2022-07-30T${startTime}`).getTime()) / 1000
+      endTime && startTime
+        ? (new Date(`2022-07-30T${endTime}`).getTime() - new Date(`2022-07-30T${startTime}`).getTime()) / 1000
+        : 0
     if (timeGapStamp < 0) {
       toast('끝 시간이 시작 시간보다 빠릅니다.')
       return
     }
     // api params
-    const payload: ICreateEvent = {
+    const payload: IEditEvent = {
+      id: router.query.id as string,
       title,
       description,
       tags: tags.join(','),
       startingTimes: dateTimestamp.join(','),
       timeSize: timeGapStamp,
+      headCounts: headCounts,
       isUnlimitedHeadCounts,
+      ...(selectedGroup && { groupId: selectedGroup }),
     }
 
     if (!isUnlimitedHeadCounts && headCounts > 0) {
@@ -163,7 +193,9 @@ function Create() {
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
             <button
-              onClick={() => router.push({ pathname: '/auth/login', query: { redirect: '/meets/create' } })}
+              onClick={() =>
+                router.push({ pathname: '/auth/login', query: { redirect: `/meets/edit/${router.query.id}` } })
+              }
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               SNS 계정으로 로그인
@@ -184,9 +216,9 @@ function Create() {
           </button>
           <h1 className="mt-8 text-xl font-bold text-white text-center ">약속 만들기</h1>
         </div>
-        {createPhase === 1 && (
+        {editPhase === 1 && (
           <>
-            {/* TODO: groupId 있으면 해당 그룹을 기본으로 선택 */}
+            {/* TODO: 생성으로 넘어올 때, groupId 있으면 해당 그룹을 기본으로 선택 */}
             {status === 'authenticated' && (
               <div className="form-control w-full max-w-xs">
                 <div className="flex justify-between">
@@ -199,10 +231,15 @@ function Create() {
                   onChange={() => {}}
                   value={selectedGroup}
                 >
-                  <option disabled defaultValue={'nexters'}>
+                  <option disabled defaultValue="">
                     그룹을 선택해주세요
                   </option>
-                  <option value={'nexters'}>넥스터즈</option>
+                  <option value="">없음</option>
+                  {(user as IUser)?.groups?.map(group => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
@@ -290,7 +327,7 @@ function Create() {
           </>
         )}
 
-        {createPhase === 2 && (
+        {editPhase === 2 && (
           <>
             <div className="form-control w-full max-w-xs">
               <label className="label">
@@ -379,4 +416,4 @@ function Create() {
   )
 }
 
-export default Create
+export default Edit

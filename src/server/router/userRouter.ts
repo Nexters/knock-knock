@@ -3,6 +3,7 @@ import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
 import { defaultError } from '../shared/errors'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+import { z } from 'zod'
 
 export const userRouter = createRouter()
   .query('getSession', {
@@ -20,8 +21,32 @@ export const userRouter = createRouter()
   .query('user-list', {
     async resolve({ ctx }) {
       try {
-        const userList = await ctx.prisma.profile.findMany()
+        const userList = await ctx.prisma.profile.findMany({
+          include: {
+            participates: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        })
         return userList
+      } catch (error) {
+        console.error(error)
+        throw new trpc.TRPCError(defaultError)
+      }
+    },
+  })
+  .query('single-profile', {
+    input: z.object({ email: z.string() }),
+    async resolve({ ctx, input }) {
+      try {
+        const profile = await ctx.prisma.profile.findUnique({
+          where: {
+            email: input.email,
+          },
+        })
+        return profile
       } catch (error) {
         console.error(error)
         throw new trpc.TRPCError(defaultError)
