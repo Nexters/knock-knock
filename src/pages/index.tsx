@@ -15,8 +15,8 @@ export default function Home() {
       <div className="flex justify-between items-center px-5 ">
         <object data="assets/svg/logo.svg" />
         <Link href="/search">
-          <span className="mr-3">
-            <iframe src="assets/svg/search.svg" />
+          <span className="mr-3 cursor-pointer">
+            <img src="assets/svg/search.svg" alt="icon" />
           </span>
         </Link>
       </div>
