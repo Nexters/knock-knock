@@ -25,13 +25,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       </Head>
       <SessionProvider session={session}>
         <UserContextProvider value={data}>
-<<<<<<< Updated upstream
           <div className="w-full h-screen bg-slate-100 overflow-auto">
             <main className="w-full md:max-w-sm h-screen mx-auto bg-bgColor text-white overflow-hidden">
-=======
-          <div className="w-full h-screen overflow-auto">
-            <main className="w-full sm:max-w-sm h-screen mx-auto bg-bgColor text-white">
->>>>>>> Stashed changes
               <Component {...pageProps} />
             </main>
           </div>
