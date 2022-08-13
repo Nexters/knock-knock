@@ -5,11 +5,11 @@ export const createEventSchema = z.object({
   description: z.string(),
   startingTimes: z.string(),
   timeSize: z.number(),
-  isPublicMeet: z.boolean(),
   status: z.string().optional(),
-  headCounts: z.number(),
-  tags: z.string(),
-  groupId: z.string(),
+  headCounts: z.number().optional(),
+  isUnlimitedHeadCounts: z.boolean().optional(),
+  tags: z.string().optional(),
+  groupId: z.string().optional(),
 })
 
 export type ICreateEvent = z.TypeOf<typeof createEventSchema>
