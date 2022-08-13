@@ -6,6 +6,7 @@ module.exports = {
     colors: {
       bgColor: '#18191F',
       cardBg: '#2B2F37',
+      darkGray: '#5D5E62',
       textLightGray: '#E8E8E9',
       textGray: '#BABABC',
       textGray2: '#B8B7BC',

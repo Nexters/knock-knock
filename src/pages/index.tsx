@@ -9,6 +9,7 @@ import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
 import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
+import SkeletonCard from 'src/components/SkeletonCard'
 import { IGroup } from 'src/types/Group'
 
 interface IUser extends Profile {
@@ -18,8 +19,7 @@ interface IUser extends Profile {
 export default function Home() {
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
-  const { data: events, isLoading, error } = trpc.useQuery(['events.events'])
-
+  const { data: events, isLoading } = trpc.useQuery(['events.events'])
   const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
 
   return (
@@ -54,9 +54,18 @@ export default function Home() {
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">내 약속</h2>
           <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
-            {(events ?? []).map((event, index) => {
-              return <GatheringCard key={index} data={event} />
-            })}
+            {isLoading ? (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            ) : (
+              <>
+                {(events ?? []).map((event, index) => {
+                  return <GatheringCard key={index} data={event} />
+                })}
+              </>
+            )}
           </div>
         </div>
 
@@ -74,7 +83,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
         <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleBottomSheet('create')}>
             <svg

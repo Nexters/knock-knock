@@ -1,5 +1,4 @@
 import * as trpc from '@trpc/server'
-import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { defaultError } from '../shared/errors'

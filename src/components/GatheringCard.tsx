@@ -17,11 +17,11 @@ export interface IGathering {
 }
 
 const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
-  const {
-    data: groupData,
-    isLoading,
-    error,
-  } = trpc.useQuery(['groups.single-group', { groupId: data.groupId as string }])
+  // const {
+  //   data: groupData,
+  //   isLoading,
+  //   error,
+  // } = trpc.useQuery(['groups.single-group', { groupId: data.groupId as string }])
 
   return (
     <Link href={`/invite/${data.id}`}>
@@ -32,7 +32,7 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
       >
         <div className="card-body bg-cardBg p-4 px-3 text-white relative">
           <div className="flex items-center justify-between">
-            {data.groupId && <div className="badge badge-info text-2xs mr-2">{groupData?.name}</div>}
+            {/* {data.groupId && <div className="badge badge-info text-2xs mr-2">{groupData?.name}</div>} */}
             <div className="flex">
               {(data.tags?.split(',') ?? []).map(category => (
                 <div key={category} className="badge badge-neutral text-2xs mr-2">

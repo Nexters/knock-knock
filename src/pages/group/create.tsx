@@ -1,47 +1,84 @@
-import { useForm, useFieldArray } from 'react-hook-form'
-import CenteringLayout from '../../components/pageLayouts/CenteringLayout'
-import Input from '../../components/formElements/Input'
-import Button from '../../components/formElements/Button'
-import TagInput from '../../components/formElements/TagInput'
-import Checkbox from '../../components/formElements/Checkbox'
+import { useState, FormEvent } from 'react'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
+import { trpc } from 'src/utils/trpc'
+import CenteringLayout from 'src/components/pageLayouts/CenteringLayout'
+import Input from 'src/components/formElements/Input'
+import Button from 'src/components/formElements/Button'
+import TagInput from 'src/components/formElements/TagInput'
+import Checkbox from 'src/components/formElements/Checkbox'
+import { toast } from 'react-toastify'
+import { ICreateGroup } from 'src/schema/groupSchema'
 
-interface CreateGroupInput {
-  name: string
-  password?: number
-  introduction?: string
+interface GroupTags {
   tags?: { text: string }[]
-  isPublic: boolean
 }
 
 function CreateGroup() {
+  const router = useRouter()
+  const { handleSubmit, register } = useForm<ICreateGroup>()
+  const { data: session } = useSession()
   const {
     control,
-    register,
-    handleSubmit,
     formState: { errors },
-  } = useForm<CreateGroupInput>()
+  } = useForm<GroupTags>()
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'tags',
   })
 
-  const onSubmit = (values: CreateGroupInput) => {
-    console.log(values)
+  const { mutate } = trpc.useMutation('groups.create-group', {
+    onSuccess(data) {
+      toast('생성 완료!', { autoClose: 2000 })
+      insertMutation({ groupId: data.id })
+      router.push(`/group/${data.id}`)
+    },
+    onError() {
+      toast('생성 실패...', { autoClose: 2000 })
+    },
+  })
+
+  const { mutate: insertMutation } = trpc.useMutation('groups.insert-host-group')
+
+  const onValid: SubmitHandler<ICreateGroup> = async (formValues: ICreateGroup) => {
+    if (!session?.user) return
+    if (!formValues.name) return
+    if (!formValues.description) return
+
+    const tags = fields.map(field => field.text)
+    const { name, description, password, isPublic } = formValues
+    const payload: ICreateGroup = {
+      name,
+      description,
+      tags: tags.join(','),
+      password: Number(password),
+      isPublic,
+    }
+    try {
+      await mutate(payload)
+    } catch (error) {
+      alert('뭔가 잘못됐어요..')
+    }
   }
 
   return (
     <CenteringLayout seoTitle="그룹 생성">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full h-full flex flex-col justify-between px-5 py-14">
-        <div>
+      <div className="fixed w-full bg-bgColor top-0 pb-4">
+        <button onClick={() => router.back()} className="absolute top-9 left-5 ">
+          <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
+        </button>
+        <h1 className="mt-8 text-xl font-bold text-white text-center ">그룹 만들기</h1>
+      </div>
+      <form onSubmit={handleSubmit(onValid)} className="w-full h-full flex flex-col justify-between px-5 py-14">
+        <div className="mt-7">
           <Input
             name="name"
             label="그룹 이름"
             type="text"
             placeholder="그룹 이름을 입력해주세요"
-            register={register('name', {
-              required: true,
-            })}
+            register={register('name', { required: true })}
             required
             classNames="mb-4"
           />
@@ -57,14 +94,13 @@ function CreateGroup() {
               },
             })}
             classNames="mb-4"
-            errorMessage={errors.password?.message}
           />
           <Input
-            name="introduction"
+            name="description"
             label="그룹 소개"
             type="textarea"
             placeholder="20자 이내로 작성해주세요"
-            register={register('introduction')}
+            register={register('description')}
             classNames="mb-4"
           />
           <TagInput
@@ -84,7 +120,9 @@ function CreateGroup() {
         </div>
         <div>
           <Checkbox name="public" label="이 모임을 검색 결과에 공개할래요" register={register('isPublic')} />
-          <Button type="submit">완료</Button>
+          <Button type="submit" classNames="btn btn-primary">
+            완료
+          </Button>
         </div>
       </form>
     </CenteringLayout>

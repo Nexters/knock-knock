@@ -78,18 +78,32 @@ model Profile {
   introduction  String?
   events        Event[]
   participates  Participation[]
+  members       Member[]
   groups        Group[]
 }
 
 model Group {
-  id          String    @id @default(cuid())
-  password    String?
+  id          String   @id @default(cuid())
+  password    Int?
   name        String
   description String
   tags        String?
   events      Event[]
   isPublic    Boolean?
-  members     Profile[]
+  members     Member[]
+  profile     Profile? @relation(fields: [profileId], references: [id])
+  profileId   String?
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  isHost    Boolean
 }
 
 model Participation {
@@ -104,21 +118,21 @@ model Participation {
 }
 
 model Event {
-  id            String          @id @default(cuid())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  profile       Profile         @relation(fields: [profileId], references: [id])
-  profileId     String
-  participates  Participation[]
-  title         String
-  description   String          @db.Text
-  startingTimes String          @db.Text
-  timeSize      Int
-  timeInterval  Int?
-  headCounts    Int?
-  isUnlimitedHeadCounts  Boolean?
-  tags          String?
-  status        String?
-  group         Group?          @relation(fields: [groupId], references: [id])
-  groupId       String?
+  id                    String          @id @default(cuid())
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  profile               Profile         @relation(fields: [profileId], references: [id])
+  profileId             String
+  participates          Participation[]
+  title                 String
+  description           String          @db.Text
+  startingTimes         String          @db.Text
+  timeSize              Int
+  timeInterval          Int?
+  headCounts            Int?
+  isUnlimitedHeadCounts Boolean?
+  tags                  String?
+  status                String?
+  group                 Group?           @relation(fields: [groupId], references: [id])
+  groupId               String?
 }
