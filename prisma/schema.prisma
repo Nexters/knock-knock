@@ -119,6 +119,6 @@ model Event {
   isUnlimitedHeadCounts  Boolean?
   tags          String?
   status        String?
-  Group         Group?          @relation(fields: [groupId], references: [id])
+  group         Group?          @relation(fields: [groupId], references: [id])
   groupId       String?
 }
