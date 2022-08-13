@@ -1,6 +1,8 @@
-import { Event, Participation } from '@prisma/client'
+import { Event } from '@prisma/client'
 import Link from 'next/link'
 import format from 'date-fns/format'
+
+import { trpc } from 'src/utils/trpc'
 
 type GatheringCardProps = {
   data: Event & { participates: any[] }
@@ -15,6 +17,12 @@ export interface IGathering {
 }
 
 const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
+  const {
+    data: groupData,
+    isLoading,
+    error,
+  } = trpc.useQuery(['groups.single-group', { groupId: data.groupId as string }])
+
   return (
     <Link href={`/invite/${data.id}`}>
       <div
@@ -24,6 +32,7 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
       >
         <div className="card-body bg-cardBg p-4 px-3 text-white relative">
           <div className="flex items-center justify-between">
+            {data.groupId && <div className="badge badge-info text-2xs mr-2">{groupData?.name}</div>}
             <div className="flex">
               {(data.tags?.split(',') ?? []).map(category => (
                 <div key={category} className="badge badge-neutral text-2xs mr-2">
