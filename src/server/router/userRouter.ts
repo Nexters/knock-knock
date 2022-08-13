@@ -12,7 +12,7 @@ export const userRouter = createRouter()
   .query('me', {
     resolve({ ctx }) {
       const session = ctx.session
-      if (!session) throw new trpc.TRPCError({ code: 'UNAUTHORIZED', message: 'Session is null' })
+      if (!session) return null
       return ctx.user
     },
   })
