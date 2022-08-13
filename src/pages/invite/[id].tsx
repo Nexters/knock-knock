@@ -18,6 +18,7 @@ interface Invite {
 export default function Invite() {
   const { status } = useSession()
   const router = useRouter()
+  console.log(router)
 
   const [isVisibleModal, setIsVisibleModal] = useState(false)
   const {
@@ -120,7 +121,7 @@ export default function Invite() {
 
           {/* TODO: 로그인모달 컴포넌트화 */}
           <input checked={isVisibleModal} readOnly type="checkbox" id="my-modal-4" className="modal-toggle" />
-          <div className="modal items-center">
+          <div className="modal items-center bg-bgColor bg-opacity-80">
             <div className="modal-box py-8 rounded-2xl sm:max-w-xs">
               <button onClick={() => setIsVisibleModal(false)} className="btn btn-ghost absolute right-0 top-0">
                 ✕
@@ -133,6 +134,12 @@ export default function Invite() {
                 className="block mx-auto btn w-full max-w-xs mt-4 bg-primary text-white"
               >
                 SNS 계정으로 로그인
+              </button>
+              <button
+                onClick={() => router.push({ pathname: '/auth/login/anonymous', query: { redirect: router.asPath } })}
+                className="block mx-auto btn w-full max-w-xs mt-2 bg-neutral text-white"
+              >
+                비회원 로그인
               </button>
             </div>
           </div>
