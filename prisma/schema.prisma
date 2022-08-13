@@ -116,8 +116,8 @@ model Event {
   startingTimes String          @db.Text
   timeSize      Int
   timeInterval  Int?
-  isPublicMeet  Boolean?
   headCounts    Int?
+  isUnlimitedHeadCounts  Boolean?
   tags          String?
   status        String?
   Group         Group?          @relation(fields: [groupId], references: [id])
