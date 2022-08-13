@@ -25,13 +25,24 @@ export default function Home() {
         <div className="px-5 mt-5">
           <div className="card bg-gradient-to-r from-from to-to rounded-xl">
             {isAuthenticated ? (
-              <div className="card-body p-4 relative">
-                <div>
-                  <div className="avatar items-center">
-                    <div className="w-10 h-10 rounded-full">
-                      <img src={user?.image ?? 'assets/images/avatar.png'} />
+              <>
+                <div className="card-body p-4 relative">
+                  <div>
+                    <div className="avatar items-center">
+                      <div className="w-10 h-10 rounded-full">
+                        <img src={user?.image ?? 'assets/images/avatar.png'} />
+                      </div>
+                      <div className="ml-3 font-bold">{user?.name}</div>
                     </div>
-                    <div className="ml-3 font-bold">{user?.name}</div>
+                  </div>
+                  <div className="mt-3">
+                    {user?.tags?.split(',').map(tag => {
+                      return (
+                        <div key={tag} className="badge badge-secondary mr-2">
+                          {tag.trim()}
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
                 <div className="mt-3">
@@ -43,26 +54,7 @@ export default function Home() {
                     )
                   })}
                 </div>
-              </div>
-<<<<<<< Updated upstream
-              <div className="mt-3">
-                {user?.tags?.split(',').map(tag => {
-                  return (
-                    <div key={tag} className="badge badge-secondary mr-2">
-                      {tag.trim()}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          ) : (
-            <div className="card-body p-4">
-              <div className="ml-3 font-bold">
-                <Link href="/auth/login">
-                  <span className="underline underline-offset-1 cursor-pointer">로그인</span>
-                </Link>{' '}
-                후 이용하시겠습니까?
-=======
+              </>
             ) : (
               <div className="card-body p-4">
                 <div className="ml-3 font-bold">
@@ -71,7 +63,6 @@ export default function Home() {
                   </Link>{' '}
                   후 이용하시겠습니까?
                 </div>
->>>>>>> Stashed changes
               </div>
             )}
             {isAuthenticated && (
