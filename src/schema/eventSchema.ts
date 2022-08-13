@@ -6,7 +6,7 @@ export const createEventSchema = z.object({
   startingTimes: z.string(),
   timeSize: z.number(),
   isPublicMeet: z.boolean(),
-  status: z.string(),
+  status: z.string().optional(),
   headCounts: z.number(),
   tags: z.string(),
 })
