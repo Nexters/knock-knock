@@ -92,10 +92,6 @@ model Group {
   members     Profile[]
 }
 
-model ProfileAnonymous {
-  id String @id @default(cuid())
-}
-
 model Participation {
   id            String   @id @default(cuid())
   createdAt     DateTime @default(now())
@@ -112,18 +108,13 @@ model AnonymousParticipation {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   name          String
-<<<<<<< Updated upstream
   identifier    String
-=======
-  secret        String
->>>>>>> Stashed changes
   event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId       String
   selectedCells String   @db.Text
 }
 
 model Event {
-<<<<<<< Updated upstream
   id                    String                   @id @default(cuid())
   createdAt             DateTime                 @default(now())
   updatedAt             DateTime                 @updatedAt
@@ -142,21 +133,4 @@ model Event {
   status                String?
   Group                 Group?                   @relation(fields: [groupId], references: [id])
   groupId               String?
-=======
-  id                     String                   @id @default(cuid())
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
-  profile                Profile                  @relation(fields: [profileId], references: [id])
-  profileId              String
-  participates           Participation[]
-  title                  String
-  description            String                   @db.Text
-  startingTimes          String                   @db.Text
-  timeSize               Int
-  timeInterval           Int?
-  isPublicMeet           Boolean?
-  headCounts             Int?
-  tags                   String?
-  AnonymousParticipation AnonymousParticipation[]
->>>>>>> Stashed changes
 }
