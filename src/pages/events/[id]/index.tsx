@@ -108,7 +108,7 @@ export default function Event() {
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
             <button
-              onClick={() => push({ pathname: '/api/auth/signin', query: { redirect: query.id } })}
+              onClick={() => push({ pathname: '/auth/login', query: { redirect: query.id } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               SNS 계정으로 로그인

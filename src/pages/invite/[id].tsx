@@ -127,7 +127,9 @@ export default function Invite() {
               </button>
               <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
               <button
-                onClick={() => router.push({ pathname: '/api/auth/signin' })}
+                onClick={() =>
+                  router.push({ pathname: '/auth/login', query: { redirect: `/invite/${router.query.id}` } })
+                }
                 className="block mx-auto btn w-full max-w-xs mt-4 bg-primary text-white"
               >
                 SNS 계정으로 로그인

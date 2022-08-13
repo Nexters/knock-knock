@@ -46,7 +46,7 @@ export default function Home() {
           ) : (
             <div className="card-body p-4">
               <div className="ml-3 font-bold">
-                <Link href="/api/auth/signin">
+                <Link href="/auth/login">
                   <span className="underline underline-offset-1 cursor-pointer">로그인</span>
                 </Link>{' '}
                 후 이용하시겠습니까?
