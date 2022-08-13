@@ -78,6 +78,19 @@ model Profile {
   introduction  String?
   events        Event[]
   participates  Participation[]
+  groups        Group[]
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  password    String?
+  name        String
+  description String
+  tags        String?
+  events      Event[]
+  isPublic    Boolean?
+  Profile     Profile? @relation(fields: [profileId], references: [id])
+  profileId   String?
 }
 
 model Participation {
@@ -106,4 +119,7 @@ model Event {
   isPublicMeet  Boolean?
   headCounts    Int?
   tags          String?
+  status        String?
+  Group         Group?          @relation(fields: [groupId], references: [id])
+  groupId       String?
 }

@@ -9,6 +9,7 @@ export const createEventSchema = z.object({
   status: z.string(),
   headCounts: z.number(),
   tags: z.string(),
+  groupId: z.string(),
 })
 
 export type ICreateEvent = z.TypeOf<typeof createEventSchema>
