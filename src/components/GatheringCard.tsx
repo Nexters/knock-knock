@@ -47,11 +47,8 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
                 {data && data?.startingTimes.length > 1 && ` 외 ${data?.startingTimes?.split(',')?.length - 1}일`}
               </span>
             </div>
-            {/* <div className={`font-bold mt-1 text-primary ${isWideView && 'absolute bottom-4 right-4'}`}>마감일 D-5</div> */}
           </div>
-          {/* <div className="text-white">{ data?.participates}</div> */}
           <div className="avatar items-center mt-5">
-            {/* ts-ignore */}
             {(data?.participates ?? []).map(participate => (
               <div key={participate.id} className="w-7 rounded-full mr-2">
                 <img src={participate.profile.image ?? `/assets/images/avatar.png`} />

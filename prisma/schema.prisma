@@ -82,15 +82,14 @@ model Profile {
 }
 
 model Group {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   password    String?
   name        String
   description String
   tags        String?
   events      Event[]
   isPublic    Boolean?
-  Profile     Profile? @relation(fields: [profileId], references: [id])
-  profileId   String?
+  members     Profile[]
 }
 
 model Participation {

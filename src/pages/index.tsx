@@ -1,98 +1,82 @@
 import Link from 'next/link'
+import { useState } from 'react'
+import { Profile } from '@prisma/client'
+
 import GatheringCard from 'src/components/GatheringCard'
 import SEO from 'src/components/pageLayouts/SEO'
 import { useRouter } from 'next/router'
 import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
+import MyGroupCard from 'src/components/MyGroupCard'
+import BottomSheet from 'src/components/BottomSheet'
+import { IGroup } from 'src/types/Group'
+
+interface IUser extends Profile {
+  groups: IGroup[]
+}
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
   const { data: events, isLoading, error } = trpc.useQuery(['events.events'])
 
+  const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
+
   return (
     <SEO>
-      <div className="flex flex-col py-5 pt-9 relative bg-bgColor">
-        <div className="flex justify-between items-center px-5 ">
-          <object data="assets/svg/logo.svg" />
-          <Link href="/search">
-            <span className="mr-3 cursor-pointer">
-              <img src="assets/svg/search.svg" alt="icon" />
-            </span>
-          </Link>
-        </div>
-
-        <div className="px-5 mt-5">
-          <div className="card bg-gradient-to-r from-from to-to rounded-xl">
+      <div className="w-full h-full flex flex-col relative bg-bgColor">
+        <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+          <object data="assets/svg/logo_white.svg" />
+          <div className="flex items-center">
+            <Link href="/search">
+              <span className="mr-3 cursor-pointer">
+                <img src="assets/svg/search.svg" alt="icon" />
+              </span>
+            </Link>
             {isAuthenticated ? (
-              <>
-                <div className="card-body p-4 relative">
-                  <div>
-                    <div className="avatar items-center">
-                      <div className="w-10 h-10 rounded-full">
-                        <img src={user?.image ?? 'assets/images/avatar.png'} />
-                      </div>
-                      <div className="ml-3 font-bold">{user?.name}</div>
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    {user?.tags?.split(',').map(tag => {
-                      return (
-                        <div key={tag} className="badge badge-secondary mr-2">
-                          {tag.trim()}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-                <div className="mt-3">
-                  {user?.tags?.split(',').map(tag => {
-                    return (
-                      <div key={tag} className="badge badge-secondary mr-2">
-                        {tag.trim()}
-                      </div>
-                    )
-                  })}
-                </div>
-              </>
-            ) : (
-              <div className="card-body p-4">
-                <div className="ml-3 font-bold">
-                  <Link href="/auth/login">
-                    <span className="underline underline-offset-1 cursor-pointer">로그인</span>
-                  </Link>{' '}
-                  후 이용하시겠습니까?
-                </div>
-              </div>
-            )}
-            {isAuthenticated && (
               <Link href="/profile">
-                <span className="absolute right-3 top-3 text-white p-2 cursor-pointer">
-                  <img src="assets/svg/Edit_outlined.svg" alt="logo" />
-                </span>
+                <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover">
+                  <img className="" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
+                </div>
+              </Link>
+            ) : (
+              <Link href="/auth/login">
+                <div className="cursor-pointer px-4 py-1 bg-gradient-to-r from-from to-to rounded-[54px]">
+                  <span className="text-sm text-white">로그인</span>
+                </div>
               </Link>
             )}
           </div>
         </div>
 
+        <div className="w-full h-[205px] flex justify-center items-center bg-to">배너</div>
+
         <div className="mt-8">
-          <div className="flex justify-between items-center px-5">
-            <h2 className="text-lg font-bold">약속 모임</h2>
-            <button className="text-sm text-textGray">필터</button>
-          </div>
-          <div className="mx-2 mt-2 pb-2 flex flex-col">
+          <h2 className="text-lg font-bold pl-5">내 약속</h2>
+          <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
             {(events ?? []).map((event, index) => {
-              return <GatheringCard key={index} isWideView data={event} />
+              return <GatheringCard key={index} data={event} />
             })}
           </div>
         </div>
+
+        <div className="mt-8 px-5">
+          <h2 className="text-lg font-bold">내 그룹</h2>
+          <div className="mt-2 pb-2 flex flex-row">
+            {(user as IUser)?.groups ? (
+              (user as IUser).groups.map((group, index) => {
+                return <MyGroupCard key={index} data={group} />
+              })
+            ) : (
+              <div className="w-full bg-cardBg p-3 rounded-lg mt-2">
+                <span className="font-bold">아직 참여한 그룹이 없어요!</span>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
-          <button
-            className="btn btn-circle bg-primary text-white mr-5"
-            onClick={() => {
-              router.push('/meets/create')
-            }}
-          >
+          <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleBottomSheet('create')}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -105,6 +89,20 @@ export default function Home() {
             </svg>
           </button>
         </div>
+
+        {visibleBottomSheet === 'create' && (
+          <BottomSheet onClose={() => setVisibleBottomSheet(null)} isBackground={false}>
+            <button onClick={() => router.push('/meets/create')} className="btn w-full max-w-xs bg-primary text-white">
+              약속 만들기
+            </button>
+            <button
+              onClick={() => router.push('/group/create')}
+              className="btn w-full max-w-xs bg-white text-bgColor mt-2"
+            >
+              그룹 만들기
+            </button>
+          </BottomSheet>
+        )}
       </div>
     </SEO>
   )

@@ -1,112 +1,106 @@
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { IGathering } from 'src/components/GatheringCard'
 
-interface TGroupDetail extends IGathering {
-  participants: string[]
-}
+import { trpc } from 'src/utils/trpc'
+import { useUser } from 'src/shared/hooks'
+import GatheringCard from 'src/components/GatheringCard'
 
 export default function GroupDetail() {
-  const [detail, setDetail] = useState<TGroupDetail>()
+  const { user, isAuthenticated } = useUser()
   const router = useRouter()
-  const { id } = router.query
-
-  useEffect(() => {
-    const gatheringDetail = gatheringDetailList.filter(detail => {
-      return detail.id === Number(id)
-    })
-    setDetail({ ...gatheringDetail[0] } as TGroupDetail)
-  }, [id])
+  const { data: events, isLoading, error } = trpc.useQuery(['events.events'])
 
   return (
-    <div className="flex flex-col py-4 relative h-screen bg-bgColor px-5">
-      {/* <div className="flex justify-between items-center">
+    <div className="flex flex-col py-5 pt-9 relative bg-bgColor">
+      <div className="flex justify-between items-center px-5 ">
         <Link href="/">
-          <img src="/assets/svg/logo.svg" alt="logo" />
+          <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer" />
         </Link>
-      </div> */}
-
-      <div className="flex itmes-center mt-5">
-        <Link href="/">
-          <img src="/assets/svg/Arrow left.svg" alt="logo" className="cursor-pointer" />
-        </Link>
-        <h2 className="text-lg font-bold ml-2">약속 모임</h2>
       </div>
 
-      <div className="flex align-center justify-between mt-7">
-        <div>
-          {detail?.categoryList?.map(category => (
-            <div key={category} className="badge badge-neutral text-2xs mr-2">
-              {category}
-            </div>
-          ))}
-        </div>
-        <div className={`font-bold mt-1 text-primary`}>마감일 D-5</div>
-      </div>
-      <h2 className="mt-3 text-xl font-bold">{detail?.title}</h2>
-
-      <div className="mt-7 flex flex-col">
-        <span className="text-sm text-textGray mb-2">날짜</span>
-        <select className="select w-full max-w-s mt-3 bg-cardBg text-textGray">
-          <option disabled selected>
-            날짜 선택
-          </option>
-          <option>2022.08.02</option>
-          <option>2022.08.03</option>
-          <option>2022.08.04</option>
-          <option>2022.08.05</option>
-          <option>2022.08.06</option>
-        </select>
-      </div>
-
-      <div className="mt-7 flex flex-col">
-        <span className="text-sm text-textGray mb-2">참여자</span>
-        <div className="xs:max-h-[50%] sm:max-h-[100%] overflow-auto">
-          {detail?.participants?.map((person: string) => {
-            return (
-              <div className="flex items-center justify-between bg-cardBg p-3 rounded-lg mt-2">
-                <div className="avatar flex items-center">
-                  <div className="w-10 rounded-full">
-                    <img src="https://placeimg.com/50/50/people" />
+      <div className="px-5 mt-5">
+        <div className="card bg-gradient-to-r from-from to-to rounded-xl">
+          {isAuthenticated ? (
+            <>
+              <div className="card-body p-4 relative">
+                <div>
+                  <div className="avatar items-center">
+                    <div className="w-10 h-10 rounded-full">
+                      <img src={user?.image ?? 'assets/images/avatar.png'} />
+                    </div>
+                    <div className="ml-3 font-bold">{user?.name}</div>
                   </div>
-
-                  <div className="ml-3 font-bold">{person}</div>
+                </div>
+                <div className="mt-3">
+                  {user?.tags?.split(',').map(tag => {
+                    return (
+                      <div key={tag} className="badge badge-secondary mr-2">
+                        {tag.trim()}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
-            )
+              <div className="mt-3">
+                {user?.tags?.split(',').map(tag => {
+                  return (
+                    <div key={tag} className="badge badge-secondary mr-2">
+                      {tag.trim()}
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="card-body p-4">
+              <div className="ml-3 font-bold">
+                <Link href="/auth/login">
+                  <span className="underline underline-offset-1 cursor-pointer">로그인</span>
+                </Link>{' '}
+                후 이용하시겠습니까?
+              </div>
+            </div>
+          )}
+          {isAuthenticated && (
+            <Link href="/profile">
+              <span className="absolute right-3 top-3 text-white p-2 cursor-pointer">
+                <img src="assets/svg/Edit_outlined.svg" alt="logo" />
+              </span>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <div className="flex justify-between items-center px-5">
+          <h2 className="text-lg font-bold">약속 모임</h2>
+          <button className="text-sm text-textGray">필터</button>
+        </div>
+        <div className="mx-2 mt-2 pb-2 flex flex-col">
+          {(events ?? []).map((event, index) => {
+            return <GatheringCard key={index} isWideView data={event} />
           })}
         </div>
       </div>
-
-      <div className="fixed bottom-0 left-0 flex justify-between mt-10 p-5 w-[100%] bg-bgColor md:max-w-sm md:static md:p-0">
-        <button className="btn w-[160px]">모임 참여하기</button>
-        <button className="btn w-[160px]">확정시간 선택하기</button>
+      <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+        <button
+          className="btn btn-circle bg-primary text-white mr-5"
+          onClick={() => {
+            router.push('/meets/create')
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
       </div>
     </div>
   )
 }
-
-const gatheringDetailList = [
-  {
-    id: 1,
-    categoryList: ['밥약', '넥스터즈'],
-    title: '뼈찜모임 모여라',
-    date: '2020-07-24',
-    participants: ['윤지영', '김태우', '이지원', '신창선', '김희원', '강소현'],
-  },
-  {
-    id: 2,
-    categoryList: ['술약', '넥스터즈'],
-    title: '수제맥주 뿌실분',
-    date: '2020-07-24',
-    participants: ['윤지영', '김태우', '이지원', '신창선'],
-  },
-  {
-    id: 3,
-    categoryList: ['커피챗', '넥스터즈'],
-    title: '면접 꿀팁 알려주세요',
-    date: '2020-07-24',
-    participants: ['윤지영', '김태우', '이지원', '신창선'],
-  },
-]
