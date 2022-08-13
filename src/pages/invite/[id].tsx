@@ -108,7 +108,7 @@ export default function Invite() {
                   날짜 선택
                 </option>
                 {eventData?.startingTimes?.split(',').map(date => {
-                  return <option>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
+                  return <option key={date}>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
                 })}
               </select>
             </div>

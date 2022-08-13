@@ -50,7 +50,7 @@ export default function SearchPage() {
             {searchedUserList.length > 0 ? (
               (searchedUserList ?? []).map(user => {
                 return (
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between" key={user.id}>
                     <div className="my-3 flex items-center">
                       <img
                         className="w-[30px] h-[30px] rounded-full"
@@ -71,7 +71,7 @@ export default function SearchPage() {
             {searchedGroupList?.length > 0 ? (
               (searchedGroupList ?? []).map(event => {
                 return (
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between" key={event.id}>
                     <div className="my-3 flex items-center">
                       <img className="w-[30px] h-[30px] rounded-full" src="assets/svg/logo.svg" alt="profile" />
                       <span className="text-sm ml-2 text-textGray">{event.title}</span>
