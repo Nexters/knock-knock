@@ -103,22 +103,34 @@ model Participation {
   selectedCells String   @db.Text
 }
 
+model AnonymousParticipation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  identifier    String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId       String
+  selectedCells String   @db.Text
+}
+
 model Event {
-  id            String          @id @default(cuid())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  profile       Profile         @relation(fields: [profileId], references: [id])
-  profileId     String
-  participates  Participation[]
-  title         String
-  description   String          @db.Text
-  startingTimes String          @db.Text
-  timeSize      Int
-  timeInterval  Int?
-  headCounts    Int?
-  isUnlimitedHeadCounts  Boolean?
-  tags          String?
-  status        String?
-  Group         Group?          @relation(fields: [groupId], references: [id])
-  groupId       String?
+  id                    String                   @id @default(cuid())
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  profile               Profile                  @relation(fields: [profileId], references: [id])
+  profileId             String
+  participates          Participation[]
+  anonymousParticipates AnonymousParticipation[]
+  title                 String
+  description           String                   @db.Text
+  startingTimes         String                   @db.Text
+  timeSize              Int
+  timeInterval          Int?
+  headCounts            Int?
+  isUnlimitedHeadCounts Boolean?
+  tags                  String?
+  status                String?
+  Group                 Group?                   @relation(fields: [groupId], references: [id])
+  groupId               String?
 }

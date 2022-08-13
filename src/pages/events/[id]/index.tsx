@@ -4,15 +4,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
-import { useUserContext } from 'src/context/UserContext'
 import { trpc } from 'src/utils/trpc'
 import { toast } from 'react-toastify'
+import { useUser } from 'src/shared/hooks'
 
 export default function Event() {
   const { status } = useSession()
   const { push, query } = useRouter()
   const { data: eventData, isLoading, error } = trpc.useQuery(['events.single-event', { eventId: query.id as string }])
-  const utils = trpc.useContext()
   const { mutate } = trpc.useMutation('events.my-cells', {
     onSuccess() {
       toast('저장 완료!', { autoClose: 2000 })
@@ -21,7 +20,8 @@ export default function Event() {
       toast('저장 실패...', { autoClose: 2000 })
     },
   })
-  const user = useUserContext()
+
+  const { user } = useUser()
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(
