@@ -4,7 +4,7 @@ import z from 'zod'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { createRouter } from './context'
 import { defaultError } from '../shared/errors'
-import { createGroupSchema } from 'src/schema/groupSchema'
+import { createGroupSchema, modifyGroupSchema } from 'src/schema/groupSchema'
 
 export const groupRouter = createRouter()
   .query('groups', {
@@ -104,5 +104,18 @@ export const groupRouter = createRouter()
         console.error(e)
         throw new trpc.TRPCError(defaultError)
       }
+    },
+  })
+  .mutation('modify-group', {
+    input: modifyGroupSchema,
+    async resolve({ ctx, input }) {
+      await ctx.prisma.group.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input,
+        },
+      })
     },
   })
