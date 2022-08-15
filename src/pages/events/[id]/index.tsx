@@ -1,5 +1,4 @@
 import { Participation } from '@prisma/client'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -9,7 +8,6 @@ import { toast } from 'react-toastify'
 import { useUser } from 'src/shared/hooks'
 
 export default function Event() {
-  const { status } = useSession()
   const { push, query } = useRouter()
   const { data: eventData, isLoading, error } = trpc.useQuery(['events.single-event', { eventId: query.id as string }])
   const { mutate } = trpc.useMutation('events.my-cells', {
@@ -21,7 +19,8 @@ export default function Event() {
     },
   })
 
-  const { user } = useUser()
+  const { user, isLoadingUser, isAnonymousUser } = useUser()
+  console.log(user, isAnonymousUser)
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(
@@ -102,8 +101,8 @@ export default function Event() {
 
   return (
     <>
-      <input checked={status === 'unauthenticated'} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal">
+      <input checked={!isLoadingUser && !user} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
+      <div className="modal  bg-bgColor bg-opacity-80">
         <div className="modal-box sm:max-w-xs">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
@@ -154,7 +153,7 @@ export default function Event() {
           )}
         </div>
 
-        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
+        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 sm:max-w-sm">
           {isResultView ? (
             <button onClick={() => setIsResultView(!isResultView)} className="btn w-[100%] bg-white text-cardBg">
               다시 선택하기

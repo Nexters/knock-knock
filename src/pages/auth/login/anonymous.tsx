@@ -3,6 +3,8 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { signJwt } from 'src/utils/jwt'
 import { cls } from 'src/utils/cls'
+import { useUser } from 'src/shared/hooks'
+import { toast } from 'react-toastify'
 
 type Inputs = {
   name: string
@@ -16,13 +18,17 @@ export default function CreateAnonymous() {
     watch,
     formState: { errors },
   } = useForm<Inputs>()
-  const { query, push } = useRouter()
+  const router = useRouter()
+  const { setAnonymousUser } = useUser()
+
   watch()
-  console.log(errors)
 
   const onValid: SubmitHandler<Inputs> = (data: Inputs) => {
-    console.log(data)
-    console.log(signJwt(data))
+    setAnonymousUser({ id: signJwt(data), name: data.name })
+    if (router.query?.redirect) router.push(router.query?.redirect as string)
+    else {
+      toast('에러가 발생했습니다.')
+    }
   }
 
   return (

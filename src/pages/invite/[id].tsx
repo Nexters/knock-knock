@@ -1,10 +1,10 @@
 import { FormEvent, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { trpc } from 'src/utils/trpc'
 import format from 'date-fns/format'
+import { useUser } from 'src/shared/hooks'
 
 interface Invite {
   id: number
@@ -16,9 +16,8 @@ interface Invite {
 }
 
 export default function Invite() {
-  const { status } = useSession()
   const router = useRouter()
-  console.log(router)
+  const { user } = useUser()
 
   const [isVisibleModal, setIsVisibleModal] = useState(false)
   const {
@@ -42,7 +41,7 @@ export default function Invite() {
   }
 
   const onSelectTime = () => {
-    if (status === 'unauthenticated') {
+    if (!user) {
       setIsVisibleModal(true)
     } else {
       router.push(`/events/${router.query.id}`)
@@ -63,7 +62,7 @@ export default function Invite() {
         </div>
       )}
       {eventData && (
-        <>
+        <div className="overflow-auto">
           <h1 className="mt-12 text-xl font-bold text-white text-center">모임에 초대해요!</h1>
           <div className="mt-11 px-5">
             <p className="text-base font-bold">{eventData?.title}</p>
@@ -105,12 +104,12 @@ export default function Invite() {
                 날짜 선택
               </option>
               {eventData?.startingTimes?.split(',').map(date => {
-                return <option>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
+                return <option key={date}>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
               })}
             </select>
           </div>
 
-          <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
+          <div className="mt-20 flex justify-between w-[100%] px-5 sm:max-w-sm">
             <button onClick={onCopyToClipboard} className="btn w-[48%] bg-white text-primary">
               링크 공유
             </button>
@@ -143,7 +142,7 @@ export default function Invite() {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

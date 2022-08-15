@@ -82,7 +82,7 @@ export default function GroupDetail() {
           })}
         </div>
       </div>
-      <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+      <div className="w-full sm:max-w-sm fixed bottom-10 auto flex justify-end">
         <button
           className="btn btn-circle bg-primary text-white mr-5"
           onClick={() => {
