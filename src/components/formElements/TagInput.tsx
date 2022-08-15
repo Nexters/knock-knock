@@ -39,7 +39,11 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
       </div>
       <div className="flex flex-wrap my-3">
         {tags.map((tag, index) => (
-          <button key={tag.id} onClick={() => onRemoveTag(index)} className="bg-[#46474C] px-2 mr-2 mb-2 rounded-md">
+          <button
+            key={tag.id}
+            onClick={() => onRemoveTag(index)}
+            className="bg-[#46474C] px-2 mr-2 mb-2 rounded-md text-sm"
+          >
             {tag.text}
           </button>
         ))}

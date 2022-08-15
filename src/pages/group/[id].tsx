@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
 import SEO from 'src/components/pageLayouts/SEO'
+import BottomSheet from 'src/components/BottomSheet'
 import GatheringCard from 'src/components/GatheringCard'
 
 export default function GroupDetail() {
+  const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
+
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
 
@@ -44,14 +48,20 @@ export default function GroupDetail() {
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-between items-end bg-to p-4">
-          <span className="font-bold text-lg">{groupData?.name}</span>
-          {groupData?.profileId === user?.id && (
-            <div className="flex">
-              <img className="" src={'/assets/svg/Edit_outlined.svg'} />
-              <span className="text-sm">그룹 수정</span>
-            </div>
-          )}
+        <div className="w-full h-[205px] flex justify-end items-start flex-col bg-to p-4">
+          <div className="badge badge-secondary mb-2 text-2xs mr-2">{groupData?.isPublic ? '공개' : '비공개'}</div>
+          <div className="flex justify-between w-full">
+            <span className="font-bold text-lg">{groupData?.name}</span>
+            {groupData?.profileId === user?.id && (
+              <div
+                className="flex items-center"
+                onClick={() => router.push({ pathname: '/group/modify', query: { id: `${router.query.id}` } })}
+              >
+                <img className="w-[20px]" src={'/assets/svg/Edit_outlined.svg'} />
+                <span className="text-sm"> 그룹 수정</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="mt-8">
@@ -68,7 +78,7 @@ export default function GroupDetail() {
           <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
             <button
               className="btn btn-circle bg-primary text-white mr-5"
-              // onClick={() => setVisibleBottomSheet('create')}
+              onClick={() => setVisibleBottomSheet('create')}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,6 +93,19 @@ export default function GroupDetail() {
             </button>
           </div>
         </div>
+        {visibleBottomSheet === 'create' && (
+          <BottomSheet onClose={() => setVisibleBottomSheet(null)} isBackground={false}>
+            <button onClick={() => router.push('/meets/create')} className="btn w-full max-w-xs bg-primary text-white">
+              약속 만들기
+            </button>
+            <button
+              onClick={() => router.push('/group/create')}
+              className="btn w-full max-w-xs bg-white text-bgColor mt-2"
+            >
+              그룹 만들기
+            </button>
+          </BottomSheet>
+        )}
       </div>
     </SEO>
   )
