@@ -25,7 +25,7 @@ export default function Input({
 }: InputProps) {
   return (
     <div className={classNames ?? ''}>
-      <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor={name}>
+      <label className="mb-1 block text-sm font-medium text-gray-700 text-left" htmlFor={name}>
         {label}
       </label>
       {kind === 'text' ? (
@@ -36,7 +36,7 @@ export default function Input({
             {...rest}
             {...register}
             type={type}
-            className="appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="input input-bordered appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
           {errorMessage && <p className=" font-medium text-xs text-red-500 mt-1">{errorMessage}</p>}
         </div>
@@ -53,7 +53,7 @@ export default function Input({
             type={type}
             className="appearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
-          <div className="absolute right-0 pointer-events-none pr-3 flex items-center">
+          <div className="input input-bordered absolute right-0 pointer-events-none pr-3 flex items-center">
             <span className="text-gray-500">KRW</span>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function Input({
             required={required}
             {...register}
             type={type}
-            className="appearance-none w-full px-3 py-2 border border-gray-300 rounded-md rounded-l-none shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="input input-bordered appearance-none w-full px-3 py-2 border border-gray-300 rounded-md rounded-l-none shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
       ) : null}

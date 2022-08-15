@@ -9,16 +9,13 @@ import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
 import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
-import { IGroup } from 'src/types/Group'
-
-interface IUser extends Profile {
-  groups: IGroup[]
-}
+import SkeletonCard from 'src/components/SkeletonCard'
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
-  const { data: events, isLoading, error } = trpc.useQuery(['events.events'])
+  const { data: events, isLoading } = trpc.useQuery(['events.events'])
+  const { data: userData } = trpc.useQuery(['users.my-data', { userId: user?.id as string }])
 
   const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
 
@@ -52,20 +49,35 @@ export default function Home() {
         <div className="w-full h-[205px] flex justify-center items-center bg-to">배너</div>
 
         <div className="mt-8">
-          <h2 className="text-lg font-bold pl-5">내 약속</h2>
+          {/* 현재 전체 약속 리스트 불러오는 거라서 타이틀 수정함 */}
+          <h2 className="text-lg font-bold pl-5">약속</h2>
           <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
-            {(events ?? []).map((event, index) => {
-              return <GatheringCard key={index} data={event} />
-            })}
+            {isLoading ? (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            ) : (
+              <>
+                {(events ?? []).map((event, index) => {
+                  return <GatheringCard key={index} data={event} />
+                })}
+              </>
+            )}
           </div>
         </div>
 
         <div className="mt-8 px-5">
-          <h2 className="text-lg font-bold">내 그룹</h2>
-          <div className="mt-2 pb-2 flex flex-row">
-            {(user as IUser)?.groups ? (
-              (user as IUser).groups.map((group, index) => {
-                return <MyGroupCard key={index} data={group} />
+          <div className="flex justify-between">
+            <h2 className="text-lg font-bold">내 그룹</h2>
+            <Link href="/group/list">
+              <span className="text-sm text-textGray">전체 보기</span>
+            </Link>
+          </div>
+          <div className="mt-2 pb-2 flex flex-col">
+            {userData?.groups ? (
+              userData.groups.map((group, index) => {
+                return <MyGroupCard key={index} data={group as any} />
               })
             ) : (
               <div className="w-full bg-cardBg p-3 rounded-lg mt-2">
@@ -74,7 +86,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
         <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleBottomSheet('create')}>
             <svg

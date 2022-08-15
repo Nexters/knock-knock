@@ -1,5 +1,4 @@
 import * as trpc from '@trpc/server'
-import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { defaultError } from '../shared/errors'
@@ -98,6 +97,7 @@ export const eventRouter = createRouter()
   .mutation('create-event', {
     input: createEventSchema,
     async resolve({ ctx, input }) {
+      const { title, description, tags, startingTimes, timeSize, isUnlimitedHeadCounts } = input
       try {
         const event = await ctx.prisma.event.create({
           data: {
@@ -106,7 +106,17 @@ export const eventRouter = createRouter()
                 id: ctx.user?.id,
               },
             },
-            ...input,
+            group: {
+              connect: {
+                id: input.groupId,
+              },
+            },
+            title,
+            description,
+            tags,
+            startingTimes,
+            timeSize,
+            isUnlimitedHeadCounts,
           },
         })
         return event

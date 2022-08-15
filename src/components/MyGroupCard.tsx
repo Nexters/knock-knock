@@ -9,12 +9,12 @@ type MyGroupProps = {
 const MyGroupCard = ({ data }: MyGroupProps) => {
   return (
     <Link href={`/group/${data.id}`}>
-      <div className="flex items-center justify-between bg-cardBg p-3 rounded-lg mt-2">
+      <div className="flex items-center justify-between bg-cardBg p-3 rounded-lg mt-2 w-[100%]">
         <div className="flex items-center">
-          <div className="font-bold">{data.name}</div>
-          <div className="ml-2 text-xs text-textGray">참여 {data.members.length}명</div>
+          <div className="font-bold">{data?.name}</div>
+          {/* <div className="ml-2 text-xs text-textGray">참여 {data?.members?.length || 0}명</div> */}
         </div>
-        <img src="assets/svg/right.svg" alt="logo" />
+        <img src="/assets/svg/right.svg" alt="logo" />
       </div>
     </Link>
   )
