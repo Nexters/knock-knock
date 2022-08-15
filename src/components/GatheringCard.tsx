@@ -2,8 +2,6 @@ import { Event } from '@prisma/client'
 import Link from 'next/link'
 import format from 'date-fns/format'
 
-import { trpc } from 'src/utils/trpc'
-
 type GatheringCardProps = {
   data: Event & { participates: any[] }
   isWideView?: boolean
@@ -17,12 +15,6 @@ export interface IGathering {
 }
 
 const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
-  // const {
-  //   data: groupData,
-  //   isLoading,
-  //   error,
-  // } = trpc.useQuery(['groups.single-group', { groupId: data.groupId as string }])
-
   return (
     <Link href={`/invite/${data.id}`}>
       <div
@@ -41,7 +33,7 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
               ))}
             </div>
             <span>
-              <img src="assets/svg/fi_more-vertical.svg" alt="date_icon" className={`${isWideView && 'rotate-90'}`} />
+              <img src="/assets/svg/fi_more-vertical.svg" alt="date_icon" className={`${isWideView && 'rotate-90'}`} />
             </span>
           </div>
 
@@ -49,7 +41,7 @@ const GatheringCard = ({ data, isWideView }: GatheringCardProps) => {
 
           <div className="mt-2 text-xs">
             <div className="flex">
-              <img src="assets/svg/uiw_date.svg" alt="date_icon" />
+              <img src="/assets/svg/uiw_date.svg" alt="date_icon" />
               <span className="ml-2 text-textGray">
                 {data?.startingTimes[0] &&
                   format(new Date(Number(data?.startingTimes?.split(',')?.[0]) * 1000), 'yyyy.MM.dd')}

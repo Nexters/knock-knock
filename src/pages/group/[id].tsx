@@ -9,14 +9,12 @@ import GatheringCard from 'src/components/GatheringCard'
 export default function GroupDetail() {
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
+
   const {
     data: groupData,
     isLoading,
     error,
   } = trpc.useQuery(['groups.single-group', { groupId: router.query.id as string }])
-
-  console.log({ groupData })
-
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative bg-bgColor">
@@ -46,15 +44,23 @@ export default function GroupDetail() {
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-center items-center bg-to">배너</div>
+        <div className="w-full h-[205px] flex justify-between items-end bg-to p-4">
+          <span className="font-bold text-lg">{groupData?.name}</span>
+          {groupData?.profileId === user?.id && (
+            <div className="flex">
+              <img className="" src={'/assets/svg/Edit_outlined.svg'} />
+              <span className="text-sm">그룹 수정</span>
+            </div>
+          )}
+        </div>
 
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">약속 모임</h2>
           <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
             <div>
-              {/* {(groups ?? []).map((group, index) => {
-                return <GatheringCard key={index} data={group} />
-              })} */}
+              {(groupData?.events ?? []).map((group, index) => {
+                return <GatheringCard key={index} data={group as any} />
+              })}
             </div>
           </div>
 

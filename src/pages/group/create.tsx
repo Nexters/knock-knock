@@ -1,4 +1,3 @@
-import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
@@ -30,9 +29,9 @@ function CreateGroup() {
   })
 
   const { mutate } = trpc.useMutation('groups.create-group', {
-    onSuccess(data) {
-      toast('생성 완료!', { autoClose: 2000 })
-      insertMutation({ groupId: data.id })
+    onSuccess: async data => {
+      await toast('생성 완료!', { autoClose: 2000 })
+      await insertMutation({ groupId: data.id })
       router.push(`/group/${data.id}`)
     },
     onError() {

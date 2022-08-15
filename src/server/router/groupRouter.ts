@@ -26,6 +26,15 @@ export const groupRouter = createRouter()
           where: {
             id: input.groupId,
           },
+          include: {
+            members: {
+              include: {
+                profile: true,
+              },
+            },
+            profile: true,
+            events: true,
+          },
         })
         return group
       } catch (error) {
