@@ -34,6 +34,16 @@ export const userRouter = createRouter()
                 profile: true,
               },
             },
+            events: {
+              include: {
+                participates: {
+                  include: {
+                    profile: true,
+                  },
+                },
+                profile: true,
+              },
+            },
           },
         })
         return userData
@@ -45,7 +55,15 @@ export const userRouter = createRouter()
   .query('user-list', {
     async resolve({ ctx }) {
       try {
-        const userList = await ctx.prisma.profile.findMany()
+        const userList = await ctx.prisma.profile.findMany({
+          include: {
+            participates: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        })
         return userList
       } catch (error) {
         console.error(error)
