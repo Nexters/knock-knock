@@ -12,10 +12,12 @@ import GuideModal from 'src/components/GuideModal'
 // import SkeletonCard from 'src/components/SkeletonCard'
 import { IUser } from 'src/types/User'
 import { IEvent } from 'src/types/Event'
+import { useRouter } from 'next/router'
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
   const { data: userData } = trpc.useQuery(['users.me'])
+  const router = useRouter()
 
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<IEvent | null>(null)
@@ -54,6 +56,7 @@ export default function Home() {
   const closeGuideModal = () => {
     setShowGuideModal(false)
     localStorage.setItem('hadSeenGuideModal', 'true')
+    router.replace(router.asPath.split('#')[0] as string)
   }
 
   useEffect(() => {
@@ -92,7 +95,7 @@ export default function Home() {
 
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">내 약속</h2>
-          <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
+          <div className="mt-2 pb-2 flex flex-row overflow-x-auto px-5">
             {userData?.events ? (
               userData?.events.map((event, index) => {
                 return (

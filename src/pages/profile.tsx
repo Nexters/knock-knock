@@ -49,7 +49,7 @@ export default function Profile() {
         <div className="badge badge-lg badge-success mr-2">수요일</div>
       </div>
 
-      <div className="flex pl-5 mt-5 overflow-x-scroll">
+      <div className="flex pl-5 mt-5 overflow-x-auto">
         <div className="min-w-[160px] min-h-[130px] bg-cardBg rounded-lg flex flex-col items-center justify-center mr-3 py-3">
           <img className="w-[70px]" src="/assets/images/badge1.png" alt="badge" />
           <span className="text-sm text-textGray mt-1">[넥스터즈]</span>
