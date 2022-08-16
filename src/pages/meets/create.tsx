@@ -18,6 +18,8 @@ function Create() {
   const router = useRouter()
   const { status } = useSession()
 
+  const { data: groups, isLoading, error } = trpc.useQuery(['groups.groups'])
+
   const [createPhase, setCreatePhase] = useState(1)
 
   const [selectedGroup, setSelectedGroup] = useState('')
@@ -29,6 +31,7 @@ function Create() {
   const [endTime, setEndTime] = useState('')
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('')
+
   const { mutate } = trpc.useMutation('events.create-event', {
     onSuccess(data) {
       toast('생성 완료!', { autoClose: 2000 })
@@ -131,6 +134,7 @@ function Create() {
       startingTimes: dateTimestamp.join(','),
       timeSize: timeGapStamp,
       isUnlimitedHeadCounts,
+      groupId: selectedGroup,
     }
 
     if (!isUnlimitedHeadCounts && headCounts > 0) {
@@ -196,13 +200,19 @@ function Create() {
                 </div>
                 <select
                   className="select select-bordered bg-[#2F3035] border-none"
-                  onChange={() => {}}
+                  onChange={e => {
+                    setSelectedGroup(e.target.value)
+                  }}
                   value={selectedGroup}
                 >
-                  <option disabled defaultValue={'nexters'}>
-                    그룹을 선택해주세요
-                  </option>
-                  <option value={'nexters'}>넥스터즈</option>
+                  <option>그룹을 선택해주세요</option>
+                  {groups?.map(group => {
+                    return (
+                      <option key={group.id} value={group.id}>
+                        {group.name}
+                      </option>
+                    )
+                  })}
                 </select>
               </div>
             )}
