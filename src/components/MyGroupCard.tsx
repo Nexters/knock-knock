@@ -8,7 +8,7 @@ type MyGroupProps = {
 
 const MyGroupCard = ({ data }: MyGroupProps) => {
   return (
-    <Link href={`/group/${data.id}`}>
+    <Link href={`/groups/${data.id}`}>
       <div className="flex items-center justify-between bg-cardBg p-3 rounded-lg mt-2 w-[100%]">
         <div className="flex items-center">
           <div className="font-bold text-base text-textLightGray">{data.name}</div>

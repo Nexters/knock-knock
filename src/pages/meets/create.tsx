@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { trpc } from 'src/utils/trpc'
 import { useSession } from 'next-auth/react'
 import { ICreateEvent } from '../../schema/eventSchema'
+import LoginModal from 'src/components/modals/LoginModal'
 
 interface MeetTags {
   tags?: { text: string }[]
@@ -35,7 +36,7 @@ function Create() {
   const { mutate } = trpc.useMutation('events.create-event', {
     onSuccess(data) {
       toast('생성 완료!', { autoClose: 2000 })
-      router.push(`/invite/${data.id}`)
+      router.push(`/invites/${data.id}`)
     },
     onError() {
       toast('생성 실패...', { autoClose: 2000 })
@@ -161,7 +162,8 @@ function Create() {
 
   return (
     <>
-      <input checked={status === 'unauthenticated'} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
+      <LoginModal />
+      {/* <input checked={status === 'unauthenticated'} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box sm:max-w-xs">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
@@ -180,7 +182,7 @@ function Create() {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
       <section className="flex flex-col items-center bg-bgColor h-screen pt-[6rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto">
         <div className="fixed w-full bg-bgColor top-0 pb-4">
           <button onClick={handleBack} className="absolute top-9 left-5 ">

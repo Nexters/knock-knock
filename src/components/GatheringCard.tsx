@@ -35,7 +35,7 @@ const GatheringCard = ({ data, isWideView, onMoreButtonClick }: GatheringCardPro
           <img src="assets/svg/fi_more-vertical.svg" alt="date_icon" />
         </button>
       )}
-      <Link href={`/invite/${data.id}`}>
+      <Link href={`/invites/${data.id}`}>
         <div className="w-full h-full card bg-slate-400 rounded-xl">
           <div className="card-body bg-cardBg p-4 px-3 text-white relative">
             <div className="h-5 flex items-center">
