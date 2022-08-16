@@ -109,9 +109,9 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-2 pb-2 flex flex-col">
-            {userData?.groups ? (
+            {userData?.groups && userData.groups.length > 0 ? (
               userData.groups.map((group, index) => {
-                return <MyGroupCard key={index} data={group} />
+                return <MyGroupCard key={index} data={group as any} />
               })
             ) : (
               <div className="w-full bg-cardBg p-3 rounded-lg mt-2">

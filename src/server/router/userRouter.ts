@@ -34,6 +34,16 @@ export const userRouter = createRouter()
                 profile: true,
               },
             },
+            events: {
+              include: {
+                participates: {
+                  include: {
+                    profile: true,
+                  },
+                },
+                profile: true,
+              },
+            },
           },
         })
         return userData
