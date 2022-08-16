@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useRef } from 'react'
+import { useClickAway } from 'react-use'
 
 interface GuideProps {
   onClose: () => void
 }
 
 function GuideModal({ onClose }: GuideProps) {
+  const carouselContainerRef = useRef(null)
+  useClickAway(carouselContainerRef, onClose)
+
   return (
     <>
       {/* BackDrop */}
       <div className="fixed top-0 left-0 right-0 bottom-0 bg-bgColor z-20 opacity-80 overflow-hidden"></div>
       <div className="flex justify-center z-30">
-        <div className="w-[80%] absolute top-1/2 -translate-y-1/2">
+        <div ref={carouselContainerRef} className="w-[80%] absolute top-1/2 -translate-y-1/2">
           <div className="carousel w-[100%] h-[100%]">
             <div id="slide1" className="carousel-item relative w-full flex flex-col">
               <img className="w-[100%] h-[100%] z-40" src="assets/images/clock.png" alt="시계" />
