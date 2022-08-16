@@ -100,11 +100,15 @@ export default function Invite() {
           <div className="mt-5 flex flex-col px-5">
             <span className="text-sm text-textGray mb-2">날짜</span>
             <select className="select w-full max-w-s mt-3 bg-cardBg text-textGray">
-              <option disabled selected>
+              <option disabled defaultValue="">
                 날짜 선택
               </option>
               {eventData?.startingTimes?.split(',').map(date => {
-                return <option key={date}>{format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}</option>
+                return (
+                  <option key={date} value={date}>
+                    {format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}
+                  </option>
+                )
               })}
             </select>
           </div>
