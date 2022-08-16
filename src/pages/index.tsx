@@ -15,7 +15,7 @@ import { IEvent } from 'src/types/Event'
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
-  const { data: userData } = trpc.useQuery(['users.my-data', { userId: user?.id as string }])
+  const { data: userData } = trpc.useQuery(['users.me'])
 
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<IEvent | null>(null)
@@ -64,7 +64,7 @@ export default function Home() {
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative bg-bgColor">
-        <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+        <div className="w-[100%] sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <object data="assets/svg/logo_white.svg" />
           <div className="flex items-center">
             {isAuthenticated ? (

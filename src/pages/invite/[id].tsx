@@ -1,10 +1,10 @@
-import { FormEvent, useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { trpc } from 'src/utils/trpc'
 import format from 'date-fns/format'
+import { useUser } from 'src/shared/hooks'
 
 interface Invite {
   id: number
@@ -16,8 +16,8 @@ interface Invite {
 }
 
 export default function Invite() {
-  const { status } = useSession()
   const router = useRouter()
+  const { user } = useUser()
 
   const [isVisibleModal, setIsVisibleModal] = useState(false)
   const {
@@ -41,7 +41,7 @@ export default function Invite() {
   }
 
   const onSelectTime = () => {
-    if (status === 'unauthenticated') {
+    if (!user) {
       setIsVisibleModal(true)
     } else {
       router.push(`/events/${router.query.id}`)
@@ -62,7 +62,7 @@ export default function Invite() {
         </div>
       )}
       {eventData && (
-        <>
+        <div className="overflow-auto">
           <h1 className="mt-12 text-xl font-bold text-white text-center">모임에 초대해요!</h1>
           <div className="mt-11 px-5">
             <p className="text-base font-bold">{eventData?.title}</p>
@@ -113,7 +113,7 @@ export default function Invite() {
             </select>
           </div>
 
-          <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
+          <div className="mt-20 flex justify-between w-[100%] px-5 sm:max-w-sm">
             <button onClick={onCopyToClipboard} className="btn w-[48%] bg-white text-primary">
               링크 공유
             </button>
@@ -124,7 +124,7 @@ export default function Invite() {
 
           {/* TODO: 로그인모달 컴포넌트화 */}
           <input checked={isVisibleModal} readOnly type="checkbox" id="my-modal-4" className="modal-toggle" />
-          <div className="modal items-center">
+          <div className="modal items-center bg-bgColor bg-opacity-80">
             <div className="modal-box py-8 rounded-2xl sm:max-w-xs">
               <button onClick={() => setIsVisibleModal(false)} className="btn btn-ghost absolute right-0 top-0">
                 ✕
@@ -138,9 +138,15 @@ export default function Invite() {
               >
                 SNS 계정으로 로그인
               </button>
+              <button
+                onClick={() => router.push({ pathname: '/auth/login/anonymous', query: { redirect: router.asPath } })}
+                className="block mx-auto btn w-full max-w-xs mt-2 bg-neutral text-white"
+              >
+                비회원 로그인
+              </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

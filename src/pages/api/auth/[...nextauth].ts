@@ -58,6 +58,12 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/login',
     newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
+  // jwt: {
+  //   // Default 값으로 NEXTAUTH_SECRET 환경변수 사용
+  //   secret: 'super-secret',
+  //   maxAge: 15 * 24 * 30 * 60, // 15 days
+  // },
+  // 아래 theme 설정은 위 custom pages 를 쓰는 순간 필요없어졌지만 혹시 모르니 놔둠
   theme: {
     colorScheme: 'auto', // "auto" | "dark" | "light"
     brandColor: '#16C674', // Hex color code

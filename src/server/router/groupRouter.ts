@@ -43,6 +43,12 @@ export const groupRouter = createRouter()
       }
     },
   })
+  .middleware(async ({ ctx, next }) => {
+    if (!ctx.session?.user?.email) {
+      throw new trpc.TRPCError({ code: 'UNAUTHORIZED', message: 'Need to login' })
+    }
+    return next()
+  })
   .mutation('create-group', {
     input: createGroupSchema,
     async resolve({ ctx, input }) {
@@ -51,7 +57,7 @@ export const groupRouter = createRouter()
           data: {
             profile: {
               connect: {
-                id: ctx.user?.id,
+                email: ctx.session?.user?.email!,
               },
             },
             ...input,
@@ -80,7 +86,7 @@ export const groupRouter = createRouter()
           data: {
             profile: {
               connect: {
-                id: ctx.user?.id,
+                email: ctx.session?.user?.email!,
               },
             },
             group: {

@@ -1,6 +1,10 @@
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 import { signJwt } from 'src/utils/jwt'
+import { cls } from 'src/utils/cls'
+import { useUser } from 'src/shared/hooks'
+import { toast } from 'react-toastify'
 
 type Inputs = {
   name: string
@@ -8,49 +12,76 @@ type Inputs = {
 }
 
 export default function CreateAnonymous() {
-  const { handleSubmit, register } = useForm<Inputs>()
-  const { query, push } = useRouter()
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>()
+  const router = useRouter()
+  const { setAnonymousUser } = useUser()
+
+  watch()
 
   const onValid: SubmitHandler<Inputs> = (data: Inputs) => {
-    console.log(data)
-    console.log(signJwt(data))
+    setAnonymousUser({ id: signJwt(data), name: data.name })
+    if (router.query?.redirect) router.push(router.query?.redirect as string)
+    else {
+      toast('에러가 발생했습니다.')
+    }
   }
 
   return (
-    <div className="flex flex-col py-5 pt-9 px-5 relative h-screen bg-bgColor">
+    <div className="flex flex-col pb-8 pt-16 px-5 relative bg-bgColor">
       <div>
-        <h1 className="font-bold">비회원 로그인</h1>
-        <p className="text-sm">비회원이면 모임 수정 불가능 해요!</p>
+        <h1 className="font-bold text-center">비회원 로그인</h1>
       </div>
 
       <form onSubmit={handleSubmit(onValid)}>
-        <div className="form-control w-full mt-5">
+        <div className="form-control w-full mt-11">
           <label htmlFor="name" className="label pb-1 pl-0">
             <span className="label-text">이름</span>
           </label>
           <input
-            {...register('name')}
+            {...register('name', {
+              required: '필수 입력 필드입니다.',
+              maxLength: { value: 10, message: '10자 이내로 입력해주세요.' },
+            })}
             type="text"
             name="name"
+            spellCheck="false"
             placeholder="이름을 입력해주세요"
-            className="input input-bordered w-full"
+            className={cls('input input-bordered w-full', errors.name ? 'input-error text-error' : '')}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="name"
+            render={({ message }) => <p className="text-error mt-2 ml-1 text-xs">{message}</p>}
           />
         </div>
 
         <div className="form-control w-full mt-5">
           <label htmlFor="password" className="label pb-1 pl-0">
-            <span className="label-text">비밀번호 (선택)</span>
+            <span className="label-text">비밀번호</span>
           </label>
           <input
-            {...register('password')}
+            {...register('password', {
+              required: '필수 입력 필드입니다.',
+              maxLength: { value: 10, message: '10자 이내로 입력해주세요.' },
+            })}
             type="password"
             name="password"
-            placeholder="비밀번호를 입력해주세요"
-            className="input input-bordered w-full"
+            placeholder="10자 이내로 입력해주세요"
+            className={cls('input input-bordered w-full', errors.password ? 'input-error text-error' : '')}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="password"
+            render={({ message }) => <p className="text-error mt-2 ml-1 text-xs">{message}</p>}
           />
         </div>
 
-        <div className="w-full max-w-sm mx-auto mb-10 fixed bottom-0 left-0 right-0 px-5">
+        <div className="fixed w-full max-w-sm px-5 mx-auto mb-6 bottom-0 left-0 right-0">
           <button type="submit" className="w-full btn bg-primary text-white">
             로그인
           </button>

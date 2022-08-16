@@ -58,6 +58,7 @@ model User {
   // createdAt     DateTime  @default(now())
   // updatedAt     DateTime  @updatedAt
   name          String?
+  // email 은 우리 앱에서 SNS 로그인을 헀을 때 유니크/필수 필드여야 하므로 이메일을 반드시 받아오도록 해야 함
   email         String?   @unique
   emailVerified DateTime?
   image         String?
@@ -71,7 +72,7 @@ model Profile {
   updatedAt     DateTime        @updatedAt
   oauthId       String?
   name          String
-  email         String?         @unique
+  email         String          @unique
   emailVerified DateTime?
   image         String?
   tags          String?
@@ -117,22 +118,34 @@ model Participation {
   selectedCells String   @db.Text
 }
 
+model AnonymousParticipation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  identifier    String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId       String
+  selectedCells String   @db.Text
+}
+
 model Event {
-  id            String          @id @default(cuid())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  profile       Profile         @relation(fields: [profileId], references: [id])
-  profileId     String
-  participates  Participation[]
-  title         String
-  description   String          @db.Text
-  startingTimes String          @db.Text
-  timeSize      Int
-  timeInterval  Int?
-  headCounts    Int?
-  isUnlimitedHeadCounts  Boolean?
-  tags          String?
-  status        String?
-  group         Group?          @relation(fields: [groupId], references: [id])
-  groupId       String?
+  id                    String                   @id @default(cuid())
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  profile               Profile                  @relation(fields: [profileId], references: [id])
+  profileId             String
+  participates          Participation[]
+  anonymousParticipates AnonymousParticipation[]
+  title                 String
+  description           String                   @db.Text
+  startingTimes         String                   @db.Text
+  timeSize              Int
+  timeInterval          Int?
+  headCounts            Int?
+  isUnlimitedHeadCounts Boolean?
+  tags                  String?
+  status                String?
+  group                 Group?                   @relation(fields: [groupId], references: [id])
+  groupId               String?
 }
