@@ -37,7 +37,7 @@ function Edit() {
   const { mutate } = trpc.useMutation('events.edit-event', {
     onSuccess(data) {
       toast('수정 완료!', { autoClose: 2000 })
-      router.push(`/invite/${data.id}`)
+      router.push(`/invites/${data.id}`)
     },
     onError() {
       toast('수정 실패...', { autoClose: 2000 })

@@ -97,7 +97,7 @@ export default function SearchPage() {
             {searchedGroupList?.length > 0 ? (
               (searchedGroupList ?? []).map(group => {
                 return (
-                  <div className="flex items-center justify-between" onClick={() => router.push(`/group/${group.id}`)}>
+                  <div className="flex items-center justify-between" onClick={() => router.push(`/groups/${group.id}`)}>
                     <div className="my-3 flex items-center">
                       <img className="w-[30px] h-[30px] rounded-full" src="assets/svg/logo.svg" alt="profile" />
                       <span className="text-sm ml-2 text-textGray">{group.name}</span>

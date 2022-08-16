@@ -22,7 +22,7 @@ export default function GroupDetail() {
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative bg-bgColor">
-        <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+        <div className="w-[100%] sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <Link href="/">
             <img src="/assets/svg/logo_white.svg" />
           </Link>
@@ -75,7 +75,7 @@ export default function GroupDetail() {
           </div>
 
           <div className="mt-8 px-5"></div>
-          <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+          <div className="w-full sm:max-w-sm fixed bottom-10 auto flex justify-end">
             <button
               className="btn btn-circle bg-primary text-white mr-5"
               onClick={() => setVisibleBottomSheet('create')}

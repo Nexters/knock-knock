@@ -8,7 +8,7 @@ import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
 import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
-import GuideModal from 'src/components/GuideModal'
+import GuideModal from 'src/components/modals/GuideModal'
 // import SkeletonCard from 'src/components/SkeletonCard'
 import { IUser } from 'src/types/User'
 import { IEvent } from 'src/types/Event'
@@ -120,7 +120,7 @@ export default function Home() {
         <div className="mt-8 px-5">
           <div className="flex justify-between">
             <h2 className="text-lg font-bold">내 그룹</h2>
-            <Link href="/group/list">
+            <Link href="/groups">
               <span className="text-sm text-textGray">전체 보기</span>
             </Link>
           </div>
@@ -138,7 +138,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+        <div className="w-full sm:max-w-sm fixed bottom-10 auto flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleCreateModal(true)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +160,7 @@ export default function Home() {
                 <span className="text-white">약속 만들기</span>
               </a>
             </Link>
-            <Link href="/group/create">
+            <Link href="/groups/create">
               <a className="btn w-full max-w-xs bg-white mt-2">
                 <span className="text-bgColor">그룹 만들기</span>
               </a>

@@ -1,3 +1,7 @@
+import { useRef } from 'react'
+import { useClickAway } from 'react-use'
+import BackDrop from './BackDrop'
+
 interface Props {
   onClose: () => void
   children: React.ReactNode
@@ -5,13 +9,14 @@ interface Props {
 }
 
 const BottomSheet = ({ onClose, children, isBackground = true }: Props) => {
+  const ref = useRef(null)
+  useClickAway(ref, onClose)
+
   return (
     <>
+      <BackDrop />
       <div
-        className="w-full h-['100vh'] absolute top-0 bottom-0 left-0 right-0 bg-bgColor bg-opacity-80 cursor-pointer z-40"
-        onClick={onClose}
-      />
-      <div
+        ref={ref}
         className={`w-full h-fit flex flex-col items-center absolute bottom-0 ${
           isBackground && 'bg-white'
         } rounded-t-2xl px-5 pt-3 pb-6 z-50`}
