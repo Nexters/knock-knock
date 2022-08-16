@@ -162,7 +162,6 @@ function Create() {
 
   return (
     <>
-      <LoginModal />
       {/* <input checked={status === 'unauthenticated'} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box sm:max-w-xs">
@@ -183,7 +182,8 @@ function Create() {
           </div>
         </div>
       </div> */}
-      <section className="flex flex-col items-center bg-bgColor h-screen pt-[6rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto">
+      <section className="flex flex-col items-center bg-bgColor h-screen pt-[6rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto relative">
+        <LoginModal />
         <div className="fixed w-full bg-bgColor top-0 pb-4">
           <button onClick={handleBack} className="absolute top-9 left-5 ">
             <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
