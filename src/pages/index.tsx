@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Profile } from '@prisma/client'
 
 import GatheringCard from 'src/components/GatheringCard'
@@ -11,6 +11,8 @@ import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
 import { IGroup } from 'src/types/Group'
 
+import GuideModal from '../components/GuideModal'
+
 interface IUser extends Profile {
   groups: IGroup[]
 }
@@ -21,6 +23,18 @@ export default function Home() {
   const { data: events, isLoading, error } = trpc.useQuery(['events.events'])
 
   const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
+
+  const [showGuideModal, setShowGuideModal] = useState(false)
+
+  const closeGuideModal = () => {
+    setShowGuideModal(false)
+    localStorage.setItem('hadSeenGuideModal', 'true')
+  }
+
+  useEffect(() => {
+    const hadSeenGuideModal = Boolean(localStorage.getItem('hadSeenGuideModal')) || false
+    setShowGuideModal(!hadSeenGuideModal)
+  }, [])
 
   return (
     <SEO>
@@ -103,6 +117,7 @@ export default function Home() {
             </button>
           </BottomSheet>
         )}
+        {showGuideModal && <GuideModal onClose={closeGuideModal} />}
       </div>
     </SEO>
   )
