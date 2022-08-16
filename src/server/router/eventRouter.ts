@@ -94,16 +94,23 @@ export const eventRouter = createRouter()
       }
     },
   })
+  .middleware(async ({ ctx, next }) => {
+    if (!ctx.session?.user?.email) {
+      throw new trpc.TRPCError({ code: 'UNAUTHORIZED', message: 'Need to login' })
+    }
+    return next()
+  })
   .mutation('create-event', {
     input: createEventSchema,
     async resolve({ ctx, input }) {
       const { title, description, tags, startingTimes, timeSize, isUnlimitedHeadCounts } = input
+
       try {
         const event = await ctx.prisma.event.create({
           data: {
             profile: {
               connect: {
-                id: ctx.user?.id,
+                email: ctx.session?.user?.email!,
               },
             },
             group: {

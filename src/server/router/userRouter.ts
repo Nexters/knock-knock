@@ -12,33 +12,29 @@ export const userRouter = createRouter()
     },
   })
   .query('me', {
-    resolve({ ctx }) {
+    async resolve({ ctx }) {
       const session = ctx.session
-      if (!session) return null
-      return ctx.user
-    },
-  })
-  .query('my-data', {
-    input: z.object({ userId: z.string() }),
-    async resolve({ ctx, input }) {
-      const session = ctx.session
-      if (!session) return null
+      if (!session?.user?.email) return null
       try {
-        const userData = await ctx.prisma.profile.findUnique({
+        const user = await ctx.prisma.profile.findFirst({
           where: {
-            id: input.userId,
+            email: session.user.email,
           },
           include: {
             groups: {
-              include: {
-                profile: true,
+              select: {
+                profileId: true,
               },
             },
           },
         })
-        return userData
+        return user
       } catch (error) {
         console.error(error)
+        throw new trpc.TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found',
+        })
       }
     },
   })

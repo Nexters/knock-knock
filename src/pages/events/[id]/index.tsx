@@ -7,6 +7,7 @@ import { trpc } from 'src/utils/trpc'
 import { toast } from 'react-toastify'
 import { useUser } from 'src/shared/hooks'
 import { signIn } from 'next-auth/react'
+import { cls } from 'src/utils/cls'
 
 export default function Event() {
   const { push, query } = useRouter()
@@ -106,17 +107,6 @@ export default function Event() {
       <div className="modal  bg-bgColor bg-opacity-80">
         <div className="modal-box sm:max-w-xs">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
-          <div className="mt-2">
-            <button
-              className={cls(
-                'btn w-[250px] text-bgColor hover:text-white',
-              )`btn w-[250px] text-bgColor hover:text-white ${provider.id === 'kakao' ? 'bg-kakao' : 'bg-white'}`}
-              onClick={() => signIn(provider.id, { callbackUrl: (router.query.redirect as string) ?? '/' })}
-            >
-              <img src={`/assets/svg/kakao.svg`} alt="logo" className="ml-3 mr-1" />
-              카카오 로그인
-            </button>
-          </div>
           <div className="flex-col mt-6">
             <button
               onClick={() => push({ pathname: '/auth/login', query: { redirect: query.id } })}

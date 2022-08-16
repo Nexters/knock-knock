@@ -8,7 +8,7 @@ const BottomSheet = ({ onClose, children, isBackground = true }: Props) => {
   return (
     <>
       <div
-        className="w-full h-['100vh'] absolute top-0 bottom-0 left-0 right-0 bg-bgColor bg-opacity-50 cursor-pointer z-40"
+        className="w-full h-['100vh'] absolute top-0 bottom-0 left-0 right-0 bg-bgColor bg-opacity-80 cursor-pointer z-40"
         onClick={onClose}
       />
       <div

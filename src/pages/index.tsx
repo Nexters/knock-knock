@@ -14,7 +14,7 @@ export default function Home() {
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
   const { data: events, isLoading } = trpc.useQuery(['events.events'])
-  const { data: userData } = trpc.useQuery(['users.my-data', { userId: user?.id as string }])
+  const { data: userData } = trpc.useQuery(['users.me'])
 
   const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
 
