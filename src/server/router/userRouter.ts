@@ -1,9 +1,9 @@
 import * as trpc from '@trpc/server'
+import z from 'zod'
 import { createProfileSchema } from '../../schema/userSchema'
 import { createRouter } from './context'
 import { defaultError } from '../shared/errors'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-import { z } from 'zod'
 
 export const userRouter = createRouter()
   .query('getSession', {
@@ -16,6 +16,30 @@ export const userRouter = createRouter()
       const session = ctx.session
       if (!session) return null
       return ctx.user
+    },
+  })
+  .query('my-data', {
+    input: z.object({ userId: z.string() }),
+    async resolve({ ctx, input }) {
+      const session = ctx.session
+      if (!session) return null
+      try {
+        const userData = await ctx.prisma.profile.findUnique({
+          where: {
+            id: input.userId,
+          },
+          include: {
+            groups: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        })
+        return userData
+      } catch (error) {
+        console.error(error)
+      }
     },
   })
   .query('user-list', {
@@ -31,22 +55,6 @@ export const userRouter = createRouter()
           },
         })
         return userList
-      } catch (error) {
-        console.error(error)
-        throw new trpc.TRPCError(defaultError)
-      }
-    },
-  })
-  .query('single-profile', {
-    input: z.object({ email: z.string() }),
-    async resolve({ ctx, input }) {
-      try {
-        const profile = await ctx.prisma.profile.findUnique({
-          where: {
-            email: input.email,
-          },
-        })
-        return profile
       } catch (error) {
         console.error(error)
         throw new trpc.TRPCError(defaultError)
