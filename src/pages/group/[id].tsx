@@ -66,7 +66,7 @@ export default function GroupDetail() {
 
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">약속 모임</h2>
-          <div className="mt-2 pb-2 flex flex-row overflow-x-scroll px-5">
+          <div className="mt-2 pb-2 flex flex-row overflow-x-auto px-5">
             <div>
               {(groupData?.events ?? []).map((group, index) => {
                 return <GatheringCard key={index} data={group as any} />
