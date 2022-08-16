@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import GatheringCard from 'src/components/GatheringCard'
@@ -8,6 +8,7 @@ import { trpc } from 'src/utils/trpc'
 import { useUser } from 'src/shared/hooks'
 import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
+import GuideModal from 'src/components/GuideModal'
 // import SkeletonCard from 'src/components/SkeletonCard'
 import { IUser } from 'src/types/User'
 import { IEvent } from 'src/types/Event'
@@ -47,6 +48,18 @@ export default function Home() {
     leaveMeetMutation.mutate({ eventId: meetId, profileId: user.id, cells: '' })
     setVisibleMoreButtonModal(null)
   }
+
+  const [showGuideModal, setShowGuideModal] = useState(false)
+
+  const closeGuideModal = () => {
+    setShowGuideModal(false)
+    localStorage.setItem('hadSeenGuideModal', 'true')
+  }
+
+  useEffect(() => {
+    const hadSeenGuideModal = Boolean(localStorage.getItem('hadSeenGuideModal')) || false
+    setShowGuideModal(!hadSeenGuideModal)
+  }, [])
 
   return (
     <SEO>
@@ -177,6 +190,7 @@ export default function Home() {
             </button>
           </BottomSheet>
         )}
+        {showGuideModal && <GuideModal onClose={closeGuideModal} />}
       </div>
     </SEO>
   )
