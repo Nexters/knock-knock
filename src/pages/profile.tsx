@@ -28,7 +28,11 @@ export default function Profile() {
         </div>
         <div className="flex mt-5">
           {user?.tags?.split(',').map(tag => {
-            return <div className="badge badge-lg badge-neutral mr-2">{tag.trim()}</div>
+            return (
+              <div key={tag} className="badge badge-lg badge-neutral mr-2">
+                {tag.trim()}
+              </div>
+            )
           })}
         </div>
         <span className="text-3xl font-bold mt-2">{user?.name}</span>

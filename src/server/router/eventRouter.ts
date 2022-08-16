@@ -1,10 +1,10 @@
 import * as trpc from '@trpc/server'
-import { createProfileSchema } from '../../schema/userSchema'
+
 import { createRouter } from './context'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { defaultError } from '../shared/errors'
 import z from 'zod'
-import { createEventSchema } from 'src/schema/eventSchema'
+import { createEventSchema, editEventSchema } from 'src/schema/eventSchema'
 
 export const eventRouter = createRouter()
   .query('events', {
@@ -98,6 +98,7 @@ export const eventRouter = createRouter()
   .mutation('create-event', {
     input: createEventSchema,
     async resolve({ ctx, input }) {
+      const { title, description, tags, startingTimes, timeSize, isUnlimitedHeadCounts } = input
       try {
         const event = await ctx.prisma.event.create({
           data: {
@@ -106,7 +107,68 @@ export const eventRouter = createRouter()
                 id: ctx.user?.id,
               },
             },
+            group: {
+              connect: {
+                id: input.groupId,
+              },
+            },
+            title,
+            description,
+            tags,
+            startingTimes,
+            timeSize,
+            isUnlimitedHeadCounts,
+          },
+        })
+        return event
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === 'P2002') {
+            throw new trpc.TRPCError({
+              code: 'CONFLICT',
+              message: 'Profile already exists',
+            })
+          }
+        }
+        console.error(e)
+        throw new trpc.TRPCError(defaultError)
+      }
+    },
+  })
+  .mutation('edit-event', {
+    input: editEventSchema,
+    async resolve({ ctx, input }) {
+      try {
+        const event = await ctx.prisma.event.update({
+          where: {
+            id: input.id,
+          },
+          data: {
             ...input,
+          },
+        })
+        return event
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === 'P2002') {
+            throw new trpc.TRPCError({
+              code: 'CONFLICT',
+              message: 'Profile already exists',
+            })
+          }
+        }
+        console.error(e)
+        throw new trpc.TRPCError(defaultError)
+      }
+    },
+  })
+  .mutation('delete-event', {
+    input: z.object({ eventId: z.string() }),
+    async resolve({ ctx, input }) {
+      try {
+        const event = await ctx.prisma.event.delete({
+          where: {
+            id: input.eventId,
           },
         })
         return event
