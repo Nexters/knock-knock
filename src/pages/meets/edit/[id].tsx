@@ -60,8 +60,6 @@ function Edit() {
       return { text: value }
     })
 
-    console.log(eventData?.startingTimes)
-
     // TODO: group, startTime, endTime, selectedTimes 초기화
     setTitle(eventData?.title ?? '')
     setDescription(eventData?.description ?? '')

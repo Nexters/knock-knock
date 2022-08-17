@@ -5,6 +5,8 @@ import { signJwt } from 'src/utils/jwt'
 import { cls } from 'src/utils/cls'
 import { useUser } from 'src/shared/hooks'
 import { toast } from 'react-toastify'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from 'src/pages/api/auth/[...nextauth]'
 
 type Inputs = {
   name: string
@@ -89,4 +91,13 @@ export default function CreateAnonymous() {
       </form>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  if (session) {
+    return {
+      redirect: { destination: '/' },
+    }
+  }
 }

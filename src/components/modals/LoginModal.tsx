@@ -1,13 +1,15 @@
-import { useCustomRouter } from 'src/shared/hooks'
+import { useCustomRouter, useUser } from 'src/shared/hooks'
 import BackDrop from 'src/components/BackDrop'
 
 export default function LoginModal({ fallbackUrl }: { fallbackUrl?: string }) {
+  const { isAuthenticated } = useUser()
   const router = useCustomRouter()
 
   function handleCloseClick() {
-    if (history.length <= 1) router.replace(fallbackUrl ?? '/')
-    else router.back()
+    router.back(fallbackUrl)
   }
+
+  if (isAuthenticated) return null
 
   return (
     <>
@@ -16,13 +18,13 @@ export default function LoginModal({ fallbackUrl }: { fallbackUrl?: string }) {
         <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
         <div className="flex-col mt-6">
           <button
-            onClick={() => router.push({ pathname: '/auth/login', query: { redirect: router.query.id } })}
+            onClick={() => router.push({ pathname: '/auth/login', query: { redirect: router.asPath } })}
             className="block mx-auto btn w-full mt-2 bg-primary text-white"
           >
             SNS 계정으로 로그인
           </button>
           <button
-            onClick={() => router.push({ pathname: '/', query: { redirect: router.query.id } })}
+            onClick={() => router.push({ pathname: '/auth/login/anonymous', query: { redirect: router.query.asPath } })}
             className="block mx-auto btn w-full mt-2 bg-neutral hover:bg-opacity-30 text-white"
           >
             비회원 로그인

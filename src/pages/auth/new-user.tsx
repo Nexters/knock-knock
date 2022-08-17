@@ -1,8 +1,10 @@
+import { unstable_getServerSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { ICreateProfile } from 'src/schema/userSchema'
 import { trpc } from 'src/utils/trpc'
+import { authOptions } from '../api/auth/[...nextauth]'
 
 export default function NewUser() {
   const { handleSubmit, register } = useForm<ICreateProfile>()
@@ -72,4 +74,13 @@ export default function NewUser() {
       </form>
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  if (session) {
+    return {
+      redirect: { destination: '/' },
+    }
+  }
 }
