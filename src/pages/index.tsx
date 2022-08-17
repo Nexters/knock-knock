@@ -65,8 +65,8 @@ export default function Home() {
 
   return (
     <SEO>
-      <div className="w-full h-full flex flex-col relative bg-bgColor">
-        <div className="w-[100%] sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+      <div className="w-full h-full flex flex-col relative">
+        <div className="w-full sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <object data="assets/svg/logo_white.svg" />
           <div className="flex items-center">
             {isAuthenticated ? (
