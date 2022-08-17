@@ -13,7 +13,7 @@ import { useCustomRouter } from 'src/shared/hooks'
 import TitleHeader from 'src/components/TitleHeader'
 import TopTitleBottomBtnLayout from 'src/components/pageLayouts/TopTitleBottomBtnLayout'
 
-interface MeetTags {
+interface EventTags {
   tags?: { text: string }[]
 }
 
@@ -60,7 +60,7 @@ function Create() {
   const {
     control,
     formState: { errors },
-  } = useForm<MeetTags>()
+  } = useForm<EventTags>()
 
   const { fields, append, remove } = useFieldArray({
     control,

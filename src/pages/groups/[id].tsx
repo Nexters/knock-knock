@@ -95,7 +95,7 @@ export default function GroupDetail() {
         </div>
         {visibleBottomSheet === 'create' && (
           <BottomSheet onClose={() => setVisibleBottomSheet(null)} isBackground={false}>
-            <button onClick={() => router.push('/meets/create')} className="btn w-full max-w-xs bg-primary text-white">
+            <button onClick={() => router.push('/events/create')} className="btn w-full max-w-xs bg-primary text-white">
               약속 만들기
             </button>
             <button
