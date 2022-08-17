@@ -1,10 +1,10 @@
 import React from 'react'
 import { trpc } from 'src/utils/trpc'
-import { useRouter } from 'next/router'
 import MyGroupCard from 'src/components/MyGroupCard'
+import { useCustomRouter } from 'src/shared/hooks'
 
 function GroupListPage() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { data: groups } = trpc.useQuery(['groups.groups'])
 
   return (

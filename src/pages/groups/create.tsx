@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import { trpc } from 'src/utils/trpc'
@@ -6,13 +5,14 @@ import CenteringLayout from 'src/components/pageLayouts/CenteringLayout'
 import { toast } from 'react-toastify'
 import { ICreateGroup } from 'src/schema/groupSchema'
 import GroupForm from 'src/components/GroupForm'
+import { useCustomRouter } from 'src/shared/hooks'
 
 interface GroupTags {
   tags?: { text: string }[]
 }
 
 function CreateGroup() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { handleSubmit, register } = useForm<ICreateGroup>()
   const { data: session } = useSession()
   const {
@@ -61,7 +61,7 @@ function CreateGroup() {
 
   return (
     <CenteringLayout seoTitle="그룹 생성">
-      <div className="fixed w-full bg-bgColor top-0 pb-4">
+      <div className="fixed w-full sm:max-w-sm bg-bgColor top-0 pb-4">
         <button onClick={() => router.back()} className="absolute top-9 left-5 ">
           <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
         </button>

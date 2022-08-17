@@ -6,11 +6,11 @@ interface Props {
   seoTitle?: string
 }
 
-export default function NoLayout({ children, seoTitle }: Props) {
+export default function CenteringLayout({ children, seoTitle }: Props) {
   return (
     <>
       <Head>
-        <title>{seoTitle || '우만시'}</title>
+        <title>{seoTitle || '노크노크'}</title>
       </Head>
       <div className="h-screen flex flex-col items-center justify-center relative overflow-hidden text-center">
         {children}

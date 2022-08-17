@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import format from 'date-fns/format'
@@ -9,7 +8,7 @@ import TagInput from '../../../components/formElements/TagInput'
 import Calendar from 'src/components/Calendar'
 import { trpc } from 'src/utils/trpc'
 import { IEditEvent } from '../../../schema/eventSchema'
-import { useUser } from 'src/shared/hooks'
+import { useCustomRouter, useUser } from 'src/shared/hooks'
 import { IUser } from 'src/types/User'
 
 interface MeetTags {
@@ -18,7 +17,7 @@ interface MeetTags {
 
 // TODO: 필수, 선택에 따른 유효성 검사
 function Edit() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { status } = useSession()
   const { user, isAuthenticated } = useUser()
   const { data: eventData } = trpc.useQuery(['events.single-event', { eventId: router.query.id as string }])
@@ -250,7 +249,7 @@ function Edit() {
               </label>
               <input
                 type="text"
-                placeholder="약속 제목을 입력해주세요 (15자이내)"
+                placeholder="약속 제목을 입력해주세요 (15자 이내)"
                 className="input input-bordered w-full max-w-xs bg-[#2F3035] border-none"
                 onChange={handleChangeTitle}
                 value={title}

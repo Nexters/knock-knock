@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import { trpc } from 'src/utils/trpc'
@@ -7,14 +6,14 @@ import CenteringLayout from 'src/components/pageLayouts/CenteringLayout'
 import { toast } from 'react-toastify'
 import { ICreateGroup, IModifyGroup } from 'src/schema/groupSchema'
 import GroupForm from 'src/components/GroupForm'
-import { Group } from '@prisma/client'
+import { useCustomRouter } from 'src/shared/hooks'
 
 interface GroupTags {
   tags?: { text: string }[]
 }
 
 function ModifyGroup() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { handleSubmit, register, reset, getValues } = useForm<ICreateGroup>()
   const { data: session } = useSession()
 
