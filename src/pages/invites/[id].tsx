@@ -1,10 +1,9 @@
-import { FormEvent, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { trpc } from 'src/utils/trpc'
 import format from 'date-fns/format'
-import { useUser } from 'src/shared/hooks'
+import { useCustomRouter, useUser } from 'src/shared/hooks'
 
 interface Invite {
   id: number
@@ -16,7 +15,7 @@ interface Invite {
 }
 
 export default function Invite() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { user } = useUser()
 
   const [isVisibleModal, setIsVisibleModal] = useState(false)

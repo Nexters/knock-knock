@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router'
-import BackDrop from '../BackDrop'
+import { useCustomRouter } from 'src/shared/hooks'
+import BackDrop from 'src/components/BackDrop'
 
 export default function LoginModal({ fallbackUrl }: { fallbackUrl?: string }) {
-  const router = useRouter()
+  const router = useCustomRouter()
 
   function handleCloseClick() {
     if (history.length <= 1) router.replace(fallbackUrl ?? '/')

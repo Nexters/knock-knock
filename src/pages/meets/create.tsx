@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useFieldArray, useForm } from 'react-hook-form'
 import format from 'date-fns/format'
 
@@ -10,13 +9,14 @@ import { trpc } from 'src/utils/trpc'
 import { useSession } from 'next-auth/react'
 import { ICreateEvent } from '../../schema/eventSchema'
 import LoginModal from 'src/components/modals/LoginModal'
+import { useCustomRouter } from 'src/shared/hooks'
 
 interface MeetTags {
   tags?: { text: string }[]
 }
 
 function Create() {
-  const router = useRouter()
+  const router = useCustomRouter()
   const { status } = useSession()
 
   const { data: groups, isLoading, error } = trpc.useQuery(['groups.groups'])
@@ -225,7 +225,7 @@ function Create() {
               </label>
               <input
                 type="text"
-                placeholder="약속 제목을 입력해주세요 (15자이내)"
+                placeholder="약속 제목을 입력해주세요 (15자 이내)"
                 className="input input-bordered w-full max-w-xs bg-[#2F3035] border-none"
                 onChange={handleChangeTitle}
                 value={title}

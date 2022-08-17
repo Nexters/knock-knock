@@ -5,19 +5,18 @@ import { toast } from 'react-toastify'
 import GatheringCard from 'src/components/GatheringCard'
 import SEO from 'src/components/pageLayouts/SEO'
 import { trpc } from 'src/utils/trpc'
-import { useUser } from 'src/shared/hooks'
+import { useCustomRouter, useUser } from 'src/shared/hooks'
 import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
 import GuideModal from 'src/components/modals/GuideModal'
 // import SkeletonCard from 'src/components/SkeletonCard'
 import { IUser } from 'src/types/User'
 import { IEvent } from 'src/types/Event'
-import { useRouter } from 'next/router'
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
   const { data: userData } = trpc.useQuery(['users.me'])
-  const router = useRouter()
+  const router = useCustomRouter()
 
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<IEvent | null>(null)
@@ -56,7 +55,7 @@ export default function Home() {
   const closeGuideModal = () => {
     setShowGuideModal(false)
     localStorage.setItem('hadSeenGuideModal', 'true')
-    router.replace(router.asPath.split('#')[0] as string)
+    router.removeHash()
   }
 
   useEffect(() => {
@@ -118,10 +117,10 @@ export default function Home() {
         </div>
 
         <div className="mt-8 px-5">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-baseline">
             <h2 className="text-lg font-bold">내 그룹</h2>
             <Link href="/groups">
-              <span className="text-sm text-textGray">전체 보기</span>
+              <span className="text-sm text-textGray cursor-pointer">전체 보기</span>
             </Link>
           </div>
           <div className="mt-2 pb-2 flex flex-col">
@@ -138,7 +137,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="w-full sm:max-w-sm fixed bottom-10 auto flex justify-end">
+        <div className="w-full sm:max-w-sm fixed bottom-10 flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleCreateModal(true)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
