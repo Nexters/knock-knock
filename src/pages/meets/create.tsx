@@ -105,13 +105,8 @@ function Create() {
     setSelectedTimeSlot(event.target.value)
   }
 
-  const handleBack = () => {
-    if (createPhase === 1) {
-      router.back()
-    }
-    if (createPhase === 2) {
-      setCreatePhase(prevState => prevState - 1)
-    }
+  const handleBackBtnClick = () => {
+    setCreatePhase(prevState => prevState - 1)
   }
 
   const handleNextPhase = () => {
@@ -166,7 +161,7 @@ function Create() {
     <>
       <LoginModal />
       {createPhase === 1 && (
-        <TopTitleBottomBtnLayout {...{ title: '약속 만들기', btnText: '다음', onBtnClick: handleNextPhase }}>
+        <TopTitleBottomBtnLayout {...{ title: '약속 만들기', btnText: '다음', onBottomBtnClick: handleNextPhase }}>
           {/* TODO: groupId 있으면 해당 그룹을 기본으로 선택 */}
           {status === 'authenticated' && (
             <div className="form-control w-full">
@@ -274,7 +269,14 @@ function Create() {
       )}
 
       {createPhase === 2 && (
-        <TopTitleBottomBtnLayout {...{ title: '약속 만들기', btnText: '완료', onBtnClick: handleSubmit }}>
+        <TopTitleBottomBtnLayout
+          {...{
+            title: '약속 만들기',
+            btnText: '완료',
+            onBackBtnClick: handleBackBtnClick,
+            onBottomBtnClick: handleSubmit,
+          }}
+        >
           <div className="form-control w-full ">
             <label className="label">
               <span className="label-text">날짜</span>
