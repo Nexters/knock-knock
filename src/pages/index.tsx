@@ -15,7 +15,7 @@ import { IEvent } from 'src/types/Event'
 
 export default function Home() {
   const { user, isAuthenticated } = useUser()
-  const { data: userData } = trpc.useQuery(['users.me'])
+  const { data: me } = trpc.useQuery(['users.me'])
   const router = useCustomRouter()
 
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
@@ -90,13 +90,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-center items-center bg-textGray2">배너 이미지</div>
+        <div className="w-full h-[205px] flex justify-center items-center bg-textGray2 bg-[url('/assets/images/banner.png')] bg-cover bg-bottom"></div>
 
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">내 약속</h2>
           <div className="mt-2 pb-2 flex flex-row overflow-x-auto px-5">
-            {userData?.events ? (
-              userData?.events.map((event, index) => {
+            {me?.events?.length ? (
+              me?.events.map((event, index) => {
                 return (
                   <GatheringCard key={index} data={event} onMoreButtonClick={() => setVisibleMoreButtonModal(event)} />
                 )
@@ -124,8 +124,8 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-2 pb-2 flex flex-col">
-            {userData?.groups && userData.groups.length > 0 ? (
-              userData.groups.map((group, index) => {
+            {(me?.groups?.length ?? 0) > 0 ? (
+              me!.groups.map((group, index) => {
                 return <MyGroupCard key={index} data={group as any} />
               })
             ) : (
