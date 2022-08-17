@@ -77,7 +77,7 @@ function GuideModal({ onClose }: GuideProps) {
             <img className="w-[100%] h-[100%] z-40" src="assets/images/talk.png" alt="토크" />
             <div className="absolute top-[60%] w-full h-[40%] z-50 flex flex-col items-center justify-center rounded-bl-lg rounded-br-lg">
               <p className="text-[1.125rem] leading-[1.6875rem]">
-                모임장이 <span className="bg-[#28D899]">확정 시간</span>을
+                약속장이 <span className="bg-[#28D899]">확정 시간</span>을
               </p>
               <p className="text-[1.125rem] leading-[1.6875rem]">결정하면 약속 만들기 끝!</p>
             </div>

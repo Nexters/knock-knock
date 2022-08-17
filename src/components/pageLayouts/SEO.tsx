@@ -13,7 +13,7 @@ function SEO({ children, title, description, image, keywords, url }: SEO): JSX.E
   const basicConfig = {
     title: '우리가 만날 시간은? 노크노크!',
     siteTitle: 'Knock Knock',
-    description: '쉽고 빠르게 모임 약속을 만들어봐요!',
+    description: '쉽고 빠르게 약속을 만들어봐요!',
     url: 'https://www.knockknock.co.kr/',
     image: 'https://user-images.githubusercontent.com/60738400/184473499-d14ec4f3-7617-461f-bdf8-b9e6649e10e3.png',
     keywords: `약속, 노크노크, 넥스터즈, 모임, 만남, 약속 생성, 커피챗, 개발자, 디자이너, 쉽다, 빠르다`,

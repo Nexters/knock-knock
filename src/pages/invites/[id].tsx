@@ -62,7 +62,7 @@ export default function Invite() {
       )}
       {eventData && (
         <div className="overflow-auto">
-          <h1 className="mt-12 text-xl font-bold text-white text-center">모임에 초대해요!</h1>
+          <h1 className="mt-12 text-xl font-bold text-white text-center">약속에 초대해요!</h1>
           <div className="mt-11 px-5">
             <p className="text-base font-bold">{eventData?.title}</p>
             <p className="mt-1 text-xs text-textGray">

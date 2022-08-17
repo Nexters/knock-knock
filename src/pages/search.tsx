@@ -73,7 +73,7 @@ export default function SearchPage() {
             )}
           </div>
           <div className="bg-cardBg mt-4 p-2 rounded-md">
-            <span className="inline-block font-bold text-sm text-textGray">모임</span>
+            <span className="inline-block font-bold text-sm text-textGray">약속</span>
             {searchedEventList?.length > 0 ? (
               (searchedEventList ?? []).map(event => {
                 return (
