@@ -81,6 +81,8 @@ export async function getServerSideProps(context) {
   if (session) {
     return {
       redirect: { destination: '/' },
+      props: {},
     }
   }
+  return { props: {} }
 }
