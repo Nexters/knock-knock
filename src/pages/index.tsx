@@ -21,7 +21,7 @@ export default function Home() {
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<IEvent | null>(null)
 
-  const deleteMeetMutation = trpc.useMutation('events.delete-event', {
+  const deleteEventMutation = trpc.useMutation('events.delete-event', {
     onSuccess() {
       toast('약속을 삭제했습니다.', { autoClose: 2000 })
     },
@@ -30,7 +30,7 @@ export default function Home() {
     },
   })
 
-  const leaveMeetMutation = trpc.useMutation('events.my-cells', {
+  const leaveEventMutation = trpc.useMutation('events.my-cells', {
     onSuccess() {
       toast('약속을 떠났습니다.', { autoClose: 2000 })
     },
@@ -39,14 +39,14 @@ export default function Home() {
     },
   })
 
-  const onDeleteMeet = (meetId: string) => {
-    deleteMeetMutation.mutate({ eventId: meetId })
+  const onDeleteEvent = (eventId: string) => {
+    deleteEventMutation.mutate({ eventId: eventId })
     setVisibleMoreButtonModal(null)
   }
 
-  const onLeaveMeet = (meetId: string) => {
+  const onLeaveEvent = (eventId: string) => {
     if (!user?.id) return
-    leaveMeetMutation.mutate({ eventId: meetId, profileId: user.id, cells: '' })
+    leaveEventMutation.mutate({ eventId: eventId, profileId: user.id, cells: '' })
     setVisibleMoreButtonModal(null)
   }
 
@@ -102,7 +102,7 @@ export default function Home() {
                 )
               })
             ) : (
-              <Link href="/meets/create">
+              <Link href="/events/create">
                 <div className="card bg-cardBg rounded-xl min-w-[190px] min-h-[150px] flex justify-center mt-2 px-4 cursor-pointer">
                   <span className="text-textGray font-bold">
                     새로운 약속을
@@ -154,7 +154,7 @@ export default function Home() {
 
         {visibleCreateModal && (
           <BottomSheet onClose={() => setVisibleCreateModal(false)} isBackground={false}>
-            <Link href="/meets/create">
+            <Link href="/events/create">
               <a className="btn w-full max-w-xs bg-primary">
                 <span className="text-white">약속 만들기</span>
               </a>
@@ -171,13 +171,13 @@ export default function Home() {
           <BottomSheet onClose={() => setVisibleMoreButtonModal(null)} isBackground={false}>
             {(user as IUser)?.events.some(value => value.profileId === visibleMoreButtonModal.profileId) && (
               <>
-                <Link href={`/meets/edit/${visibleMoreButtonModal}`}>
+                <Link href={`/events/edit/${visibleMoreButtonModal}`}>
                   <a className="btn w-full max-w-xs bg-primary">
                     <span className="text-white">약속 수정하기</span>
                   </a>
                 </Link>
                 <button
-                  onClick={() => onDeleteMeet(visibleMoreButtonModal.id)}
+                  onClick={() => onDeleteEvent(visibleMoreButtonModal.id)}
                   className="btn w-full max-w-xs bg-white mt-2"
                 >
                   <span className="text-bgColor">약속 삭제하기</span>
@@ -185,7 +185,7 @@ export default function Home() {
               </>
             )}
             <button
-              onClick={() => onLeaveMeet(visibleMoreButtonModal.id)}
+              onClick={() => onLeaveEvent(visibleMoreButtonModal.id)}
               className="btn w-full max-w-xs bg-buttonGray mt-2"
             >
               <span className="text-white">떠나기</span>

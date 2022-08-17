@@ -12,7 +12,7 @@ import { useCustomRouter, useUser } from 'src/shared/hooks'
 import { IUser } from 'src/types/User'
 import TitleHeader from 'src/components/TitleHeader'
 
-interface MeetTags {
+interface EventTags {
   tags?: { text: string }[]
 }
 
@@ -48,7 +48,7 @@ function Edit() {
     control,
     setValue,
     formState: { errors },
-  } = useForm<MeetTags>()
+  } = useForm<EventTags>()
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -192,14 +192,14 @@ function Edit() {
           <div className="flex-col mt-6">
             <button
               onClick={() =>
-                router.push({ pathname: '/auth/login', query: { redirect: `/meets/edit/${router.query.id}` } })
+                router.push({ pathname: '/auth/login', query: { redirect: `/events/edit/${router.query.id}` } })
               }
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               SNS 계정으로 로그인
             </button>
             <button
-              onClick={() => router.push({ pathname: '/', query: { redirect: '/meets/create' } })}
+              onClick={() => router.push({ pathname: '/', query: { redirect: '/events/create' } })}
               className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
             >
               홈으로 가기
