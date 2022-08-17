@@ -1,6 +1,8 @@
-import { getProviders, signIn, getSession } from 'next-auth/react'
-import { InferGetServerSidePropsType, NextPageContext } from 'next'
+import { getProviders, signIn } from 'next-auth/react'
+import { InferGetServerSidePropsType } from 'next'
 import { useRouter } from 'next/router'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from 'src/pages/api/auth/[...nextauth]'
 
 function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
@@ -34,8 +36,13 @@ function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSi
 
 export default LoginPage
 
-export async function getServerSideProps(context: NextPageContext) {
-  const { req, res } = context
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  if (session) {
+    return {
+      redirect: { destination: '/' },
+    }
+  }
   const providers = await getProviders()
   return {
     props: {

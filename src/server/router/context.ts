@@ -2,7 +2,7 @@
 import * as trpc from '@trpc/server'
 import { prisma } from '../db/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession, Session } from 'next-auth'
+import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'src/pages/api/auth/[...nextauth]'
 
 export async function createContext({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {

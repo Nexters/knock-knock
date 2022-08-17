@@ -40,7 +40,6 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect(context) {
       const { url, baseUrl } = context
-      console.log(url, baseUrl)
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`
       // Allows callback URLs on the same origin

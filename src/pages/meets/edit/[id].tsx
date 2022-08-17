@@ -10,6 +10,7 @@ import { trpc } from 'src/utils/trpc'
 import { IEditEvent } from '../../../schema/eventSchema'
 import { useCustomRouter, useUser } from 'src/shared/hooks'
 import { IUser } from 'src/types/User'
+import TitleHeader from 'src/components/TitleHeader'
 
 interface MeetTags {
   tags?: { text: string }[]
@@ -58,8 +59,6 @@ function Edit() {
     const tags = eventData?.tags?.split(',').map(value => {
       return { text: value }
     })
-
-    console.log(eventData?.startingTimes)
 
     // TODO: group, startTime, endTime, selectedTimes 초기화
     setTitle(eventData?.title ?? '')
@@ -209,12 +208,7 @@ function Edit() {
         </div>
       </div>
       <section className="flex flex-col items-center bg-bgColor h-screen pt-[6rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto">
-        <div className="fixed w-full bg-bgColor top-0 pb-4">
-          <button onClick={handleBack} className="absolute top-9 left-5 ">
-            <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
-          </button>
-          <h1 className="mt-8 text-xl font-bold text-white text-center ">약속 만들기</h1>
-        </div>
+        <TitleHeader title="약속 수정" />
         {editPhase === 1 && (
           <>
             {/* TODO: 생성으로 넘어올 때, groupId 있으면 해당 그룹을 기본으로 선택 */}

@@ -14,9 +14,11 @@ import { trpc } from 'src/utils/trpc'
 import { toast, ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { RecoilRoot } from 'recoil'
+import { useLastPathTracker } from 'src/shared/hooks'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const { data } = trpc.useQuery(['users.me'], {})
+  useLastPathTracker()
 
   return (
     <>

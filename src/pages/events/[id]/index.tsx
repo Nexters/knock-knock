@@ -22,7 +22,6 @@ export default function Event() {
   })
 
   const { user, isLoadingUser, isAnonymousUser } = useUser()
-  console.log(user, isAnonymousUser)
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { ICreateGroup, IModifyGroup } from 'src/schema/groupSchema'
 import GroupForm from 'src/components/GroupForm'
 import { useCustomRouter } from 'src/shared/hooks'
+import TitleHeader from 'src/components/TitleHeader'
 
 interface GroupTags {
   tags?: { text: string }[]
@@ -78,12 +79,7 @@ function ModifyGroup() {
 
   return (
     <CenteringLayout seoTitle="그룹 수정">
-      <div className="fixed w-full bg-bgColor top-0 pb-4">
-        <button onClick={() => router.back()} className="absolute top-9 left-5 ">
-          <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
-        </button>
-        <h1 className="mt-8 text-xl font-bold text-white text-center ">그룹 수정</h1>
-      </div>
+      <TitleHeader title="그룹 수정" />
       <GroupForm
         handleSubmit={handleSubmit(onValid)}
         register={register}
