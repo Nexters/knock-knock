@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react'
 import { ICreateEvent } from '../../schema/eventSchema'
 import LoginModal from 'src/components/modals/LoginModal'
 import { useCustomRouter } from 'src/shared/hooks'
+import TitleHeader from 'src/components/TitleHeader'
 
 interface MeetTags {
   tags?: { text: string }[]
@@ -184,12 +185,7 @@ function Create() {
       </div> */}
       <section className="flex flex-col items-center bg-bgColor h-screen pt-[6rem] pr-[1.25rem] pb-[1.625rem] pl-[1.25rem] overflow-auto relative">
         <LoginModal />
-        <div className="fixed w-full bg-bgColor top-0 pb-4">
-          <button onClick={handleBack} className="absolute top-9 left-5 ">
-            <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
-          </button>
-          <h1 className="mt-8 text-xl font-bold text-white text-center ">약속 만들기</h1>
-        </div>
+        <TitleHeader title={'약속 만들기'} />
         {createPhase === 1 && (
           <>
             {/* TODO: groupId 있으면 해당 그룹을 기본으로 선택 */}

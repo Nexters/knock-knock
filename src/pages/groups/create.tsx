@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import { ICreateGroup } from 'src/schema/groupSchema'
 import GroupForm from 'src/components/GroupForm'
 import { useCustomRouter } from 'src/shared/hooks'
+import TitleHeader from 'src/components/TitleHeader'
 
 interface GroupTags {
   tags?: { text: string }[]
@@ -61,12 +62,7 @@ function CreateGroup() {
 
   return (
     <CenteringLayout seoTitle="그룹 생성">
-      <div className="fixed w-full sm:max-w-sm bg-bgColor top-0 pb-4">
-        <button onClick={() => router.back()} className="absolute top-9 left-5 ">
-          <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0" />
-        </button>
-        <h1 className="mt-8 text-xl font-bold text-white text-center ">그룹 만들기</h1>
-      </div>
+      <TitleHeader title="그룹 만들기" />
       <GroupForm
         handleSubmit={() => handleSubmit(onValid)}
         register={register}
