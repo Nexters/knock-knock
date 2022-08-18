@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { UseFormRegister } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { CreateEventInput } from 'src/pages/events/create'
 
 interface TagInputProps {
   label: string
   tags: { id?: string; text: string }[]
-  onAddTag: (tag: string) => void
-  onRemoveTag: (index: number) => void
+  onChange: (tags: { id?: string; text: string }[]) => void
   classNames?: string
   [key: string]: any
 }
 
-export default function TagInput({ label, tags, onAddTag, onRemoveTag, classNames, ...rest }: TagInputProps) {
+export default function TagInput({ label, tags, onChange, classNames, ...rest }: TagInputProps) {
   const [inputText, setInputText] = useState('')
 
   return (
@@ -31,8 +31,13 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
         <button
           onClick={e => {
             e.preventDefault()
+            if (!inputText) return
             setInputText('')
-            onAddTag(inputText)
+            if (tags.findIndex(tag => tag.text === inputText) === -1) {
+              onChange([...tags, { text: inputText }])
+            } else {
+              toast.warn('이미 동일한 태그가 존재합니다.')
+            }
           }}
           className="w-1/5 text-sm rounded-md bg-[#5D5E62]"
         >
@@ -42,9 +47,12 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
       <div className="flex flex-wrap my-3">
         {tags.map((tag, index) => (
           <div
-            key={tag.id}
+            key={tag.text}
             className="badge bg-[#2F3035] border-none py-4 px-3 text-white gap-2"
-            onClick={() => onRemoveTag(index)}
+            onClick={() => {
+              const updatedTags = tags.filter((_tag, tagIndex) => index !== tagIndex)
+              onChange(updatedTags)
+            }}
           >
             {tag.text}
             <svg
@@ -53,7 +61,7 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
               viewBox="0 0 24 24"
               className="inline-block w-4 h-4 stroke-current"
             >
-              <path strokeLinecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
         ))}

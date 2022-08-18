@@ -104,7 +104,7 @@ export const eventRouter = createRouter()
   .mutation('create-event', {
     input: createEventSchema,
     async resolve({ ctx, input }) {
-      const { title, description, tags, startingTimes, timeSize, isUnlimitedHeadCounts } = input
+      const { title, description, tags, startingTimes, timeSize, isUnlimitedHeadCounts, groupId } = input
 
       try {
         const event = await ctx.prisma.event.create({
@@ -114,11 +114,15 @@ export const eventRouter = createRouter()
                 email: ctx.session?.user?.email!,
               },
             },
-            group: {
-              connect: {
-                id: input.groupId,
-              },
-            },
+            ...(groupId
+              ? {
+                  group: {
+                    connect: {
+                      id: input.groupId,
+                    },
+                  },
+                }
+              : {}),
             title,
             description,
             tags,

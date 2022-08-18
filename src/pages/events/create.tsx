@@ -18,7 +18,6 @@ export interface CreateEventInput {
   description: string
   headCounts: number
   isUnlimitedHeadCounts: boolean
-  tags: { text: string }[]
 }
 
 function Create() {
@@ -26,11 +25,12 @@ function Create() {
   const { isAuthenticated, user } = useUser()
 
   const [createPhase, setCreatePhase] = useState(1)
+
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
   const [startTime, setStartTime] = useState('09:00')
   const [endTime, setEndTime] = useState('17:00')
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('')
-
+  const [tags, setTags] = useState<{ id?: string; text: string }[]>([])
   const {
     handleSubmit,
     register,
@@ -42,13 +42,11 @@ function Create() {
       description: '',
       headCounts: 2,
       isUnlimitedHeadCounts: false,
-      tags: [],
     },
   })
+  console.log(errors)
 
-  const { title, description, isUnlimitedHeadCounts, headCounts, selectedGroup, tags } = watch()
-
-  const { onChange: onTagsChange } = register('tags')
+  const { title, description, isUnlimitedHeadCounts, headCounts, selectedGroup } = watch()
 
   const { mutate } = trpc.useMutation('events.create-event', {
     onSuccess(data) {
@@ -175,9 +173,10 @@ function Create() {
                 <input
                   type="text"
                   placeholder="약속 제목을 입력해주세요 (15자 이내)"
-                  className="input w-full bg-[#2F3035] border-none"
+                  className="input w-full bg-base-100 border-none"
                   {...register('title', {
                     maxLength: 15,
+                    required: '제목은 반드시 입력해야 합니다.',
                   })}
                 />
               </div>
@@ -186,7 +185,7 @@ function Create() {
                 <textarea
                   className="textarea h-24 bg-[#2F3035]"
                   placeholder="약속 설명을 적어주세요 (95자 이내)"
-                  {...register('description', { maxLength: 95 })}
+                  {...register('description', { maxLength: 95, required: '설명은 반드시 입력해야 합니다.' })}
                 ></textarea>
                 <label className="label">
                   <span className="label-text-alt"></span>
@@ -194,19 +193,11 @@ function Create() {
                 </label>
               </div>
 
-              <TagInput<CreateEventInput>
+              <TagInput
                 label="태그는 3개까지 가능해요(선택)"
                 placeholder="5자 이내로 적어주세요"
                 tags={tags}
-                onAddTag={tag => {
-                  if (fields.findIndex(field => field.text === tag) === -1) {
-                    onTagsChange([...tags, { text: tag }])
-                    append({ text: tag })
-                  } else {
-                    toast.warn('이미 동일한 태그가 존재합니다.')
-                  }
-                }}
-                onRemoveTag={index => remove(index)}
+                onChange={setTags}
                 classNames="w-full  mt-[1.375rem]"
               />
 
@@ -220,12 +211,12 @@ function Create() {
                     <input type="checkbox" className="checkbox" {...register('isUnlimitedHeadCounts')} />
                   </label>
                 </div>
-                <div className="form-control w-full mt-5">
+                <div className="form-control w-full mt-2">
                   <input
                     type="number"
                     min={2}
                     placeholder="모집인원을 입력해주세요"
-                    className="input w-full bg-[#2F3035] border-none"
+                    className="input w-full bg-base-100 border-none"
                     disabled={isUnlimitedHeadCounts}
                     {...register('headCounts')}
                   />
