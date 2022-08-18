@@ -12,7 +12,7 @@ export const createEventSchema = z.object({
   groupId: z.string().optional(),
 })
 
-export type ICreateEvent = z.TypeOf<typeof createEventSchema>
+export type CreateEventInputSchema = z.TypeOf<typeof createEventSchema>
 
 export const editEventSchema = z.object({
   id: z.string(),
