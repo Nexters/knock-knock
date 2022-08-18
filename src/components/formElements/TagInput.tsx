@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { UseFormRegister } from 'react-hook-form'
+import { CreateEventInput } from 'src/pages/events/create'
 
 interface TagInputProps {
   label: string
-  tags: { id: string; text: string }[]
+  tags: { id?: string; text: string }[]
   onAddTag: (tag: string) => void
   onRemoveTag: (index: number) => void
   classNames?: string
@@ -14,7 +16,7 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
 
   return (
     <div className={classNames ?? ''}>
-      <label className="mb-1 block text-sm font-medium text-gray-700 text-left" htmlFor="tagInput">
+      <label className="mb-1 block text-sm font-medium text-[#F3F4F4] text-left" htmlFor="tagInput">
         {label}
       </label>
       <div className="relative flex justify-between">
@@ -23,7 +25,7 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
           type="text"
           value={inputText}
           onChange={e => setInputText(e.target.value)}
-          className="input input-bordered appearance-none w-4/5 px-3 py-2 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 bg-[#2F3035]"
+          className="input w-full bg-[#2F3035] border-none"
           {...rest}
         />
         <button
@@ -32,20 +34,28 @@ export default function TagInput({ label, tags, onAddTag, onRemoveTag, className
             setInputText('')
             onAddTag(inputText)
           }}
-          className="w-1/6 text-sm rounded-md bg-[#5D5E62]"
+          className="w-1/5 text-sm rounded-md bg-[#5D5E62]"
         >
           추가
         </button>
       </div>
       <div className="flex flex-wrap my-3">
         {tags.map((tag, index) => (
-          <button
+          <div
             key={tag.id}
+            className="badge bg-[#2F3035] border-none py-4 px-3 text-white gap-2"
             onClick={() => onRemoveTag(index)}
-            className="bg-[#46474C] px-2 mr-2 mb-2 rounded-md text-sm"
           >
             {tag.text}
-          </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-4 h-4 stroke-current"
+            >
+              <path strokeLinecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </div>
         ))}
       </div>
     </div>
