@@ -133,34 +133,33 @@ export default function GroupDetail() {
           </div>
 
           <div className="mt-8 px-5"></div>
-          <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
-            <button
-              className="btn btn-circle bg-primary text-white mr-5"
-              onClick={() => setVisibleBottomSheet('create')}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+          {user?.groups.some(group => group.id === groupData?.id) && (
+            <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+              <button
+                className="btn btn-circle bg-primary text-white mr-5"
+                onClick={() => setVisibleBottomSheet('create')}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-            </button>
-          </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
         {visibleBottomSheet === 'create' && (
           <BottomSheet onClose={() => setVisibleBottomSheet(null)} isBackground={false}>
-            <button onClick={() => router.push('/events/create')} className="btn w-full max-w-xs bg-primary text-white">
-              약속 만들기
-            </button>
             <button
-              onClick={() => router.push('/group/create')}
-              className="btn w-full max-w-xs bg-white text-bgColor mt-2"
+              onClick={() => router.push({ pathname: '/events/create', query: { groupId: router.query.id } })}
+              className="btn w-full max-w-xs bg-primary text-white"
             >
-              그룹 만들기
+              약속 만들기
             </button>
           </BottomSheet>
         )}
