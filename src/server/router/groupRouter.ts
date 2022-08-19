@@ -129,3 +129,18 @@ export const groupRouter = createRouter()
       })
     },
   })
+  .mutation('join-group', {
+    input: z.object({ groupId: z.string(), profileId: z.string(), isHost: z.boolean() }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.group.update({
+        where: {
+          id: input.groupId,
+        },
+        data: {
+          members: {
+            create: { profileId: input.profileId, isHost: input.isHost },
+          },
+        },
+      })
+    },
+  })
