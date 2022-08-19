@@ -19,7 +19,7 @@ const GatheringCard = ({ event, group, isWideView, onMoreButtonClick }: Gatherin
       }] relative inline-flex flex-shrink-0 cursor-pointer ${isWideView ? 'mt-2 w-full' : 'mr-3'}`}
     >
       {onMoreButtonClick && (
-        <button onClick={onMoreButtonClick} className={`absolute top-4 right-3 z-50`}>
+        <button onClick={onMoreButtonClick} className={`absolute top-4 right-3 z-40`}>
           <img src="/assets/svg/fi_more-vertical.svg" alt="more_icon" />
         </button>
       )}
