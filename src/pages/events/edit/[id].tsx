@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useFieldArray, useForm } from 'react-hook-form'
 import format from 'date-fns/format'
 import { toast } from 'react-toastify'
 
@@ -9,12 +8,7 @@ import Calendar from 'src/components/Calendar'
 import { trpc } from 'src/utils/trpc'
 import { IEditEvent } from '../../../schema/eventSchema'
 import { useCustomRouter, useUser } from 'src/shared/hooks'
-import { IUser } from 'src/types/User'
 import TitleHeader from 'src/components/TitleHeader'
-
-interface EventTags {
-  tags?: { text: string }[]
-}
 
 // TODO: 필수, 선택에 따른 유효성 검사
 function Edit() {
@@ -44,16 +38,7 @@ function Edit() {
     },
   })
 
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm<EventTags>()
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'tags',
-  })
+  const [tags, setTags] = useState<{ text: string }[]>([])
 
   useEffect(() => {
     const tags = eventData?.tags?.split(',').map(value => {
@@ -63,7 +48,7 @@ function Edit() {
     // TODO: group, startTime, endTime, selectedTimes 초기화
     setTitle(eventData?.title ?? '')
     setDescription(eventData?.description ?? '')
-    setValue('tags', tags ?? undefined)
+    setTags(tags ?? [])
     setSelectedDates([])
     setHeadCounts(eventData?.headCounts ?? 0)
     setIsUnlimitedHeadCounts(eventData?.isUnlimitedHeadCounts ?? false)
@@ -122,21 +107,12 @@ function Edit() {
     setSelectedTimeSlot(event.target.value)
   }
 
-  const handleBack = () => {
-    if (editPhase === 1) {
-      router.back()
-    }
-    if (editPhase === 2) {
-      setEditPhase(prevState => prevState - 1)
-    }
-  }
-
   const handleNextPhase = () => {
     setEditPhase(prevState => prevState + 1)
   }
 
   const handleSubmit = () => {
-    const tags = fields.map(field => field.text)
+    const currentTags = tags.map(tag => tag.text)
     const dateTimestamp = selectedDates.map(date => {
       return (date.getTime() + Number(startTime.split(':')[0])! * 60 * 60 * 1000) / 1000
     })
@@ -153,7 +129,7 @@ function Edit() {
       id: router.query.id as string,
       title,
       description,
-      tags: tags.join(','),
+      tags: currentTags.join(','),
       startingTimes: dateTimestamp.join(','),
       timeSize: timeGapStamp,
       headCounts: headCounts,
@@ -228,7 +204,7 @@ function Edit() {
                     그룹을 선택해주세요
                   </option>
                   <option value="">없음</option>
-                  {(user as IUser)?.groups?.map(group => (
+                  {user?.groups?.map(group => (
                     <option key={group.id} value={group.id}>
                       {group.name}
                     </option>
@@ -269,15 +245,8 @@ function Edit() {
             <TagInput
               label="태그"
               placeholder="태그를 입력해주세요"
-              tags={fields}
-              onAddTag={tag => {
-                if (fields.findIndex(field => field.text === tag) === -1) {
-                  append({ text: tag })
-                } else {
-                  console.log('이미 동일한 태그가 존재합니다.')
-                }
-              }}
-              onRemoveTag={index => remove(index)}
+              tags={tags}
+              onChange={setTags}
               classNames="w-full max-w-xs mt-[1.375rem]"
             />
 

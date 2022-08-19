@@ -42,9 +42,9 @@ export default function Invite() {
 
   const dates = startingTimesToDates(eventData?.startingTimes)
   const calendarText = getCanlendarText(dates)
-  const timeRangeText = `${getFormattedTimeString(dates[0])} - ${getFormattedTimeString(
-    addSeconds(dates[0]!, eventData?.timeSize!),
-  )}`
+  const timeRangeText = dates.length
+    ? `${getFormattedTimeString(dates[0])} - ${getFormattedTimeString(addSeconds(dates[0]!, eventData?.timeSize!))}`
+    : ''
 
   const onSelectTime = () => {
     router.push(`/events/${router.query.id}`)
@@ -101,8 +101,8 @@ export default function Invite() {
               <div className="flex items-center">
                 {eventData?.participates?.map(participate => {
                   return (
-                    <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 text-sm">
-                      <img className="w-[20px] rounded-lg mr-2" src={participate.profile.image || ''} />
+                    <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 py-4 text-sm">
+                      <img className="w-6 rounded-lg mr-2" src={participate.profile.image || ''} />
                       {participate.profile.name}
                     </div>
                   )

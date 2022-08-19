@@ -10,8 +10,6 @@ import MyGroupCard from 'src/components/MyGroupCard'
 import BottomSheet from 'src/components/BottomSheet'
 import GuideModal from 'src/components/modals/GuideModal'
 // import SkeletonCard from 'src/components/SkeletonCard'
-import { IUser } from 'src/types/User'
-import { IEvent } from 'src/types/Event'
 
 export default function Home() {
   const utils = trpc.useContext()
@@ -20,7 +18,7 @@ export default function Home() {
   const router = useCustomRouter()
 
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
-  const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<IEvent | null>(null)
+  const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<any | null>(null)
 
   const deleteEventMutation = trpc.useMutation('events.delete-event', {
     onSuccess() {
@@ -68,13 +66,13 @@ export default function Home() {
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative">
-        <div className="w-full sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
-          <object data="assets/svg/logo_white.svg" />
+        <div className="w-full md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+          <object data="/assets/svg/logo_white.svg" />
           <div className="flex items-center">
             {isAuthenticated ? (
               <Link href="/profile">
                 <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover mr-3">
-                  <img className="" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
+                  <img className="" src={`${user?.image}` ?? '/assets/images/avatar.png'} />
                 </div>
               </Link>
             ) : (
@@ -100,7 +98,7 @@ export default function Home() {
             {me?.events?.length ? (
               me?.events.map((event, index) => {
                 return (
-                  <GatheringCard key={index} data={event} onMoreButtonClick={() => setVisibleMoreButtonModal(event)} />
+                  <GatheringCard key={index} event={event} onMoreButtonClick={() => setVisibleMoreButtonModal(event)} />
                 )
               })
             ) : (
@@ -139,7 +137,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="w-full sm:max-w-sm fixed bottom-10 flex justify-end">
+        <div className="w-full md:max-w-sm fixed bottom-10 flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleCreateModal(true)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -157,12 +155,12 @@ export default function Home() {
         {visibleCreateModal && (
           <BottomSheet onClose={() => setVisibleCreateModal(false)} isBackground={false}>
             <Link href="/events/create">
-              <a className="btn w-full max-w-xs bg-primary">
+              <a className="btn w-full md:max-w-sm bg-primary">
                 <span className="text-white">약속 만들기</span>
               </a>
             </Link>
             <Link href="/groups/create">
-              <a className="btn w-full max-w-xs bg-white mt-2">
+              <a className="btn w-full md:max-w-sm bg-white mt-2">
                 <span className="text-bgColor">그룹 만들기</span>
               </a>
             </Link>
@@ -174,13 +172,13 @@ export default function Home() {
             {user?.events.some(value => value.profileId === visibleMoreButtonModal.profileId) && (
               <>
                 <Link href={`/events/edit/${visibleMoreButtonModal}`}>
-                  <a className="btn w-full max-w-xs bg-primary">
+                  <a className="btn w-full md:max-w-sm bg-primary">
                     <span className="text-white">약속 수정하기</span>
                   </a>
                 </Link>
                 <button
                   onClick={() => onDeleteEvent(visibleMoreButtonModal.id)}
-                  className="btn w-full max-w-xs bg-white mt-2"
+                  className="btn w-full md:max-w-sm bg-white mt-2"
                 >
                   <span className="text-bgColor">약속 삭제하기</span>
                 </button>
@@ -188,7 +186,7 @@ export default function Home() {
             )}
             <button
               onClick={() => onLeaveEvent(visibleMoreButtonModal.id)}
-              className="btn w-full max-w-xs bg-buttonGray mt-2"
+              className="btn w-full md:max-w-sm bg-buttonGray mt-2"
             >
               <span className="text-white">떠나기</span>
             </button>

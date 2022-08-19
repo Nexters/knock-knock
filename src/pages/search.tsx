@@ -35,11 +35,11 @@ export default function SearchPage() {
     <div className="flex flex-col py-4 relative h-screen bg-bgColor px-5">
       <div className="flex itmes-center mb-3">
         <Link href="/">
-          <img src="assets/svg/Arrow left.svg" alt="logo" className="cursor-pointer" />
+          <img src="/assets/svg/Arrow left.svg" alt="logo" className="cursor-pointer" />
         </Link>
       </div>
       <form className="relative">
-        <img src="assets/svg/search.svg" className="absolute top-[14px] left-3 opacity-80" />
+        <img src="/assets/svg/search.svg" className="absolute top-[14px] left-3 opacity-80" />
         <input
           type="text"
           name="name"
@@ -60,7 +60,7 @@ export default function SearchPage() {
                     <div className="my-3 flex items-center">
                       <img
                         className="w-[30px] h-[30px] rounded-full"
-                        src={user.image || 'assets/svg/logo.svg'}
+                        src={user.image || '/assets/svg/logo.svg'}
                         alt="profile"
                       />
                       <span className="text-sm ml-2 text-textGray">{user.name}</span>
@@ -79,7 +79,7 @@ export default function SearchPage() {
                 return (
                   <div className="flex items-center justify-between">
                     <div className="my-3 flex items-center">
-                      <img className="w-[30px] h-[30px] rounded-full" src="assets/svg/logo.svg" alt="profile" />
+                      <img className="w-[30px] h-[30px] rounded-full" src="/assets/svg/logo.svg" alt="profile" />
                       <span className="text-sm ml-2 text-textGray">{event.title}</span>
                     </div>
                     {event?.participates && (
@@ -99,7 +99,7 @@ export default function SearchPage() {
                 return (
                   <div className="flex items-center justify-between" onClick={() => router.push(`/groups/${group.id}`)}>
                     <div className="my-3 flex items-center">
-                      <img className="w-[30px] h-[30px] rounded-full" src="assets/svg/logo.svg" alt="profile" />
+                      <img className="w-[30px] h-[30px] rounded-full" src="/assets/svg/logo.svg" alt="profile" />
                       <span className="text-sm ml-2 text-textGray">{group.name}</span>
                     </div>
                   </div>

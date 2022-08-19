@@ -7,22 +7,57 @@ import { useUser } from 'src/shared/hooks'
 import SEO from 'src/components/pageLayouts/SEO'
 import BottomSheet from 'src/components/BottomSheet'
 import GatheringCard from 'src/components/GatheringCard'
+import { toast } from 'react-toastify'
 
 export default function GroupDetail() {
   const [visibleBottomSheet, setVisibleBottomSheet] = useState<'create' | null>(null)
+  const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<any | null>(null)
 
   const { user, isAuthenticated } = useUser()
   const router = useRouter()
-
   const {
     data: groupData,
     isLoading,
     error,
   } = trpc.useQuery(['groups.single-group', { groupId: router.query.id as string }])
+
+  console.log(groupData)
+  const utils = trpc.useContext()
+
+  const deleteEventMutation = trpc.useMutation('events.delete-event', {
+    onSuccess() {
+      utils.invalidateQueries(['groups.single-group'])
+      toast('약속을 삭제했습니다.', { autoClose: 2000 })
+    },
+    onError() {
+      toast('다시 시도해주세요.', { autoClose: 2000 })
+    },
+  })
+
+  const leaveEventMutation = trpc.useMutation('events.my-cells', {
+    onSuccess() {
+      toast('약속을 떠났습니다.', { autoClose: 2000 })
+    },
+    onError() {
+      toast('다시 시도해주세요.', { autoClose: 2000 })
+    },
+  })
+
+  const onDeleteEvent = (eventId: string) => {
+    deleteEventMutation.mutate({ eventId: eventId })
+    setVisibleMoreButtonModal(null)
+  }
+
+  const onLeaveEvent = (eventId: string) => {
+    if (!user?.id) return
+    leaveEventMutation.mutate({ eventId: eventId, profileId: user.id, cells: '' })
+    setVisibleMoreButtonModal(null)
+  }
+
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative bg-bgColor">
-        <div className="w-[100%] sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+        <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <Link href="/">
             <img src="/assets/svg/logo_white.svg" />
           </Link>
@@ -35,7 +70,7 @@ export default function GroupDetail() {
             {isAuthenticated ? (
               <Link href="/profile">
                 <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover">
-                  <img className="" src={`${user?.image}` ?? 'assets/images/avatar.png'} />
+                  <img className="" src={`${user?.image}` ?? '/assets/images/avatar.png'} />
                 </div>
               </Link>
             ) : (
@@ -67,15 +102,23 @@ export default function GroupDetail() {
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">약속 모임</h2>
           <div className="mt-2 pb-2 flex flex-row overflow-x-auto px-5">
-            <div>
-              {(groupData?.events ?? []).map((group, index) => {
-                return <GatheringCard key={index} data={group as any} />
+            <div className="w-full">
+              {(groupData?.events ?? []).map((event, index) => {
+                return (
+                  <GatheringCard
+                    onMoreButtonClick={() => setVisibleMoreButtonModal(event)}
+                    key={index}
+                    event={event}
+                    group={groupData}
+                    isWideView
+                  />
+                )
               })}
             </div>
           </div>
 
           <div className="mt-8 px-5"></div>
-          <div className="w-full sm:max-w-sm fixed bottom-10 auto flex justify-end">
+          <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
             <button
               className="btn btn-circle bg-primary text-white mr-5"
               onClick={() => setVisibleBottomSheet('create')}
@@ -103,6 +146,31 @@ export default function GroupDetail() {
               className="btn w-full max-w-xs bg-white text-bgColor mt-2"
             >
               그룹 만들기
+            </button>
+          </BottomSheet>
+        )}
+        {visibleMoreButtonModal && (
+          <BottomSheet onClose={() => setVisibleMoreButtonModal(null)} isBackground={false}>
+            {user?.events.some(value => value.profileId === visibleMoreButtonModal.profileId) && (
+              <>
+                <Link href={`/events/edit/${visibleMoreButtonModal}`}>
+                  <a className="btn w-full md:max-w-sm bg-primary">
+                    <span className="text-white">약속 수정하기</span>
+                  </a>
+                </Link>
+                <button
+                  onClick={() => onDeleteEvent(visibleMoreButtonModal.id)}
+                  className="btn w-full md:max-w-sm bg-white mt-2"
+                >
+                  <span className="text-bgColor">약속 삭제하기</span>
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => onLeaveEvent(visibleMoreButtonModal.id)}
+              className="btn w-full md:max-w-sm bg-buttonGray mt-2"
+            >
+              <span className="text-white">떠나기</span>
             </button>
           </BottomSheet>
         )}

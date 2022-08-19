@@ -36,7 +36,7 @@ function LoginPage({ providers }: InferGetServerSidePropsType<typeof getServerSi
 
 export default LoginPage
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: any) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
   if (session) {
     return {

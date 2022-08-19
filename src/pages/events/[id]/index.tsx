@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { useUser } from 'src/shared/hooks'
 import { signIn } from 'next-auth/react'
 import { cls } from 'src/utils/cls'
+import LoginModal from 'src/components/modals/LoginModal'
 
 export default function Event() {
   const { push, query } = useRouter()
@@ -20,8 +21,8 @@ export default function Event() {
       toast('저장 실패...', { autoClose: 2000 })
     },
   })
-
-  const { user, isLoadingUser } = useUser()
+  console.log(eventData)
+  const { user, isLoadingUser, isAuthenticated } = useUser()
 
   const participates = eventData?.participates ?? []
   const myParticipation: Participation | undefined = participates.find(
@@ -102,26 +103,7 @@ export default function Event() {
 
   return (
     <>
-      <input checked={!isLoadingUser && !user} readOnly type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal  bg-bgColor bg-opacity-80">
-        <div className="modal-box sm:max-w-xs">
-          <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
-          <div className="flex-col mt-6">
-            <button
-              onClick={() => push({ pathname: '/auth/login', query: { redirect: query.id } })}
-              className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
-            >
-              SNS 계정으로 로그인
-            </button>
-            <button
-              onClick={() => push({ pathname: '/', query: { redirect: query.id } })}
-              className="block mx-auto btn w-full max-w-xs mt-2 bg-primary text-white"
-            >
-              홈으로 가기
-            </button>
-          </div>
-        </div>
-      </div>
+      {!user && <LoginModal />}
 
       <div className="flex flex-col pt-9 h-screen relative bg-bgColor">
         <div className="flex justify-between items-center ml-5">
@@ -154,7 +136,7 @@ export default function Event() {
           )}
         </div>
 
-        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 sm:max-w-sm">
+        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
           {isResultView ? (
             <button onClick={() => setIsResultView(!isResultView)} className="btn w-[100%] bg-white text-cardBg">
               다시 선택하기

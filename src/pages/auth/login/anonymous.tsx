@@ -21,12 +21,10 @@ export default function CreateAnonymous() {
     formState: { errors },
   } = useForm<Inputs>()
   const router = useRouter()
-  const { setAnonymousUser } = useUser()
 
   watch()
 
   const onValid: SubmitHandler<Inputs> = (data: Inputs) => {
-    setAnonymousUser({ id: signJwt(data), name: data.name })
     if (router.query?.redirect) router.push(router.query?.redirect as string)
     else {
       toast('에러가 발생했습니다.')
@@ -83,7 +81,7 @@ export default function CreateAnonymous() {
           />
         </div>
 
-        <div className="fixed w-full max-w-sm px-5 mx-auto mb-6 bottom-0 left-0 right-0">
+        <div className="fixed w-full md:max-w-sm px-5 mx-auto mb-6 bottom-0 left-0 right-0">
           <button type="submit" className="w-full btn bg-primary text-white">
             로그인
           </button>
@@ -93,7 +91,7 @@ export default function CreateAnonymous() {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: any) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
   if (session) {
     return {

@@ -1,5 +1,5 @@
-import { Group, Profile } from '@prisma/client'
+import { InferQueryOutput } from 'src/utils/trpc'
 
-export interface IGroup extends Group {
-  groups: Profile[]
-}
+export type GroupsOutput = InferQueryOutput<'groups.groups'>
+
+export type SingleGroupOutput = InferQueryOutput<'groups.single-group'>

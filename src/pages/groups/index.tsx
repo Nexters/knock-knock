@@ -11,7 +11,7 @@ function GroupListPage() {
       <TitleHeader title="그룹 전체 보기" />
       <div className="px-5 mt-20">
         {groups?.map((group, index) => {
-          return <MyGroupCard key={index} data={group as any} />
+          return <MyGroupCard key={index} data={group} />
         })}
       </div>
     </div>
