@@ -16,7 +16,7 @@ export default function TagInput({ label, tags, onChange, classNames, ...rest }:
 
   return (
     <div className={classNames ?? ''}>
-      <label className="mb-1 block text-sm font-medium text-[#F3F4F4] text-left" htmlFor="tagInput">
+      <label className="block text-sm font-medium text-textGray2 text-left mb-2" htmlFor="tagInput">
         {label}
       </label>
       <div className="relative flex justify-between">
@@ -39,7 +39,7 @@ export default function TagInput({ label, tags, onChange, classNames, ...rest }:
               toast.warn('이미 동일한 태그가 존재합니다.')
             }
           }}
-          className="w-1/5 text-sm rounded-md bg-[#5D5E62]"
+          className="w-1/6 h-[72%] text-sm rounded-lg bg-[#5D5E62] absolute top-[14%] right-3"
         >
           추가
         </button>
