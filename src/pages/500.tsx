@@ -18,8 +18,8 @@ export default function Custom500() {
           메인 홈으로 이동해주세요
         </div>
         <video
-          src="assets/videos/error.mp4"
-          poster="assets/images/error.png"
+          src="/assets/videos/error.mp4"
+          poster="/assets/images/error.png"
           width="300"
           height="300"
           loop={true}

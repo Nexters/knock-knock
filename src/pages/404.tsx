@@ -11,8 +11,8 @@ export default function Custom404() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">
         <div className="text-center mb-8 text-lg">페이지가 없어요...</div>
         <video
-          src="assets/videos/404.mp4"
-          poster="assets/images/404.png"
+          src="/assets/videos/404.mp4"
+          poster="/assets/images/404.png"
           width="300"
           height="300"
           loop={true}

@@ -35,7 +35,9 @@ export const groupRouter = createRouter()
               },
             },
             profile: true,
-            events: true,
+            events: {
+              include: { participates: { include: { profile: true } } },
+            },
           },
         })
         return group

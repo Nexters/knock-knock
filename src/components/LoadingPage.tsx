@@ -15,8 +15,8 @@ export default function LoadingPage() {
           조금만 기다려주세요
         </div>
         <video
-          src="assets/videos/loading.mp4"
-          poster="assets/images/loading.png"
+          src="/assets/videos/loading.mp4"
+          poster="/assets/images/loading.png"
           width="300"
           height="300"
           loop={true}

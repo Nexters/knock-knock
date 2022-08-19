@@ -23,7 +23,7 @@ function GuideModal({ onClose }: GuideProps) {
                   <span className="bg-accent-content">플러스 버튼</span>을 눌러
                   <img
                     className="absolute -top-4 -left-4 w-[20px] h-[20px]"
-                    src="assets/images/floating.svg"
+                    src="/assets/images/floating.svg"
                     alt="플러스버튼"
                   />
                 </p>
@@ -46,7 +46,7 @@ function GuideModal({ onClose }: GuideProps) {
             </div>
 
             <div id="slide2" className="carousel-item relative w-full flex flex-col">
-              <img className="w-[100%] h-[100%] z-40" src="assets/images/time_table.png" alt="시간표" />
+              <img className="w-[100%] h-[100%] z-40" src="/assets/images/time_table.png" alt="시간표" />
               <div className="absolute top-[60%] w-full h-[40%] z-50 flex flex-col items-center justify-center rounded-bl-lg rounded-br-lg">
                 <p className="text-[1.125rem] leading-[1.6875rem]">내가 가능한 약속 시간을</p>
 
