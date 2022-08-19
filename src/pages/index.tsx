@@ -14,6 +14,7 @@ import { IUser } from 'src/types/User'
 import { IEvent } from 'src/types/Event'
 
 export default function Home() {
+  const utils = trpc.useContext()
   const { user, isAuthenticated } = useUser()
   const { data: me } = trpc.useQuery(['users.me'])
   const router = useCustomRouter()
@@ -23,6 +24,7 @@ export default function Home() {
 
   const deleteEventMutation = trpc.useMutation('events.delete-event', {
     onSuccess() {
+      utils.invalidateQueries(['users.me'])
       toast('약속을 삭제했습니다.', { autoClose: 2000 })
     },
     onError() {
@@ -169,7 +171,7 @@ export default function Home() {
 
         {visibleMoreButtonModal && (
           <BottomSheet onClose={() => setVisibleMoreButtonModal(null)} isBackground={false}>
-            {(user as IUser)?.events.some(value => value.profileId === visibleMoreButtonModal.profileId) && (
+            {user?.events.some(value => value.profileId === visibleMoreButtonModal.profileId) && (
               <>
                 <Link href={`/events/edit/${visibleMoreButtonModal}`}>
                   <a className="btn w-full max-w-xs bg-primary">

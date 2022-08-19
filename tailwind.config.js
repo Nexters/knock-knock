@@ -33,6 +33,7 @@ module.exports = {
         textGray2: '#B8B7BC',
         textGray3: '#737373',
         white: '#FFF',
+        whiteGray: '#F3F4F4',
         from: '#16C674',
         to: '#28D899',
         kakao: '#FEE500',
