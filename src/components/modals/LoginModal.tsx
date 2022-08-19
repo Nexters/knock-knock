@@ -1,20 +1,23 @@
 import { useCustomRouter, useUser } from 'src/shared/hooks'
 import BackDrop from 'src/components/BackDrop'
+import { useRecoilValue } from 'recoil'
+import { anonymousUserState } from 'src/shared/recoil/user/atoms'
 
 export default function LoginModal({ fallbackUrl }: { fallbackUrl?: string }) {
   const { isAuthenticated } = useUser()
   const router = useCustomRouter()
+  const anonymous = useRecoilValue(anonymousUserState)
 
   function handleCloseClick() {
     router.back(fallbackUrl)
   }
 
-  if (isAuthenticated) return null
+  if (isAuthenticated || anonymous?.name) return null
 
   return (
     <>
-      <BackDrop classNames="z-20" />
-      <div className="w-full h-screen md:max-w-sm fixed mx-auto z-30">
+      <BackDrop classNames="z-50" />
+      <div className="w-full h-screen md:max-w-sm fixed mx-auto z-50">
         <div className="w-[80%] absolute top-1/2 -translate-y-1/2 bg-base-100 pt-9 pb-6 px-6 rounded-xl left-1/2 -translate-x-1/2 ">
           <h3 className="font-bold text-base text-center">어떤 계정으로 로그인 할까요?</h3>
           <div className="flex-col mt-6">
@@ -25,6 +28,7 @@ export default function LoginModal({ fallbackUrl }: { fallbackUrl?: string }) {
               SNS 계정으로 로그인
             </button>
             <button
+              disabled
               onClick={() =>
                 router.push({ pathname: '/auth/login/anonymous', query: { redirect: router.query.asPath } })
               }

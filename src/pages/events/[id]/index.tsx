@@ -75,8 +75,12 @@ export default function Event() {
     }, {})
     const myCells = [...selectedCells]
     myCells.forEach(cellId => {
-      if (counts[cellId]) counts[cellId] += 1
-      else counts[cellId] = 1
+      if (counts[cellId]) {
+        counts[cellId] += 1
+        if (counts[cellId]! > maximumCount) {
+          setMaximumCount(counts[cellId] as number)
+        }
+      } else counts[cellId] = 1
     })
     setResultCellCount(counts)
   }, [isResultView, eventData, selectedCells])

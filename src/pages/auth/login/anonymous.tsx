@@ -7,6 +7,8 @@ import { useUser } from 'src/shared/hooks'
 import { toast } from 'react-toastify'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'src/pages/api/auth/[...nextauth]'
+import { useRecoilState } from 'recoil'
+import { anonymousUserState } from 'src/shared/recoil/user/atoms'
 
 type Inputs = {
   name: string
@@ -22,13 +24,13 @@ export default function CreateAnonymous() {
   } = useForm<Inputs>()
   const router = useRouter()
 
+  const [anonymous, setAnonymous] = useRecoilState(anonymousUserState)
+
   watch()
 
   const onValid: SubmitHandler<Inputs> = (data: Inputs) => {
-    if (router.query?.redirect) router.push(router.query?.redirect as string)
-    else {
-      toast('에러가 발생했습니다.')
-    }
+    setAnonymous(data)
+    router.push((router.query?.redirect as string) || '/')
   }
 
   return (
@@ -51,7 +53,7 @@ export default function CreateAnonymous() {
             name="name"
             spellCheck="false"
             placeholder="이름을 입력해주세요"
-            className={cls('input input-bordered w-full', errors.name ? 'input-error text-error' : '')}
+            className={cls('input w-full', errors.name ? 'input-error text-error' : '')}
           />
           <ErrorMessage
             errors={errors}
@@ -72,7 +74,7 @@ export default function CreateAnonymous() {
             type="password"
             name="password"
             placeholder="10자 이내로 입력해주세요"
-            className={cls('input input-bordered w-full', errors.password ? 'input-error text-error' : '')}
+            className={cls('input w-full', errors.password ? 'input-error text-error' : '')}
           />
           <ErrorMessage
             errors={errors}
