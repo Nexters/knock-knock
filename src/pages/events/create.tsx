@@ -1,6 +1,5 @@
-import { ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { useForm, useFieldArray } from 'react-hook-form'
-import format from 'date-fns/format'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import TagInput from '../../components/formElements/TagInput'
 import Calendar from 'src/components/Calendar'
@@ -11,6 +10,7 @@ import LoginModal from 'src/components/modals/LoginModal'
 import { useCustomRouter, useUser } from 'src/shared/hooks'
 import TopTitleBottomBtnLayout from 'src/components/pageLayouts/TopTitleBottomBtnLayout'
 import { cls } from 'src/utils/cls'
+import { getCanlendarText } from 'src/utils/time'
 
 export interface CreateEventInput {
   selectedGroup?: string
@@ -44,7 +44,6 @@ function Create() {
       isUnlimitedHeadCounts: false,
     },
   })
-  console.log(errors)
 
   const { title, description, isUnlimitedHeadCounts, headCounts, selectedGroup } = watch()
 
@@ -58,17 +57,7 @@ function Create() {
     },
   })
 
-  const calendarText = useMemo(() => {
-    if (selectedDates.length === 0) {
-      return ''
-    }
-    if (selectedDates.length === 1) {
-      return format(selectedDates[0]!, 'yyyy.MM.dd')
-    }
-    if (selectedDates.length > 1) {
-      return `${format(selectedDates[selectedDates.length - 1]!, 'yyyy.MM.dd')} 외 ${selectedDates.length - 1}일`
-    }
-  }, [selectedDates])
+  const calendarText = getCanlendarText(selectedDates)
 
   const handleCalenderUpdate = (values: Date[]) => {
     setSelectedDates(values)
@@ -108,16 +97,18 @@ function Create() {
     const payload: CreateEventInputSchema = {
       title,
       description,
-      tags: tags.join(','),
+      tags: tags.map(tag => tag.text).join(','),
       startingTimes: dateTimestamp.join(','),
       timeSize: timeGapStamp,
       isUnlimitedHeadCounts,
       groupId: selectedGroup,
     }
 
-    if (!isUnlimitedHeadCounts && headCounts > 0) {
-      payload.headCounts = headCounts
+    if (!isUnlimitedHeadCounts && Number(headCounts) > 0) {
+      payload.headCounts = Number(headCounts)
     }
+
+    console.log(payload)
 
     mutate(payload)
   }

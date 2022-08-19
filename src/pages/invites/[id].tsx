@@ -2,10 +2,11 @@ import { FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { trpc } from 'src/utils/trpc'
-import format from 'date-fns/format'
 import { useCustomRouter, useUser } from 'src/shared/hooks'
 import TopTitleBottomBtnLayout from 'src/components/pageLayouts/TopTitleBottomBtnLayout'
 import Calendar from 'src/components/Calendar'
+import { getCanlendarText, getFormattedTimeString, setZeroHoursMinutes, startingTimesToDates } from 'src/utils/time'
+import addSeconds from 'date-fns/addSeconds'
 
 interface Invite {
   id: number
@@ -18,9 +19,7 @@ interface Invite {
 
 export default function Invite() {
   const router = useCustomRouter()
-  const { user } = useUser()
-
-  const [isVisibleModal, setIsVisibleModal] = useState(false)
+  const [calendarVisible, setCalendarVisible] = useState(true)
   const {
     data: eventData,
     isLoading,
@@ -41,12 +40,18 @@ export default function Invite() {
       })
   }
 
+  const dates = startingTimesToDates(eventData?.startingTimes)
+  const calendarText = getCanlendarText(dates)
+  const timeRangeText = `${getFormattedTimeString(dates[0])} - ${getFormattedTimeString(
+    addSeconds(dates[0]!, eventData?.timeSize!),
+  )}`
+
   const onSelectTime = () => {
-    if (!user) {
-      setIsVisibleModal(true)
-    } else {
-      router.push(`/events/${router.query.id}`)
-    }
+    router.push(`/events/${router.query.id}`)
+  }
+
+  function toggleCalendarVisibility() {
+    setCalendarVisible(prev => !prev)
   }
 
   return (
@@ -75,26 +80,24 @@ export default function Invite() {
           }
         >
           <div className="flex flex-col w-full">
-            <p className="mt-1 text-xs text-textGray">
-              {eventData?.startingTimes[0] &&
-                format(new Date(Number(eventData?.startingTimes?.split(',')?.[0]) * 1000), 'yyyy.MM.dd')}
-              {eventData &&
-                eventData?.startingTimes.length > 1 &&
-                ` 외 ${eventData?.startingTimes?.split(',')?.length - 1}일`}
-            </p>
+            <p className="mt-1 text-xs text-textGray"></p>
             {eventData.tags
-              ? eventData.tags
-                  .split(',')
-                  .map(tag => <div key={tag} className="badge bg-base-100 border-none py-4 px-3 text-white gap-2" />)
+              ? eventData.tags.split(',').map(tag => (
+                  <div key={tag} className="badge bg-base-100 border-none py-4 px-3 text-white gap-2">
+                    {tag}
+                  </div>
+                ))
               : null}
-            <div className="mt-3 text-sm text-textGray2 bg-cardBg rounded-lg p-4">{eventData?.title}</div>
-            <div className="mt-3 text-sm text-textGray2 bg-cardBg rounded-lg p-4 min-h-[8rem]">
+            <div className="mt-3 text-sm text-textGray2 bg-base-100 rounded-lg p-4">{eventData?.title}</div>
+            <div className="mt-3 text-sm text-textGray2 bg-base-100 rounded-lg p-4 min-h-[8rem]">
               {eventData?.description}
             </div>
 
             <div className="mt-7">
               <h2 className="text-sm text-whiteGray">참여 인원</h2>
-              <p className="mt-2 mb-3 text-sm bg-cardBg rounded-lg p-3">{eventData?.participates.length}명</p>
+              <p className="mt-2 mb-3 text-sm text-textGray2 bg-base-100 rounded-lg p-3">
+                {eventData?.participates.length}명 / {eventData.headCounts}명
+              </p>
               <div className="flex items-center">
                 {eventData?.participates?.map(participate => {
                   return (
@@ -107,22 +110,30 @@ export default function Invite() {
               </div>
             </div>
             <div className="mt-5 flex flex-col">
-              <span className="text-sm text-whiteGray">후보날짜</span>
-              <div className="w-full ">
-                <Calendar dates={[]} onDatesUpdate={() => {}} />
+              <div className="form-control w-full" onClick={toggleCalendarVisibility}>
+                <label className="label">
+                  <span className="label-text">후보 날짜</span>
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  className="select bg-base-100 border-none text-sm text-textGray2"
+                  value={calendarText}
+                />
               </div>
-              {/* <select className="select w-full max-w-s mt-3 bg-cardBg text-textGray">
-                <option disabled defaultValue="">
-                  날짜 선택
-                </option>
-                {eventData?.startingTimes?.split(',').map(date => {
-                  return (
-                    <option key={date} value={date}>
-                      {format(new Date(Number(date) * 1000), 'yyyy.MM.dd')}
-                    </option>
-                  )
-                })}
-              </select> */}
+
+              {calendarVisible && (
+                <div className="">
+                  <Calendar dates={dates.map(date => setZeroHoursMinutes(date))} onDatesUpdate={() => {}} />
+                </div>
+              )}
+            </div>
+
+            <div className="form-control w-full mt-5">
+              <label className="label">
+                <span className="label-text">약속 시간대</span>
+              </label>
+              <div className="mt-3 text-sm text-textGray2 text-center bg-base-100 rounded-lg p-4">{timeRangeText}</div>
             </div>
           </div>
         </TopTitleBottomBtnLayout>
