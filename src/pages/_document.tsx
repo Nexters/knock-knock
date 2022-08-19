@@ -153,6 +153,11 @@ export default function Document() {
           media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
           href="/assets/splash_screens/4__iPhone_SE__iPod_touch_5th_generation_and_later_portrait.png"
         />
+        <link
+          rel="stylesheet"
+          as="style"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.5/dist/web/static/pretendard-dynamic-subset.css"
+        />
       </Head>
       <body>
         <Main />
