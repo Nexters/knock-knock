@@ -122,9 +122,20 @@ function Create() {
     }
     if (selectedTimeSlot === 'pm') {
       setStartTime('12:00')
-      setEndTime('00:00')
+      setEndTime('23:59')
     }
   }, [selectedTimeSlot])
+
+  const options = [...Array(48)].map((_a, index) => {
+    const left = index % 2
+    if (left) {
+      return `${String(Math.floor(index / 2)).padStart(2, '0')}:30`
+    } else {
+      return `${String(Math.floor(index / 2)).padStart(2, '0')}:00`
+    }
+  })
+
+  console.log(startTime)
 
   return (
     <>
@@ -240,24 +251,40 @@ function Create() {
               </label>
               <div className="flex w-full justify-between gap-x-2">
                 <div className="form-control w-1/2">
-                  <input
+                  {/* <input
                     type="time"
                     className="w-full input bg-[#2F3035] border-none text-center"
                     onChange={handleStartTime}
                     value={startTime}
                     size={60000}
-                  />
+                  /> */}
+                  <select
+                    className="select w-full max-w-xs"
+                    onChange={e => {
+                      setStartTime(e.target.value)
+                    }}
+                    value={startTime}
+                  >
+                    {options.map(option => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
                   <label className="label flex justify-end">
                     <span className="label-text text-[0.8125rem]">부터</span>
                   </label>
                 </div>
                 <div className="form-control w-1/2">
-                  <input
-                    type="time"
-                    className="w-full input bg-[#2F3035] border-none text-center"
-                    onChange={handleEndTime}
+                  <select
+                    className="select w-full max-w-xs"
+                    onChange={e => {
+                      setStartTime(e.target.value)
+                    }}
                     value={endTime}
-                  />
+                  >
+                    {options.map(option => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
                   <label className="label flex justify-end">
                     <span className="label-text text-[0.8125rem]">까지</span>
                   </label>
