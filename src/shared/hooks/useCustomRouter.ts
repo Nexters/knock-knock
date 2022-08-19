@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useIsomorphicLayoutEffect } from 'react-use'
+import { getHashRemovedUrl } from 'src/utils/url'
 import { useLastPathTracker } from './useLastPathTracker'
 
 function isAuthPath(path: string) {
@@ -7,10 +7,14 @@ function isAuthPath(path: string) {
   return false
 }
 
+function isDynamicRoute(path: string) {
+  if (path.match(/\[.+\]/)) return true
+  return false
+}
+
 export function useCustomRouter() {
   const router = useRouter()
   const { lastPaths, setLastPaths } = useLastPathTracker()
-
   function back(fallbackUrl: string = '/') {
     if (history.length <= 1) {
       router.replace(fallbackUrl)
@@ -24,7 +28,7 @@ export function useCustomRouter() {
         router.replace(fallbackUrl)
         return
       }
-      if (lastPath !== router.pathname && !isAuthPath(lastPath)) {
+      if (lastPath !== getHashRemovedUrl(router.asPath) && !isAuthPath(lastPath) && !isDynamicRoute(lastPath)) {
         setLastPaths(paths)
         router.replace(lastPath)
         return
@@ -33,7 +37,7 @@ export function useCustomRouter() {
   }
 
   function removeHash() {
-    router.replace(router.asPath.split('#')[0] as string)
+    router.replace(getHashRemovedUrl(router.asPath))
   }
 
   return {

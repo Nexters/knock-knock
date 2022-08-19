@@ -5,14 +5,19 @@ import { useEffect, useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
 import { trpc } from 'src/utils/trpc'
 import { toast } from 'react-toastify'
-import { useUser } from 'src/shared/hooks'
-import { signIn } from 'next-auth/react'
-import { cls } from 'src/utils/cls'
+import { useCustomRouter, useUser } from 'src/shared/hooks'
 import LoginModal from 'src/components/modals/LoginModal'
+import TopTitleBottomBtnLayout from 'src/components/pageLayouts/TopTitleBottomBtnLayout'
+import { useIsomorphicLayoutEffect } from 'react-use'
+import ConfirmModal from 'src/components/modals/ConfirmModal'
 
 export default function Event() {
-  const { push, query } = useRouter()
-  const { data: eventData, isLoading, error } = trpc.useQuery(['events.single-event', { eventId: query.id as string }])
+  const router = useCustomRouter()
+  const {
+    data: eventData,
+    isLoading,
+    error,
+  } = trpc.useQuery(['events.single-event', { eventId: router.query.id as string }])
   const { mutate } = trpc.useMutation('events.my-cells', {
     onSuccess() {
       toast('저장 완료!', { autoClose: 2000 })
@@ -21,7 +26,7 @@ export default function Event() {
       toast('저장 실패...', { autoClose: 2000 })
     },
   })
-  console.log(eventData)
+
   const { user, isLoadingUser, isAuthenticated } = useUser()
 
   const participates = eventData?.participates ?? []
@@ -30,9 +35,17 @@ export default function Event() {
   )
 
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
-  const [isResultView, setIsResultView] = useState<boolean>(false)
+  const [isResultView, setIsResultView] = useState<boolean>(true)
   const [resultCellCount, setResultCellCount] = useState<{ [key: string]: number }>({})
   const [maximumCount, setMaximumCount] = useState(1)
+  const [isConfirmModalShown, setIsConfirmModalShown] = useState(false)
+
+  useEffect(() => {
+    if (!eventData) return
+    setIsResultView(router.query.view === 'my' ? false : true)
+  }, [router.query.view, eventData])
+
+  console.log(eventData)
 
   useEffect(() => {
     const myCells = (myParticipation?.selectedCells ?? '').split(',')
@@ -40,6 +53,7 @@ export default function Event() {
   }, [myParticipation])
 
   useEffect(() => {
+    if (!eventData || !router.query.id) return
     const counts = participates.reduce<{ [key: string]: number }>((accu, curr) => {
       if (curr.profileId === user?.id) return accu
       const selectedCells = (curr?.selectedCells ?? '').split(',')
@@ -61,17 +75,17 @@ export default function Event() {
       else counts[cellId] = 1
     })
     setResultCellCount(counts)
-  }, [isResultView])
+  }, [isResultView, eventData, selectedCells])
 
-  function updateSelectedCells() {
-    if (!query.id || !user?.id) return
-    mutate({ eventId: query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
+  async function updateSelectedCells() {
+    if (!router.query.id || !user?.id) return
+    await mutate({ eventId: router.query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
+    router.push({ pathname: '/events/[id]/completed', query: { id: router.query.id } })
   }
 
   function deselectAll() {
     setSelectedCells(new Set<string>([]))
-    if (!query.id || !user?.id) return
-    mutate({ eventId: query.id as string, profileId: user.id, cells: '' })
+    if (!router.query.id || !user?.id) return
   }
 
   function addOneCell(cellId: string) {
@@ -101,18 +115,57 @@ export default function Event() {
     setSelectedCells(prev => new Set([...prev, ...cellIds]))
   }
 
+  function switchToMySelects() {
+    router.push(
+      {
+        pathname: '/events/[id]',
+        query: {
+          id: router.query.id,
+          view: 'my',
+        },
+      },
+      `/events/${router.query.id}?view=my`,
+      { shallow: true },
+    )
+  }
+
+  function renderButtons() {
+    if (isResultView) {
+      return (
+        <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex flex-col justify-end">
+          <button onClick={switchToMySelects} className="btn w-full text-white bg-gradient-to-r from-from to-to">
+            내 시간 선택하기
+          </button>
+        </div>
+      )
+    }
+    return (
+      <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex justify-between">
+        <button onClick={deselectAll} className="btn w-[48%] text-base-100  bg-textLightGray">
+          다시 선택 (초기화)
+        </button>
+        <button
+          onClick={() => setIsConfirmModalShown(true)}
+          className="btn w-[48%] text-white bg-gradient-to-r from-from to-to"
+        >
+          시간 선택 완료
+        </button>
+      </div>
+    )
+  }
+
   return (
     <>
       {!user && <LoginModal />}
+      {isConfirmModalShown && <ConfirmModal onClose={() => setIsConfirmModalShown(false)} onOk={updateSelectedCells} />}
 
-      <div className="flex flex-col pt-9 h-screen relative bg-bgColor">
-        <div className="flex justify-between items-center ml-5">
-          <Link href="/">
-            <img src="/assets/svg/logo.svg" alt="logo" />
-          </Link>
-        </div>
-
-        <div className="mt-7 h-2/3 text-bgColor">
+      <TopTitleBottomBtnLayout
+        title="시간 선택하기"
+        classNames="px-0 h-screen relative overflow-hidden"
+        customBtns={renderButtons()}
+        onBackBtnClick={isResultView ? undefined : () => router.back(router.asPath.split('?')[0])}
+      >
+        <div className="flex flex-col w-full">
           {isLoading && (
             <div className="text-primary font-bold w-full h-full flex justify-center items-center">로딩중...</div>
           )}
@@ -122,40 +175,22 @@ export default function Event() {
             </div>
           )}
           {eventData && (
-            <TimeSelectTable
-              startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
-              timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
-              timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
-              selectedIds={selectedCells}
-              onSelect={handleCellSelect}
-              onSelectEnd={updateSelectedCells}
-              isResultView={isResultView}
-              resultCellCount={resultCellCount}
-              maximumCount={maximumCount}
-            />
+            <div className="w-full h-2/3 max-h-2/3">
+              <TimeSelectTable
+                startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
+                timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
+                timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
+                selectedIds={selectedCells}
+                onSelect={handleCellSelect}
+                onSelectEnd={() => {}}
+                isResultView={isResultView}
+                resultCellCount={resultCellCount}
+                maximumCount={maximumCount}
+              />
+            </div>
           )}
         </div>
-
-        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
-          {isResultView ? (
-            <button onClick={() => setIsResultView(!isResultView)} className="btn w-[100%] bg-white text-cardBg">
-              다시 선택하기
-            </button>
-          ) : (
-            <>
-              <button onClick={deselectAll} className="btn w-[42%] bg-white text-cardBg">
-                초기화
-              </button>
-              <button
-                onClick={() => setIsResultView(!isResultView)}
-                className="btn w-[54%] bg-gradient-to-r from-from to-to text-white"
-              >
-                결과 보기
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      </TopTitleBottomBtnLayout>
     </>
   )
 }

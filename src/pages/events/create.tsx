@@ -108,8 +108,6 @@ function Create() {
       payload.headCounts = Number(headCounts)
     }
 
-    console.log(payload)
-
     mutate(payload)
   }
 
