@@ -10,7 +10,9 @@ export const groupRouter = createRouter()
   .query('groups', {
     async resolve({ ctx }) {
       try {
-        const groups = await ctx.prisma.group.findMany()
+        const groups = await ctx.prisma.group.findMany({
+          include: { members: true },
+        })
         return groups
       } catch (error) {
         console.error(error)

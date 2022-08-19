@@ -66,7 +66,7 @@ export default function NewUser() {
           />
         </div>
 
-        <div className="w-full max-w-sm mx-auto mb-10 fixed bottom-0 left-0 right-0 px-5">
+        <div className="w-full md:max-w-sm mx-auto mb-10 fixed bottom-0 left-0 right-0 px-5">
           <button type="submit" className="w-full btn bg-primary text-white">
             확인
           </button>

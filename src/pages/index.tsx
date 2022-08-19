@@ -68,7 +68,7 @@ export default function Home() {
   return (
     <SEO>
       <div className="w-full h-full flex flex-col relative">
-        <div className="w-full sm:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
+        <div className="w-full md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <object data="assets/svg/logo_white.svg" />
           <div className="flex items-center">
             {isAuthenticated ? (
@@ -139,7 +139,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="w-full sm:max-w-sm fixed bottom-10 flex justify-end">
+        <div className="w-full md:max-w-sm fixed bottom-10 flex justify-end">
           <button className="btn btn-circle bg-primary text-white mr-5" onClick={() => setVisibleCreateModal(true)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

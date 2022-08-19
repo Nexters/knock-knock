@@ -13,7 +13,7 @@ function GuideModal({ onClose }: GuideProps) {
   return (
     <>
       <BackDrop classNames="z-20" />
-      <div className="fixed w-full h-full sm:max-w-sm z-30">
+      <div className="fixed w-full h-full md:max-w-sm z-30">
         <div ref={carouselContainerRef} className="w-[80%] absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
           <div className="carousel w-[100%] h-[100%]">
             <div id="slide1" className="carousel-item relative w-full flex flex-col">

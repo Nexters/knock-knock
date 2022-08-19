@@ -136,7 +136,7 @@ export default function Event() {
           )}
         </div>
 
-        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 sm:max-w-sm">
+        <div className="fixed bottom-6 flex justify-between w-[100%] px-5 md:max-w-sm">
           {isResultView ? (
             <button onClick={() => setIsResultView(!isResultView)} className="btn w-[100%] bg-white text-cardBg">
               다시 선택하기
