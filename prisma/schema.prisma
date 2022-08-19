@@ -104,7 +104,7 @@ model Member {
   profileId String
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
-  isHost    Boolean
+  isHost    Boolean  @default(false)
 }
 
 model Participation {

@@ -153,7 +153,13 @@ export default function Home() {
         </div>
 
         {visibleCreateModal && (
-          <BottomSheet onClose={() => setVisibleCreateModal(false)} isBackground={false}>
+          <BottomSheet
+            onClose={e => {
+              e.stopPropagation()
+              setVisibleCreateModal(false)
+            }}
+            isBackground={false}
+          >
             <Link href="/events/create">
               <a className="btn w-full md:max-w-sm bg-primary">
                 <span className="text-white">약속 만들기</span>

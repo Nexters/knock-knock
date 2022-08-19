@@ -7,3 +7,7 @@ export const getBaseUrl = () => {
 
   return `http://localhost:${process.env.PORT ?? 3000}` // dev SSR should use localhost
 }
+
+export function getHashRemovedUrl(url: string) {
+  return url.split('#')[0] as string
+}

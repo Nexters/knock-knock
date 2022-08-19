@@ -21,7 +21,6 @@ export default function GroupDetail() {
     error,
   } = trpc.useQuery(['groups.single-group', { groupId: router.query.id as string }])
 
-  console.log(groupData)
   const utils = trpc.useContext()
 
   const deleteEventMutation = trpc.useMutation('events.delete-event', {

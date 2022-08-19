@@ -171,12 +171,17 @@ export default function TimeSelectTable({
 
   function renderColors(cellId: string): string {
     const resultNumber = Number(resultCellCount[cellId])
-    if (!resultNumber) return ''
-    if (typeof resultNumber !== 'number') return ''
+    if (!resultNumber) return '#18191F'
+    if (typeof resultNumber !== 'number') return '#18191F'
     //@ts-ignore
     // return colors[resultNumber]
-    const step = Number((0.5 / maximumCount).toFixed(2))
-    return `rgba(22, 198, 116, ${0.5 + step * (resultNumber - 1)})`
+    const step = Number((0.7 / maximumCount).toFixed(2))
+
+    return isResultView
+      ? `rgba(22, 198, 116, ${0.2 + step * resultNumber})`
+      : selectedIds.has(cellId)
+      ? '#16C674'
+      : `rgba(47, 48, 53, ${0.2 + step * resultNumber})`
   }
 
   return (
@@ -201,7 +206,7 @@ export default function TimeSelectTable({
           {[...Array(rowsCount)].map((_e, i2) => (
             <div
               key={i2}
-              className="h-8 flex-shrink-0 border-r first:border-t last:border-b border-[#474747] relative select-none"
+              className="h-6 flex-shrink-0 border-r first:border-t last:border-b border-[#474747] relative select-none"
             >
               {i2 % 2 === isOddLabelStart ? (
                 <span className="absolute left-5 -top-2 text-xs">
@@ -250,15 +255,11 @@ export default function TimeSelectTable({
                   data-col={coloumnNumber}
                   data-row={rowNumber}
                   data-time={(startingTime + rowNumber * timeInterval) / 1000}
-                  className="flex-shrink-0 flex-grow-0 h-8 border-b border-r odd:border-dashed last-of-type:border-solid border-[#474747]"
+                  className="flex-shrink-0 flex-grow-0 h-6 border-b border-r odd:border-dashed last-of-type:border-solid border-[#474747]"
                   style={{
                     borderRight: '1px solid #474747',
                     borderColor: '#474747',
-                    backgroundColor: isResultView
-                      ? renderColors(String((startingTime + rowNumber * timeInterval) / 1000)) || 'black'
-                      : selectedIds.has(String((startingTime + rowNumber * timeInterval) / 1000))
-                      ? '#16C674'
-                      : '#18191F',
+                    backgroundColor: renderColors(String((startingTime + rowNumber * timeInterval) / 1000)),
                   }}
                 ></div>
               ))}

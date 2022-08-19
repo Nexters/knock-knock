@@ -9,7 +9,7 @@ export default function TitleHeader({ title, onBackBtnClick }: Props) {
   const router = useCustomRouter()
 
   return (
-    <div className="fixed w-full md:max-w-sm bg-bgColor top-0 pb-4">
+    <div className="fixed w-full md:max-w-sm bg-bgColor top-0 pb-4 z-20">
       <button type="button" onClick={onBackBtnClick ?? (() => router.back())} className="absolute top-10 left-5 ">
         <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer left-0 text-whiteGray" />
       </button>

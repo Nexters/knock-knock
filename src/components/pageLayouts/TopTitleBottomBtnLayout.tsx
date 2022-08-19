@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { cls } from 'src/utils/cls'
 import TitleHeader from '../TitleHeader'
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   onBottomBtnClick?: () => void
   onBackBtnClick?: () => void
   customBtns?: ReactNode
+  classNames?: string
   children: ReactNode
 }
 
@@ -16,10 +18,16 @@ export default function TopTitleBottomBtnLayout({
   onBackBtnClick,
   onBottomBtnClick,
   customBtns,
+  classNames,
   children,
 }: Props) {
   return (
-    <div className="flex flex-col items-center bg-bgColor h-screen pt-24 px-5 pb-8 overflow-auto relative">
+    <div
+      className={cls(
+        'flex flex-col items-center bg-bgColor pt-24 px-5 pb-8 overflow-auto relative',
+        classNames ? classNames : '',
+      )}
+    >
       <TitleHeader title={title} onBackBtnClick={onBackBtnClick} />
       {children}
 
