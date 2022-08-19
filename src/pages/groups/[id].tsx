@@ -14,7 +14,6 @@ export default function GroupDetail() {
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<any | null>(null)
 
   const { user, isAuthenticated } = useUser()
-  const { data: me } = trpc.useQuery(['users.me'])
   const router = useRouter()
   const {
     data: groupData,
@@ -53,13 +52,12 @@ export default function GroupDetail() {
   })
 
   const onJoinGroup = () => {
-    groupData &&
-      me &&
-      joinGroupMutation.mutate({
-        groupId: groupData.id,
-        profileId: me.id,
-        isHost: false,
-      })
+    if (!groupData?.id || !user?.id) return
+    joinGroupMutation.mutate({
+      groupId: groupData.id,
+      profileId: user.id,
+      isHost: false,
+    })
   }
 
   const onDeleteEvent = (eventId: string) => {
