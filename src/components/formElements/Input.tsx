@@ -25,7 +25,7 @@ export default function Input({
 }: InputProps) {
   return (
     <div className={classNames ?? ''}>
-      <label className="mb-1 block text-sm font-medium text-gray-700 text-left" htmlFor={name}>
+      <label className="block text-sm font-medium text-textGray2 text-left mb-2" htmlFor={name}>
         {label}
       </label>
       {kind === 'text' ? (
@@ -36,7 +36,7 @@ export default function Input({
             {...rest}
             {...register}
             type={type}
-            className="input input-bordered appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="input appearance-none w-full px-3 py-2 rounded-md shadow-sm placeholder-borderGray focus:outline-none focus:ring-borderGray focus:border-borderGray"
           />
           {errorMessage && <p className=" font-medium text-xs text-red-500 mt-1">{errorMessage}</p>}
         </div>
