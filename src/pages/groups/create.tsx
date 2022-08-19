@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react'
-import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { trpc } from 'src/utils/trpc'
 import CenteringLayout from 'src/components/pageLayouts/CenteringLayout'
 import { toast } from 'react-toastify'
@@ -7,24 +7,13 @@ import { ICreateGroup } from 'src/schema/groupSchema'
 import GroupForm from 'src/components/GroupForm'
 import { useCustomRouter } from 'src/shared/hooks'
 import TitleHeader from 'src/components/TitleHeader'
-
-interface GroupTags {
-  tags?: { text: string }[]
-}
+import { useState } from 'react'
 
 function CreateGroup() {
   const router = useCustomRouter()
   const { handleSubmit, register } = useForm<ICreateGroup>()
   const { data: session } = useSession()
-  const {
-    control,
-    formState: { errors },
-  } = useForm<GroupTags>()
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'tags',
-  })
+  const [tags, setTags] = useState<{ text: string }[]>([])
 
   const { mutate } = trpc.useMutation('groups.create-group', {
     onSuccess: async data => {
@@ -44,12 +33,12 @@ function CreateGroup() {
     if (!formValues.name) return
     if (!formValues.description) return
 
-    const tags = fields.map(field => field.text)
+    const currentTags = tags.map(tag => tag.text)
     const { name, description, password, isPublic } = formValues
     const payload: ICreateGroup = {
       name,
       description,
-      tags: tags.join(','),
+      tags: currentTags.join(','),
       password: Number(password),
       isPublic,
     }
@@ -63,13 +52,7 @@ function CreateGroup() {
   return (
     <CenteringLayout seoTitle="그룹 생성">
       <TitleHeader title="그룹 만들기" />
-      <GroupForm
-        handleSubmit={() => handleSubmit(onValid)}
-        register={register}
-        fields={fields}
-        remove={remove}
-        append={append}
-      />
+      <GroupForm handleSubmit={() => handleSubmit(onValid)} register={register} tags={tags} onTagsChange={setTags} />
     </CenteringLayout>
   )
 }

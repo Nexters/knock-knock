@@ -1,12 +1,4 @@
-import {
-  useForm,
-  useFieldArray,
-  SubmitHandler,
-  UseFormRegister,
-  FieldArrayWithId,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-} from 'react-hook-form'
+import { UseFormRegister, FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove } from 'react-hook-form'
 import Input from 'src/components/formElements/Input'
 import Button from 'src/components/formElements/Button'
 import TagInput from 'src/components/formElements/TagInput'
@@ -26,12 +18,11 @@ type Props = {
     name: string
     description: string
   }>
-  fields: FieldArrayWithId<GroupTags, 'tags', 'id'>[]
-  append: UseFieldArrayAppend<GroupTags, 'tags'>
-  remove: UseFieldArrayRemove
+  tags: { text: string }[]
+  onTagsChange: (tags: { text: string }[]) => void
 }
 
-export default function GroupForm({ handleSubmit, register, fields, append, remove }: Props) {
+export default function GroupForm({ handleSubmit, register, tags, onTagsChange }: Props) {
   return (
     <form onSubmit={handleSubmit} className="w-full h-full flex flex-col justify-between px-5 py-14">
       <div className="mt-7">
@@ -68,15 +59,8 @@ export default function GroupForm({ handleSubmit, register, fields, append, remo
         <TagInput
           label="태그"
           placeholder="태그를 입력해주세요"
-          tags={fields}
-          onAddTag={tag => {
-            if (fields.findIndex(field => field.text === tag) === -1) {
-              append({ text: tag })
-            } else {
-              console.log('이미 동일한 태그가 존재합니다.')
-            }
-          }}
-          onRemoveTag={index => remove(index)}
+          tags={tags}
+          onChange={onTagsChange}
           classNames="mb-4"
         />
       </div>

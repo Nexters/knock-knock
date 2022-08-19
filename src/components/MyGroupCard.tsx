@@ -1,6 +1,6 @@
 import { Group } from '@prisma/client'
 import Link from 'next/link'
-import { GroupsOutput } from 'src/types/Group'
+import { GroupsOutput } from 'src/types/group'
 
 const MyGroupCard = ({ data }: { data: GroupsOutput[number] }) => {
   return (
