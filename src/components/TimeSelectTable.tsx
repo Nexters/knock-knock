@@ -187,10 +187,10 @@ export default function TimeSelectTable({
     const step = Number((0.7 / maximumCount).toFixed(2))
 
     return isResultView
-      ? `rgba(22, 198, 116, ${0.2 + step * resultNumber})`
+      ? `rgba(22, 198, 116, ${0.2 + step * (resultNumber - 1)})`
       : selectedIds.has(cellId)
       ? '#16C674'
-      : `rgba(47, 48, 53, ${0.2 + step * resultNumber})`
+      : `rgba(47, 48, 53, ${0.5 + (0.5 / maximumCount) * (resultNumber - 1)})`
   }
 
   return (

@@ -138,6 +138,7 @@ export default function Event() {
       if (allSelectedCells[name]?.has(cellId)) return true
       return false
     })
+    if (selectedCells.has(cellId) && user?.name) names.push(user.name)
     setCellSelectedNames(names)
   }
 
@@ -188,7 +189,7 @@ export default function Event() {
           )}
           {eventData && (
             <>
-              <div className="w-full h-2/3">
+              <div className="w-full h-4/5">
                 <TimeSelectTable
                   startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
                   timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
@@ -201,20 +202,19 @@ export default function Event() {
                   maximumCount={maximumCount}
                   onCellClick={handleCellClickInResultView}
                 />
-              </div>
-
-              {isResultView && (
-                <div className="flex flex-col w-full px-5 mt-2">
-                  <div className="text-xs text-textGray2">이 시간을 선택한 사람들</div>
-                  <div className="flex overflow-auto mt-2">
-                    {cellSelectedNames.map(name => (
-                      <div className="badge shrink-0 mr-2 py-3 px-2 text-xs bg-base-100 border-none text-textGray2">
-                        {name}
-                      </div>
-                    ))}
+                {isResultView && cellSelectedNames?.length ? (
+                  <div className="flex flex-col w-full px-5 mt-2">
+                    <div className="text-xs text-textGray2">이 시간을 선택한 사람들</div>
+                    <div className="flex overflow-auto mt-2">
+                      {cellSelectedNames.map(name => (
+                        <div className="badge shrink-0 mr-2 py-3 px-2 text-xs bg-base-100 border-none text-textGray2">
+                          {name}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : null}
+              </div>
             </>
           )}
         </>
