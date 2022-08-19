@@ -180,7 +180,11 @@ export default function Event() {
         title={isResultView ? '시간 선택하기 (합계)' : '시간 선택하기'}
         classNames="px-0 h-screen relative overflow-hidden"
         customBtns={renderButtons()}
-        onBackBtnClick={isResultView ? undefined : () => router.back(router.asPath.split('?')[0])}
+        onBackBtnClick={
+          isResultView
+            ? () => router.push({ pathname: '/invites/[id]', query: { id: router.query.id } })
+            : () => router.back(router.asPath.split('?')[0])
+        }
       >
         <>
           {isLoading && (
