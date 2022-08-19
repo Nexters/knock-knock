@@ -165,7 +165,7 @@ export default function Event() {
         customBtns={renderButtons()}
         onBackBtnClick={isResultView ? undefined : () => router.back(router.asPath.split('?')[0])}
       >
-        <div className="flex flex-col w-full">
+        <>
           {isLoading && (
             <div className="text-primary font-bold w-full h-full flex justify-center items-center">로딩중...</div>
           )}
@@ -175,7 +175,7 @@ export default function Event() {
             </div>
           )}
           {eventData && (
-            <div className="w-full h-2/3 max-h-2/3">
+            <div className="w-full h-2/3">
               <TimeSelectTable
                 startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
                 timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
@@ -189,7 +189,7 @@ export default function Event() {
               />
             </div>
           )}
-        </div>
+        </>
       </TopTitleBottomBtnLayout>
     </>
   )
