@@ -83,10 +83,13 @@ export default function GroupDetail() {
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-end items-start flex-col bg-to p-4">
+        <div className="w-full h-[205px] flex justify-end items-start flex-col p-5 bg-[url('/assets/images/banner2.png')] bg-cover bg-bottom">
           <div className="badge badge-secondary mb-2 text-2xs mr-2">{groupData?.isPublic ? '공개' : '비공개'}</div>
           <div className="flex justify-between w-full">
-            <span className="font-bold text-lg">{groupData?.name}</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-xl">{groupData?.name}</span>
+              <span className="font-semibold text-sm">{groupData?.description}</span>
+            </div>
             {groupData?.profileId === user?.id && (
               <div
                 className="flex items-center"

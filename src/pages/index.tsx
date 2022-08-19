@@ -90,7 +90,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-center items-center bg-textGray2 bg-[url('/assets/images/banner.png')] bg-cover bg-bottom"></div>
+        <div className="w-full h-[205px] flex justify-start items-end p-5 bg-[url('/assets/images/banner1.png')] bg-cover bg-bottom">
+          <span className="font-bold text-xl">
+            쉽고 빠르게
+            <br />
+            약속 잡는법!
+          </span>
+        </div>
 
         <div className="mt-8">
           <h2 className="text-lg font-bold pl-5">내 약속</h2>
