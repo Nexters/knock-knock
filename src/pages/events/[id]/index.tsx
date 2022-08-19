@@ -35,10 +35,12 @@ export default function Event() {
   )
 
   const [selectedCells, setSelectedCells] = useState(new Set<string>())
+  const [allSelectedCells, setAllSelectedCells] = useState<{ [key: string]: Set<string> }>({})
   const [isResultView, setIsResultView] = useState<boolean>(true)
   const [resultCellCount, setResultCellCount] = useState<{ [key: string]: number }>({})
   const [maximumCount, setMaximumCount] = useState(1)
   const [isConfirmModalShown, setIsConfirmModalShown] = useState(false)
+  const [cellSelectedNames, setCellSelectedNames] = useState<string[]>([])
 
   useEffect(() => {
     if (!eventData) return
@@ -46,6 +48,7 @@ export default function Event() {
   }, [router.query.view, eventData])
 
   console.log(eventData)
+  console.log(allSelectedCells)
 
   useEffect(() => {
     const myCells = (myParticipation?.selectedCells ?? '').split(',')
@@ -57,6 +60,7 @@ export default function Event() {
     const counts = participates.reduce<{ [key: string]: number }>((accu, curr) => {
       if (curr.profileId === user?.id) return accu
       const selectedCells = (curr?.selectedCells ?? '').split(',')
+      setAllSelectedCells(prev => ({ ...prev, [curr.profile.name]: new Set(selectedCells) }))
       selectedCells.forEach(cellId => {
         if (accu[cellId]) {
           accu[cellId] += 1
@@ -129,6 +133,14 @@ export default function Event() {
     )
   }
 
+  function handleCellClickInResultView(cellId: string) {
+    const names = Object.keys(allSelectedCells).filter(name => {
+      if (allSelectedCells[name]?.has(cellId)) return true
+      return false
+    })
+    setCellSelectedNames(names)
+  }
+
   function renderButtons() {
     if (isResultView) {
       return (
@@ -160,7 +172,7 @@ export default function Event() {
       {isConfirmModalShown && <ConfirmModal onClose={() => setIsConfirmModalShown(false)} onOk={updateSelectedCells} />}
 
       <TopTitleBottomBtnLayout
-        title="시간 선택하기"
+        title={isResultView ? '시간 선택하기 (합계)' : '시간 선택하기'}
         classNames="px-0 h-screen relative overflow-hidden"
         customBtns={renderButtons()}
         onBackBtnClick={isResultView ? undefined : () => router.back(router.asPath.split('?')[0])}
@@ -175,19 +187,35 @@ export default function Event() {
             </div>
           )}
           {eventData && (
-            <div className="w-full h-2/3">
-              <TimeSelectTable
-                startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
-                timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
-                timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
-                selectedIds={selectedCells}
-                onSelect={handleCellSelect}
-                onSelectEnd={() => {}}
-                isResultView={isResultView}
-                resultCellCount={resultCellCount}
-                maximumCount={maximumCount}
-              />
-            </div>
+            <>
+              <div className="w-full h-2/3">
+                <TimeSelectTable
+                  startingTimes={eventData?.startingTimes?.split(',')?.map(timestamp => Number(timestamp) * 1000) ?? []}
+                  timeInterval={eventData?.timeInterval ? eventData.timeInterval * 1000 : undefined}
+                  timeSize={eventData?.timeSize ? eventData.timeSize * 1000 : 60 * 60 * 6 * 1000}
+                  selectedIds={selectedCells}
+                  onSelect={handleCellSelect}
+                  onSelectEnd={() => {}}
+                  isResultView={isResultView}
+                  resultCellCount={resultCellCount}
+                  maximumCount={maximumCount}
+                  onCellClick={handleCellClickInResultView}
+                />
+              </div>
+
+              {isResultView && (
+                <div className="flex flex-col w-full px-5 mt-2">
+                  <div className="text-xs text-textGray2">이 시간을 선택한 사람들</div>
+                  <div className="flex overflow-auto mt-2">
+                    {cellSelectedNames.map(name => (
+                      <div className="badge shrink-0 mr-2 py-3 px-2 text-xs bg-base-100 border-none text-textGray2">
+                        {name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </>
       </TopTitleBottomBtnLayout>

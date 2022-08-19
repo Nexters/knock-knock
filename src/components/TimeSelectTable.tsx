@@ -10,6 +10,7 @@ interface Props {
   timeInterval?: number
   timeSize: number
   maximumCount?: number
+  onCellClick?: (cellId: string) => void
 }
 
 export default function TimeSelectTable({
@@ -22,6 +23,7 @@ export default function TimeSelectTable({
   timeInterval = 30 * 60 * 1000,
   startingTimes = [],
   maximumCount = 1,
+  onCellClick,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
@@ -88,6 +90,13 @@ export default function TimeSelectTable({
 
   function handleDragEndForScroll() {
     isDraggingRef.current = false
+  }
+
+  function handleCellClick(e: any) {
+    const { col, row } = e.target.dataset
+    if (!col || !row) return
+    const cellId = cellIds[row]![col]
+    onCellClick?.(cellId)
   }
 
   function handleSelectStart(e: any) {
@@ -244,7 +253,7 @@ export default function TimeSelectTable({
             </div>
 
             <div
-              onPointerDown={isResultView ? undefined : handleSelectStart}
+              onPointerDown={isResultView ? handleCellClick : handleSelectStart}
               onMouseMove={isResultView ? undefined : handleWhileSelect}
               onTouchMove={isResultView ? undefined : handleWhileSelectTouch}
               onPointerUp={isResultView ? undefined : handleSelectEnd}
