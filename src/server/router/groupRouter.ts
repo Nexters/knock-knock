@@ -129,3 +129,40 @@ export const groupRouter = createRouter()
       })
     },
   })
+  .mutation('join-group', {
+    input: z.object({ groupId: z.string(), profileId: z.string(), isHost: z.boolean() }),
+    async resolve({ ctx, input }) {
+      const alreadyExists = await ctx.prisma.member.findFirst({
+        where: {
+          groupId: input.groupId,
+          profileId: input.profileId,
+        },
+      })
+      if (alreadyExists) {
+        await ctx.prisma.member.update({
+          where: {
+            id: alreadyExists.id,
+          },
+          data: {
+            isHost: input.isHost,
+          },
+        })
+      } else {
+        await ctx.prisma.member.create({
+          data: {
+            group: {
+              connect: {
+                id: input.groupId,
+              },
+            },
+            profile: {
+              connect: {
+                id: input.profileId,
+              },
+            },
+            isHost: input.isHost,
+          },
+        })
+      }
+    },
+  })

@@ -133,7 +133,6 @@ function Create() {
         {createPhase === 1 && (
           <TopTitleBottomBtnLayout {...{ title: '약속 만들기', btnText: '다음', onBottomBtnClick: handleNextPhase }}>
             <div className="mt-8 w-full">
-              {/* TODO: groupId 있으면 해당 그룹을 기본으로 선택 */}
               {isAuthenticated && (
                 <div className="form-control w-full">
                   <select
@@ -149,7 +148,7 @@ function Create() {
                     </option>
                     {user?.groups?.map(group => {
                       return (
-                        <option key={group.id} value={group.id}>
+                        <option key={group.id} value={group.id} selected={group.id === router.query.groupId}>
                           {group.name}
                         </option>
                       )

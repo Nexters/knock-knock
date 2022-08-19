@@ -4,9 +4,8 @@ import { cls } from 'src/utils/cls'
 export default function BackDrop({ classNames }: { classNames?: string }) {
   return (
     <div
-      onClick={e => e.stopPropagation()}
       className={cls(
-        'fixed top-0 left-0 right-0 bottom-0 bg-black z-40 opacity-80 overflow-hidden select-none',
+        'fixed top-0 left-0 right-0 bottom-0 bg-black z-50 opacity-80 overflow-hidden cursor-pointer',
         classNames ?? '',
       )}
     />

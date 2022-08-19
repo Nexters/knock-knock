@@ -23,6 +23,15 @@ export default function GroupDetail() {
 
   const utils = trpc.useContext()
 
+  const joinGroupMutation = trpc.useMutation('groups.join-group', {
+    onSuccess() {
+      toast('가입이 완료됐습니다.', { autoClose: 2000 })
+    },
+    onError() {
+      toast('다시 시도해주세요.', { autoClose: 2000 })
+    },
+  })
+
   const deleteEventMutation = trpc.useMutation('events.delete-event', {
     onSuccess() {
       utils.invalidateQueries(['groups.single-group'])
@@ -42,6 +51,15 @@ export default function GroupDetail() {
     },
   })
 
+  const onJoinGroup = () => {
+    if (!groupData?.id || !user?.id) return
+    joinGroupMutation.mutate({
+      groupId: groupData.id,
+      profileId: user.id,
+      isHost: false,
+    })
+  }
+
   const onDeleteEvent = (eventId: string) => {
     deleteEventMutation.mutate({ eventId: eventId })
     setVisibleMoreButtonModal(null)
@@ -58,34 +76,32 @@ export default function GroupDetail() {
       <div className="w-full h-full flex flex-col relative bg-bgColor">
         <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <Link href="/">
-            <img src="/assets/svg/logo_white.svg" />
+            <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer" />
           </Link>
           <div className="flex items-center">
+            {!user?.groups.some(group => group.id === groupData?.id) && (
+              <button
+                onClick={onJoinGroup}
+                className="cursor-pointer px-4 py-[2px] bg-gradient-to-r from-from to-to rounded-[54px] mr-3"
+              >
+                <span className="text-sm text-white">그룹가입</span>
+              </button>
+            )}
             <Link href="/search">
               <span className="mr-3 cursor-pointer">
                 <img src="/assets/svg/search.svg" alt="icon" />
               </span>
             </Link>
-            {isAuthenticated ? (
-              <Link href="/profile">
-                <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover">
-                  <img className="" src={`${user?.image}` ?? '/assets/images/avatar.png'} />
-                </div>
-              </Link>
-            ) : (
-              <Link href="/auth/login">
-                <div className="cursor-pointer px-4 py-1 bg-gradient-to-r from-from to-to rounded-[54px]">
-                  <span className="text-sm text-white">로그인</span>
-                </div>
-              </Link>
-            )}
           </div>
         </div>
 
-        <div className="w-full h-[205px] flex justify-end items-start flex-col bg-to p-4">
+        <div className="w-full h-[205px] flex justify-end items-start flex-col p-5 bg-[url('/assets/images/banner2.png')] bg-cover bg-bottom">
           <div className="badge badge-secondary mb-2 text-2xs mr-2">{groupData?.isPublic ? '공개' : '비공개'}</div>
           <div className="flex justify-between w-full">
-            <span className="font-bold text-lg">{groupData?.name}</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-xl">{groupData?.name}</span>
+              <span className="font-semibold text-sm">{groupData?.description}</span>
+            </div>
             {groupData?.profileId === user?.id && (
               <div
                 className="flex items-center"
@@ -117,34 +133,33 @@ export default function GroupDetail() {
           </div>
 
           <div className="mt-8 px-5"></div>
-          <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
-            <button
-              className="btn btn-circle bg-primary text-white mr-5"
-              onClick={() => setVisibleBottomSheet('create')}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+          {user?.groups.some(group => group.id === groupData?.id) && (
+            <div className="w-full md:max-w-sm fixed bottom-10 auto flex justify-end">
+              <button
+                className="btn btn-circle bg-primary text-white mr-5"
+                onClick={() => setVisibleBottomSheet('create')}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-            </button>
-          </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
         {visibleBottomSheet === 'create' && (
           <BottomSheet onClose={() => setVisibleBottomSheet(null)} isBackground={false}>
-            <button onClick={() => router.push('/events/create')} className="btn w-full max-w-xs bg-primary text-white">
-              약속 만들기
-            </button>
             <button
-              onClick={() => router.push('/group/create')}
-              className="btn w-full max-w-xs bg-white text-bgColor mt-2"
+              onClick={() => router.push({ pathname: '/events/create', query: { groupId: router.query.id } })}
+              className="btn w-full max-w-xs bg-primary text-white"
             >
-              그룹 만들기
+              약속 만들기
             </button>
           </BottomSheet>
         )}
