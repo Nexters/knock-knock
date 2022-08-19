@@ -36,7 +36,7 @@ const GatheringCard = ({ data, isWideView, onMoreButtonClick }: GatheringCardPro
         </button>
       )}
       <Link href={`/invites/${data.id}`}>
-        <div className="w-full h-full card bg-slate-400 rounded-xl">
+        <div className="w-full h-full card rounded-xl">
           <div className="card-body bg-cardBg p-4 px-3 text-white relative">
             <div className="h-5 flex items-center">
               {data.groupId && <div className="badge badge-accent text-2xs mr-1">{groupData?.name}</div>}
@@ -65,8 +65,7 @@ const GatheringCard = ({ data, isWideView, onMoreButtonClick }: GatheringCardPro
             <div className="mt-5">
               <div className="flex justify-between items-end">
                 <span className={`${isWideView ? 'text-to' : 'text-textGray3'} font-bold text-xs`}>
-                  {data.participates.length}
-                  {data.isUnlimitedHeadCounts && `/${data.isUnlimitedHeadCounts}`}명 참여중
+                  {data.participates.length}/{data.headCounts}명 참여중
                 </span>
                 {isWideView && (
                   <div className="avatar flex">
