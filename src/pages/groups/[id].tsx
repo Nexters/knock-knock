@@ -14,6 +14,7 @@ export default function GroupDetail() {
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<any | null>(null)
 
   const { user, isAuthenticated } = useUser()
+  const { data: me } = trpc.useQuery(['users.me'])
   const router = useRouter()
   const {
     data: groupData,
@@ -21,8 +22,16 @@ export default function GroupDetail() {
     error,
   } = trpc.useQuery(['groups.single-group', { groupId: router.query.id as string }])
 
-  console.log(groupData)
   const utils = trpc.useContext()
+
+  const joinGroupMutation = trpc.useMutation('groups.join-group', {
+    onSuccess() {
+      toast('가입이 완료됐습니다.', { autoClose: 2000 })
+    },
+    onError() {
+      toast('다시 시도해주세요.', { autoClose: 2000 })
+    },
+  })
 
   const deleteEventMutation = trpc.useMutation('events.delete-event', {
     onSuccess() {
@@ -43,6 +52,16 @@ export default function GroupDetail() {
     },
   })
 
+  const onJoinGroup = () => {
+    groupData &&
+      me &&
+      joinGroupMutation.mutate({
+        groupId: groupData.id,
+        profileId: me.id,
+        isHost: false,
+      })
+  }
+
   const onDeleteEvent = (eventId: string) => {
     deleteEventMutation.mutate({ eventId: eventId })
     setVisibleMoreButtonModal(null)
@@ -59,27 +78,22 @@ export default function GroupDetail() {
       <div className="w-full h-full flex flex-col relative bg-bgColor">
         <div className="w-[100%] md:max-w-sm fixed flex justify-between items-center px-5 pt-5 z-10">
           <Link href="/">
-            <img src="/assets/svg/logo_white.svg" />
+            <img src="/assets/svg/Arrow left.svg" alt="icon" className="cursor-pointer" />
           </Link>
           <div className="flex items-center">
+            {!user?.groups.some(group => group.id === groupData?.id) && (
+              <button
+                onClick={onJoinGroup}
+                className="cursor-pointer px-4 py-[2px] bg-gradient-to-r from-from to-to rounded-[54px] mr-3"
+              >
+                <span className="text-sm text-white">그룹가입</span>
+              </button>
+            )}
             <Link href="/search">
               <span className="mr-3 cursor-pointer">
                 <img src="/assets/svg/search.svg" alt="icon" />
               </span>
             </Link>
-            {isAuthenticated ? (
-              <Link href="/profile">
-                <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover">
-                  <img className="" src={`${user?.image}` ?? '/assets/images/avatar.png'} />
-                </div>
-              </Link>
-            ) : (
-              <Link href="/auth/login">
-                <div className="cursor-pointer px-4 py-1 bg-gradient-to-r from-from to-to rounded-[54px]">
-                  <span className="text-sm text-white">로그인</span>
-                </div>
-              </Link>
-            )}
           </div>
         </div>
 
