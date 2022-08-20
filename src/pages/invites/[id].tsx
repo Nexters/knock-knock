@@ -82,13 +82,15 @@ export default function Invite() {
         >
           <div className="flex flex-col w-full">
             <p className="mt-1 text-xs text-textGray"></p>
-            {eventData.tags
-              ? eventData.tags.split(',').map(tag => (
-                  <div key={tag} className="badge bg-base-100 border-none py-4 px-3 text-white gap-2">
-                    {tag}
-                  </div>
-                ))
-              : null}
+            <div className="flex overflow-auto">
+              {eventData.tags
+                ? eventData.tags.split(',').map(tag => (
+                    <div key={tag} className="badge bg-base-100 border-none mr-1 py-4 px-3 shrink-0 text-white gap-2">
+                      {tag}
+                    </div>
+                  ))
+                : null}
+            </div>
             <div className="mt-3 text-sm text-textGray2 bg-base-100 rounded-lg p-4">{eventData?.title}</div>
             <div className="mt-3 text-sm text-textGray2 bg-base-100 rounded-lg p-4 min-h-[8rem]">
               {eventData?.description}
@@ -99,10 +101,10 @@ export default function Invite() {
               <p className="mt-2 mb-3 text-sm text-textGray2 bg-base-100 rounded-lg p-3">
                 {eventData?.participates.length}명 / {eventData.headCounts}명
               </p>
-              <div className="flex items-center">
+              <div className="flex items-center overflow-auto">
                 {eventData?.participates?.map(participate => {
                   return (
-                    <div key={participate.id} className="badge badge-lg text-white mr-2 mb-2 py-4 text-sm">
+                    <div key={participate.id} className="badge badge-lg shrink-0 text-white mr-2 mb-2 py-4 text-sm">
                       <img className="w-6 rounded-lg mr-2" src={participate.profile.image || ''} />
                       {participate.profile.name}
                     </div>

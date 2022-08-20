@@ -48,7 +48,7 @@ export default function TagInput({ label, tags, onChange, classNames, ...rest }:
         {tags.map((tag, index) => (
           <div
             key={tag.text}
-            className="badge bg-[#2F3035] border-none py-4 px-3 text-white gap-2"
+            className="badge bg-[#2F3035] border-none py-4 px-3 mr-1 text-white gap-2"
             onClick={() => {
               const updatedTags = tags.filter((_tag, tagIndex) => index !== tagIndex)
               onChange(updatedTags)
