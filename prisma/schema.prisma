@@ -148,4 +148,5 @@ model Event {
   status                String?
   group                 Group?                   @relation(fields: [groupId], references: [id])
   groupId               String?
+  result                String?
 }

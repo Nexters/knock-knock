@@ -2,6 +2,7 @@ import { useRef } from 'react'
 
 interface Props {
   selectedIds: Set<string>
+  resultIds: Set<string>
   onSelect: (ids: string[], isDelete?: boolean) => void
   onSelectEnd: () => void
   isResultView: boolean
@@ -11,10 +12,12 @@ interface Props {
   timeSize: number
   maximumCount?: number
   onCellClick?: (cellId: string) => void
+  isHostView: boolean
 }
 
 export default function TimeSelectTable({
   selectedIds,
+  resultIds,
   onSelect,
   onSelectEnd,
   isResultView,
@@ -24,6 +27,7 @@ export default function TimeSelectTable({
   startingTimes = [],
   maximumCount = 1,
   onCellClick,
+  isHostView,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const cellsWrapperRef = useRef<HTMLDivElement>(null)
@@ -105,7 +109,7 @@ export default function TimeSelectTable({
     if (!col || !row) return
     isSelectingRef.current = true
     const cellId = cellIds[row]![col]
-    const isDelete = selectedIds.has(cellId)
+    const isDelete = isHostView ? resultIds.has(cellId) : selectedIds.has(cellId)
     selectStartCoors.current = { col, row, isDelete }
     prevCellRef.current = cellId
     onSelect([cellIds[row]![col]])
@@ -132,7 +136,7 @@ export default function TimeSelectTable({
         selectedCellIds.push(cellIds[row]![col])
       }
     }
-
+    console.log(selectStartCoors.current?.isDelete, '@@')
     onSelect(selectedCellIds, selectStartCoors.current?.isDelete ?? false)
   }
 
@@ -180,17 +184,22 @@ export default function TimeSelectTable({
 
   function renderColors(cellId: string): string {
     const resultNumber = Number(resultCellCount[cellId])
-    if (!resultNumber) return '#18191F'
+    if (!isHostView && !resultNumber) return '#18191F'
     if (typeof resultNumber !== 'number') return '#18191F'
     //@ts-ignore
     // return colors[resultNumber]
     const step = Number((0.7 / maximumCount).toFixed(2))
 
+    if (isHostView) {
+      if (resultIds?.has(cellId)) return '#16C674'
+      return `rgba(47, 48, 53, ${0.5 + (0.5 / maximumCount) * resultNumber})`
+    }
+
     return isResultView
       ? `rgba(22, 198, 116, ${0.2 + step * (resultNumber - 1)})`
       : selectedIds.has(cellId)
       ? '#16C674'
-      : `rgba(47, 48, 53, ${0.5 + (0.5 / maximumCount) * (resultNumber - 1)})`
+      : `rgba(47, 48, 53, ${0.5 + (0.5 / maximumCount) * resultNumber})`
   }
 
   return (

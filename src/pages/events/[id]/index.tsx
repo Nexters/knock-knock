@@ -27,6 +27,18 @@ export default function Event() {
     },
   })
 
+  async function updateSelectedCells() {
+    if (!router.query.id || !user?.id) return
+    await mutate({ eventId: router.query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
+    router.push({ pathname: '/events/[id]/completed', query: { id: router.query.id } })
+  }
+
+  async function updateResultCells() {
+    if (!router.query.id || !user?.id) return
+    // await mutate({ eventId: router.query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
+    router.push({ pathname: '/events/[id]/result', query: { id: router.query.id } })
+  }
+
   const { user, isLoadingUser, isAuthenticated } = useUser()
 
   const participates = eventData?.participates ?? []
@@ -41,14 +53,22 @@ export default function Event() {
   const [maximumCount, setMaximumCount] = useState(1)
   const [isConfirmModalShown, setIsConfirmModalShown] = useState(false)
   const [cellSelectedNames, setCellSelectedNames] = useState<string[]>([])
+  const [isHostView, setIsHostView] = useState(false)
+
+  const [resultCells, setResultCells] = useState(new Set<string>())
 
   useEffect(() => {
     if (!eventData) return
+    if (router.query.view === 'host') {
+      setIsResultView(false)
+      setIsHostView(true)
+      return
+    }
     setIsResultView(router.query.view === 'my' ? false : true)
+    setIsHostView(false)
   }, [router.query.view, eventData])
 
-  console.log(eventData)
-  console.log(allSelectedCells)
+  const isHost = eventData && eventData.profileId === user?.id
 
   useEffect(() => {
     const myCells = (myParticipation?.selectedCells ?? '').split(',')
@@ -85,26 +105,34 @@ export default function Event() {
     setResultCellCount(counts)
   }, [isResultView, eventData, selectedCells])
 
-  async function updateSelectedCells() {
-    if (!router.query.id || !user?.id) return
-    await mutate({ eventId: router.query.id as string, profileId: user.id, cells: [...selectedCells].join(',') })
-    router.push({ pathname: '/events/[id]/completed', query: { id: router.query.id } })
-  }
-
   function deselectAll() {
     setSelectedCells(new Set<string>([]))
     if (!router.query.id || !user?.id) return
   }
 
   function addOneCell(cellId: string) {
+    if (isHost && isHostView) {
+      setResultCells(prev => new Set([...prev, cellId]))
+      return
+    }
     setSelectedCells(prev => new Set([...prev, cellId]))
   }
 
   function removeOneCell(cellId: string) {
+    if (isHost && isHostView) {
+      console.log('@@@@', cellId, resultCells)
+      setResultCells(prev => new Set([...prev].filter(x => x !== cellId)))
+      return
+    }
     setSelectedCells(prev => new Set([...prev].filter(x => x !== cellId)))
   }
 
   function addOrRemoveOneCell(cellId: string) {
+    if (isHost && isHostView) {
+      if (resultCells.has(cellId)) removeOneCell(cellId)
+      else addOneCell(cellId)
+      return
+    }
     if (selectedCells.has(cellId)) removeOneCell(cellId)
     else addOneCell(cellId)
   }
@@ -115,12 +143,36 @@ export default function Event() {
       return
     }
     if (isDelete) {
+      if (isHost && isHostView) {
+        cellIds.forEach(id => {
+          if (resultCells.has(id)) removeOneCell(id)
+        })
+        return
+      }
       cellIds.forEach(id => {
         if (selectedCells.has(id)) removeOneCell(id)
       })
       return
     }
+
+    if (isHost && isHostView) {
+      setResultCells(prev => new Set([...prev, ...cellIds]))
+      return
+    }
     setSelectedCells(prev => new Set([...prev, ...cellIds]))
+  }
+
+  function switchToResult() {
+    router.push(
+      {
+        pathname: '/events/[id]',
+        query: {
+          id: router.query.id,
+        },
+      },
+      `/events/${router.query.id}`,
+      { shallow: true },
+    )
   }
 
   function switchToMySelects() {
@@ -137,6 +189,20 @@ export default function Event() {
     )
   }
 
+  function switchToHostSelects() {
+    router.push(
+      {
+        pathname: '/events/[id]',
+        query: {
+          id: router.query.id,
+          view: 'host',
+        },
+      },
+      `/events/${router.query.id}?view=host`,
+      { shallow: true },
+    )
+  }
+
   function handleCellClickInResultView(cellId: string) {
     const names = Object.keys(allSelectedCells).filter(name => {
       if (allSelectedCells[name]?.has(cellId)) return true
@@ -148,10 +214,37 @@ export default function Event() {
 
   function renderButtons() {
     if (isResultView) {
+      if (!isHost) {
+        return (
+          <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex flex-col justify-end">
+            <button onClick={switchToMySelects} className="btn w-full text-white bg-gradient-to-r from-from to-to">
+              내 시간 선택하기
+            </button>
+          </div>
+        )
+      }
       return (
-        <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex flex-col justify-end">
-          <button onClick={switchToMySelects} className="btn w-full text-white bg-gradient-to-r from-from to-to">
+        <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex justify-between">
+          <button onClick={switchToMySelects} className="btn w-[48%]  text-white bg-gradient-to-r from-from to-to">
             내 시간 선택하기
+          </button>
+          <button onClick={switchToHostSelects} className="btn w-[48%] text-base-100  bg-textLightGray ">
+            시간 확정하기
+          </button>
+        </div>
+      )
+    }
+    if (isHostView) {
+      return (
+        <div className="fixed bottom-4 w-full px-5 md:max-w-sm mx-auto flex justify-between">
+          <button onClick={switchToResult} className="btn w-[48%] text-base-100  bg-textLightGray">
+            취소
+          </button>
+          <button
+            onClick={() => setIsConfirmModalShown(true)}
+            className="btn w-[48%] text-white bg-gradient-to-r from-from to-to"
+          >
+            확인
           </button>
         </div>
       )
@@ -174,7 +267,13 @@ export default function Event() {
   return (
     <>
       {!user && <LoginModal />}
-      {isConfirmModalShown && <ConfirmModal onClose={() => setIsConfirmModalShown(false)} onOk={updateSelectedCells} />}
+      {isConfirmModalShown && (
+        <ConfirmModal
+          text={isHostView ? '선택한 시간으로 약속을 확정할까요?' : undefined}
+          onClose={() => setIsConfirmModalShown(false)}
+          onOk={isHostView ? updateResultCells : updateSelectedCells}
+        />
+      )}
 
       <TopTitleBottomBtnLayout
         title={isResultView ? '시간 선택하기 (합계)' : '시간 선택하기'}
@@ -209,6 +308,8 @@ export default function Event() {
                   resultCellCount={resultCellCount}
                   maximumCount={maximumCount}
                   onCellClick={handleCellClickInResultView}
+                  isHostView={isHostView}
+                  resultIds={resultCells}
                 />
                 {isResultView && cellSelectedNames?.length ? (
                   <div className="flex flex-col w-full px-5 mt-2">

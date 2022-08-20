@@ -24,11 +24,7 @@ export default function Completed() {
         </Link>
       </div>
       <div className="w-full max-w-sm absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center">
-        <div className="text-center mb-8 text-lg w-full">
-          시간 선택을 완료했어요.
-          <br />
-          약속장이 만날 시간을 결정할 거예요!
-        </div>
+        <div className="text-center mb-8 text-lg w-full">약속이 확정됐어요!</div>
         <video
           src="/assets/videos/inform.mp4"
           poster="/assets/images/inform.png"
@@ -41,10 +37,10 @@ export default function Completed() {
       </div>
       <div className="fixed bottom-10 w-full px-5 flex justify-between md:max-w-sm">
         <button
-          onClick={() => router.push({ pathname: '/invites/[id]', query: { id: router.query.id as string } })}
+          onClick={() => router.push({ pathname: '/' })}
           className="btn w-[48%] btn-primary text-base-100 bg-whiteGray"
         >
-          초대장으로
+          홈으로
         </button>
         <button onClick={onCopyToClipboard} className="btn w-[48%] btn-primary text-white">
           링크 공유
