@@ -277,7 +277,7 @@ function Create() {
                   <select
                     className="select w-full max-w-xs"
                     onChange={e => {
-                      setStartTime(e.target.value)
+                      setEndTime(e.target.value)
                     }}
                     value={endTime}
                   >
