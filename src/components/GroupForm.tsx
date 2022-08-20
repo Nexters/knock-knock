@@ -65,7 +65,7 @@ export default function GroupForm({ handleSubmit, register, tags, onTagsChange }
         />
       </div>
       <div>
-        <Checkbox name="public" label="이 약속을 검색 결과에 공개할래요" register={register('isPublic')} />
+        <Checkbox name="public" label="이 그룹을 검색 결과에 공개할래요" register={register('isPublic')} />
         <Button type="submit" classNames="btn btn-primary">
           완료
         </Button>

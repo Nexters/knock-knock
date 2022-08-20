@@ -68,6 +68,7 @@ export default function Invite() {
       {eventData && (
         <TopTitleBottomBtnLayout
           title="약속에 초대해요!"
+          onBackBtnClick={() => router.back('/')}
           customBtns={
             <div className="flex justify-between">
               <button onClick={onCopyToClipboard} className="btn w-[48%] bg-white text-base-100">

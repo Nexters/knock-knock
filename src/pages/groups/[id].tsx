@@ -105,7 +105,7 @@ export default function GroupDetail() {
             {groupData?.profileId === user?.id && (
               <div
                 className="flex items-center"
-                onClick={() => router.push({ pathname: '/group/modify', query: { id: `${router.query.id}` } })}
+                onClick={() => router.push({ pathname: '/groups/modify', query: { id: `${router.query.id}` } })}
               >
                 <img className="w-[20px]" src={'/assets/svg/Edit_outlined.svg'} />
                 <span className="text-sm"> 그룹 수정</span>

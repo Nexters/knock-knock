@@ -21,7 +21,7 @@ export const userRouter = createRouter()
             email: session.user.email,
           },
           include: {
-            groups: true,
+            groups: { include: { members: true } },
             events: {
               include: {
                 participates: {

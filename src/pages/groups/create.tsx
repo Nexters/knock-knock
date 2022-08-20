@@ -19,7 +19,7 @@ function CreateGroup() {
     onSuccess: async data => {
       await toast('생성 완료!', { autoClose: 2000 })
       await insertMutation({ groupId: data.id })
-      router.push(`/group/${data.id}`)
+      router.push(`/groups/${data.id}`)
     },
     onError() {
       toast('생성 실패...', { autoClose: 2000 })
@@ -29,6 +29,7 @@ function CreateGroup() {
   const { mutate: insertMutation } = trpc.useMutation('groups.insert-host-group')
 
   const onValid: SubmitHandler<ICreateGroup> = async (formValues: ICreateGroup) => {
+    console.log(formValues)
     if (!session?.user) return
     if (!formValues.name) return
     if (!formValues.description) return
@@ -52,7 +53,7 @@ function CreateGroup() {
   return (
     <CenteringLayout seoTitle="그룹 생성">
       <TitleHeader title="그룹 만들기" />
-      <GroupForm handleSubmit={() => handleSubmit(onValid)} register={register} tags={tags} onTagsChange={setTags} />
+      <GroupForm handleSubmit={handleSubmit(onValid)} register={register} tags={tags} onTagsChange={setTags} />
     </CenteringLayout>
   )
 }

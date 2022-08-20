@@ -16,7 +16,7 @@ export default function Home() {
   const { user, isAuthenticated } = useUser()
   const { data: me } = trpc.useQuery(['users.me'])
   const router = useCustomRouter()
-
+  console.log(me)
   const [visibleCreateModal, setVisibleCreateModal] = useState(false)
   const [visibleMoreButtonModal, setVisibleMoreButtonModal] = useState<any | null>(null)
 
@@ -70,7 +70,7 @@ export default function Home() {
           <object data="/assets/svg/logo_white.svg" />
           <div className="flex items-center">
             {isAuthenticated ? (
-              <Link href="/profile">
+              <Link href={{ pathname: '/profiles/[id]', query: { id: me?.id } }}>
                 <div className="cursor-pointer w-[24px] h-[24px] rounded-[24px] overflow-hidden object-cover mr-3">
                   <img className="" src={`${user?.image}` ?? '/assets/images/avatar.png'} />
                 </div>

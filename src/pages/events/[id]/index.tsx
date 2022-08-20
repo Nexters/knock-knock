@@ -182,7 +182,7 @@ export default function Event() {
         customBtns={renderButtons()}
         onBackBtnClick={
           isResultView
-            ? () => router.push({ pathname: '/invites/[id]', query: { id: router.query.id } })
+            ? () => router.replace({ pathname: '/invites/[id]', query: { id: router.query.id } })
             : () => router.back(router.asPath.split('?')[0])
         }
       >
