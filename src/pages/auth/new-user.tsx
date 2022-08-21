@@ -1,13 +1,19 @@
+import { ErrorMessage } from '@hookform/error-message'
 import { unstable_getServerSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { ICreateProfile } from 'src/schema/userSchema'
 import { trpc } from 'src/utils/trpc'
 import { authOptions } from '../api/auth/[...nextauth]'
 
 export default function NewUser() {
-  const { handleSubmit, register } = useForm<ICreateProfile>()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ICreateProfile>()
   const router = useRouter()
   const { data: me } = trpc.useQuery(['users.me'])
   const utils = trpc.useContext()
@@ -23,9 +29,14 @@ export default function NewUser() {
   if (me?.id) router.replace((router.query.redirect as string) ?? '/')
 
   const onValid: SubmitHandler<ICreateProfile> = async (formValues: ICreateProfile) => {
-    if (!session?.user) return
-    if (!formValues.name) return
-    if (!formValues.tags) return
+    if (!session?.user) {
+      toast.warn('문제가 발생했습니다. knockknock.me@gmail.com 으로 문의부탁드립니다.')
+      return
+    }
+    if (!formValues.name) {
+      toast.error('이름은 반드시 입력해야합니다.')
+      return
+    }
     try {
       mutate({ ...session.user, ...formValues, oauthId: session.id as string })
     } catch (error) {
@@ -46,21 +57,34 @@ export default function NewUser() {
             <span className="label-text text-textGray">이름</span>
           </label>
           <input
-            {...register('name', { required: true })}
+            {...register('name', {
+              required: '필수 입력 필드입니다.',
+              maxLength: { value: 10, message: '10자 이내로 입력해주세요.' },
+            })}
             type="text"
             name="name"
             placeholder="ex) 김노크"
             className="input input-bordered w-full"
           />
+          <ErrorMessage
+            errors={errors}
+            name="name"
+            render={({ message }) => <p className="text-error mt-2 ml-1 text-xs">{message}</p>}
+          />
           <label htmlFor="tag" className="label pb-1 pl-0 mt-4">
             <span className="label-text text-textGray">태그</span>
           </label>
           <input
-            {...register('tags', { required: true })}
+            {...register('tags')}
             type="text"
             name="tags"
             placeholder="ex) 개발자, ENFJ, 냥집사"
             className="input input-bordered w-full"
+          />
+          <ErrorMessage
+            errors={errors}
+            name="tags"
+            render={({ message }) => <p className="text-error mt-2 ml-1 text-xs">{message}</p>}
           />
 
           <label htmlFor="introduction" className="label pb-1 pl-0 mt-4">
@@ -71,6 +95,11 @@ export default function NewUser() {
             name="introduction"
             placeholder="ex) 안녕하세요! 노크노크의 부릉부릉입니다 :)"
             className="textarea textarea-bordered w-full"
+          />
+          <ErrorMessage
+            errors={errors}
+            name="introduction"
+            render={({ message }) => <p className="text-error mt-2 ml-1 text-xs">{message}</p>}
           />
         </div>
 

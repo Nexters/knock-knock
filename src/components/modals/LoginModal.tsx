@@ -16,7 +16,6 @@ export default function LoginModal({ fallbackUrl, redirectUrl }: { fallbackUrl?:
   }
 
   if (me?.id) router.replace(redirectUrl ?? (router.query.redirect as string) ?? '/')
-
   if (isAuthenticated || anonymous?.name) return null
   useEffect(() => {
     async function checkIsNewUser() {
