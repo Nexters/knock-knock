@@ -8,18 +8,26 @@ import { authOptions } from '../api/auth/[...nextauth]'
 
 export default function NewUser() {
   const { handleSubmit, register } = useForm<ICreateProfile>()
-  const { query, basePath, pathname, push } = useRouter()
-  const { mutate, error } = trpc.useMutation('users.create-profile')
+  const router = useRouter()
+  const { data: me } = trpc.useQuery(['users.me'])
+  const utils = trpc.useContext()
+
+  const { mutate, error } = trpc.useMutation('users.create-profile', {
+    onSuccess: async () => {
+      await utils.invalidateQueries(['users.me'])
+      router.replace((router.query.redirect as string) ?? '/')
+    },
+  })
   const { data: session } = useSession()
 
+  if (me?.id) router.replace((router.query.redirect as string) ?? '/')
+
   const onValid: SubmitHandler<ICreateProfile> = async (formValues: ICreateProfile) => {
-    if (!query.callbackUrl) return
     if (!session?.user) return
     if (!formValues.name) return
     if (!formValues.tags) return
     try {
-      await mutate({ ...session.user, ...formValues, oauthId: session.id as string })
-      push(query.callbackUrl as string)
+      mutate({ ...session.user, ...formValues, oauthId: session.id as string })
     } catch (error) {
       alert('뭔가 잘못됐어요..')
     }
@@ -74,15 +82,4 @@ export default function NewUser() {
       </form>
     </div>
   )
-}
-
-export async function getServerSideProps(context: any) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
-  if (session) {
-    return {
-      redirect: { destination: '/' },
-      props: {},
-    }
-  }
-  return { props: {} }
 }

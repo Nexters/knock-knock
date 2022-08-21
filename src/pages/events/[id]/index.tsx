@@ -1,6 +1,4 @@
 import { Participation } from '@prisma/client'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import TimeSelectTable from 'src/components/TimeSelectTable'
 import { trpc } from 'src/utils/trpc'
@@ -8,7 +6,6 @@ import { toast } from 'react-toastify'
 import { useCustomRouter, useUser } from 'src/shared/hooks'
 import LoginModal from 'src/components/modals/LoginModal'
 import TopTitleBottomBtnLayout from 'src/components/pageLayouts/TopTitleBottomBtnLayout'
-import { useIsomorphicLayoutEffect } from 'react-use'
 import ConfirmModal from 'src/components/modals/ConfirmModal'
 
 export default function Event() {
@@ -26,6 +23,12 @@ export default function Event() {
       toast('저장 실패...', { autoClose: 2000 })
     },
   })
+  const { data: me } = trpc.useQuery(['users.me'])
+  const [isLoginModalShown, setIsLoginModalShown] = useState(false)
+
+  useEffect(() => {
+    if (!me) setIsLoginModalShown(true)
+  }, [me])
 
   async function updateSelectedCells() {
     if (!router.query.id || !user?.id) return
@@ -266,7 +269,7 @@ export default function Event() {
 
   return (
     <>
-      {!user && <LoginModal />}
+      {isLoginModalShown && <LoginModal redirectUrl={router.query.asPath as string} />}
       {isConfirmModalShown && (
         <ConfirmModal
           text={isHostView ? '선택한 시간으로 약속을 확정할까요?' : undefined}
