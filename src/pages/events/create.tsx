@@ -25,7 +25,7 @@ function Create() {
   const { isAuthenticated, user } = useUser()
 
   const [createPhase, setCreatePhase] = useState(1)
-
+  const [isLoginModalShown, setIsLoginModalShown] = useState(false)
   const [selectedDates, setSelectedDates] = useState<Date[]>([])
   const [startTime, setStartTime] = useState('09:00')
   const [endTime, setEndTime] = useState('17:00')
@@ -44,6 +44,11 @@ function Create() {
       isUnlimitedHeadCounts: false,
     },
   })
+  const { data: me } = trpc.useQuery(['users.me'])
+
+  useEffect(() => {
+    if (!me) setIsLoginModalShown(true)
+  }, [me])
 
   const { title, description, isUnlimitedHeadCounts, headCounts, selectedGroup } = watch()
 
@@ -135,11 +140,9 @@ function Create() {
     }
   })
 
-  console.log(startTime)
-
   return (
     <>
-      <LoginModal />
+      {isLoginModalShown && <LoginModal redirectUrl="/events/create" />}
       <form onSubmit={handleSubmit(onFormValid)}>
         {createPhase === 1 && (
           <TopTitleBottomBtnLayout {...{ title: '약속 만들기', btnText: '다음', onBottomBtnClick: handleNextPhase }}>
