@@ -33,3 +33,55 @@ npx prisma studio
 <!-- 스키마 기반 백엔드에서 사용할 타입 생성 -->
 npx prisma generate
 ```
+
+# Next-Auth
+
+## Configuration
+
+### Provider / profile option
+
+각 Provider 의 `profile` 옵션은 해당 Provider 가 내려주는 Profile 데이터 중 어떤 것을 더 가져올지에 관한 것일 뿐 내가 새로 추가할 수 있는 건 없다. 예를 들어서 아래는 Google Provider 의 전체 Profile 이다.
+
+```ts
+export interface GoogleProfile extends Record<string, any> {
+  aud: string
+  azp: string
+  email: string
+  email_verified: boolean
+  exp: number
+  family_name: string
+  given_name: string
+  hd: string
+  iat: number
+  iss: string
+  jti: string
+  name: string
+  nbf: number
+  picture: string
+  sub: string
+}
+```
+
+[공식문서: Using a custom provider](https://next-auth.js.org/configuration/providers/oauth#using-a-custom-provider) 에서도 말하듯, next-auth 는 위 GoogleProfile 중 몇개만을 취해 아래와 같이 반환한다.
+
+```ts
+{
+  id: "google",
+  name: "Google",
+  type: "oauth",
+  wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
+  authorization: { params: { scope: "openid email profile" } },
+  idToken: true,
+  checks: ["pkce", "state"],
+  profile(profile) {
+    return {
+      id: profile.sub,
+      name: profile.name,
+      email: profile.email,
+      image: profile.picture,
+    }
+  },
+}
+```
+
+즉, `profile` 옵션은 원본에서 어떤 것을 무슨 이름으로 가져올 것인지를 정하는 것일 뿐 없는 것을 내가 만들어서 추가할 수는 없다.
